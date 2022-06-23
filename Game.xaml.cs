@@ -22,7 +22,6 @@ namespace Spider_Solitaire
     {
         const int cardOffset = 20;  //used to render the cards apart from each other
 
-        private Random random = new Random();   //used to call Random class methods
         private List<Card> Selected = new List<Card>(); //currenly selected card/s
         int Selected_x, NewCardNumber = 1; //indexes of the currently selected card (and cards underneeth)
         int DecksSolved = 0;   //number of solved decks
@@ -34,10 +33,6 @@ namespace Spider_Solitaire
             deck.GenerateCards(numberOfColours);
             _ = deck.LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect);
         }
-
-
-        
-
 
         //Loads all cards that are being selected into a tmp list "Selected"
         private void CardSelect(object sender, MouseEventArgs e)
@@ -60,6 +55,7 @@ namespace Spider_Solitaire
                 }
                 deck.activeCards[x].RemoveRange(y, deck.activeCards[x].Count-y);
                 Selected_x = x;
+                SwichHitRegistration(false);
             }
             else
             {
@@ -99,6 +95,7 @@ namespace Spider_Solitaire
             Selected.Clear();
             IsDeckSolved();
             Refresh();
+            SwichHitRegistration(true);
             if (DecksSolved == 8) MessageBox.Show("Victory");
         }
 
@@ -185,6 +182,17 @@ namespace Spider_Solitaire
                 {
                     deck.activeCards[i].Last().Visible = true;
                     deck.activeCards[i].Last().GetColour();
+                }
+            }
+        }
+
+        private void SwichHitRegistration(bool hit)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                foreach(var item in deck.activeCards[i])
+                {
+                    item.Image.IsHitTestVisible = hit;
                 }
             }
         }

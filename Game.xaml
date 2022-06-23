@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:Spider_Solitaire"
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="1150"
-      Title="Game" MinWidth="1000" MinHeight="600">
+      Title="Game" MinWidth="1000" MinHeight="650">
 
     <Grid Background="DarkGreen" Name="SolitaireGrid">
         <Grid.ColumnDefinitions>

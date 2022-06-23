@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Spider_Solitaire"
         mc:Ignorable="d"
-        Title="Spider Solitaire" Height="800" Width="1150" MinWidth="1000" MinHeight="600">
+        Title="Spider Solitaire" Height="800" Width="1150" MinWidth="1000" MinHeight="700">
     <Grid>
         <Frame Name="SolitaireFrame" Source="Menu.xaml" NavigationUIVisibility="Hidden"/>
     </Grid>
