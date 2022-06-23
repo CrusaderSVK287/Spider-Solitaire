@@ -22,11 +22,11 @@ namespace Spider_Solitaire
             Colour = colour;
             Visible = visible;
             Image = new Image();
-            makeImage(y,x,offset,CardSelect);
+            CreateImage(y,x,offset,CardSelect);
         }
 
         //inicialised image properties
-        private void makeImage(int y, int x, int offset, MouseButtonEventHandler CardSelect)
+        private void CreateImage(int y, int x, int offset, MouseButtonEventHandler CardSelect)
         {
             Image.Width = 89;
             Image.Height = 120;

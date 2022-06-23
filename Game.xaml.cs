@@ -32,7 +32,7 @@ namespace Spider_Solitaire
         {
             InitializeComponent();
             deck.GenerateCards(numberOfColours);
-            deck.LayOutStartingCardsRecursive(cardOffset,SolitaireGrid,CardSelect);
+            _ = deck.LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect);
         }
 
 
@@ -97,12 +97,12 @@ namespace Spider_Solitaire
                 }
             }
             Selected.Clear();
-            isDeckSolved();
+            IsDeckSolved();
             Refresh();
             if (DecksSolved == 8) MessageBox.Show("Victory");
         }
 
-        private void isDeckSolved()
+        private void IsDeckSolved()
         {
             for (int i = 0; i < 10; i++) //iterates through all columns
             {
@@ -143,7 +143,7 @@ namespace Spider_Solitaire
             }
         }
 
-        public void NewCardsClick(object sender, MouseButtonEventArgs e)
+        public async void NewCardsClick(object sender, MouseButtonEventArgs e)
         {
             if (NewCardNumber > 5) return;
             for (int i = 0; i < 10; i++)
@@ -152,7 +152,12 @@ namespace Spider_Solitaire
                 MessageBox.Show("You cannot add new card to an empty column");
                 return;
             }
-            for(int index = 0; index < 10; index++)
+
+            Image[] newCardImages = { new1, new2, new3, new4, new5 };
+            newCardImages[NewCardNumber - 1].Visibility = Visibility.Hidden;
+            NewCardNumber++;
+
+            for (int index = 0; index < 10; index++)
             {
                 Card card = new Card(deck.values[deck.cardNum], (char)deck.colors[deck.cardNum],true,
                     deck.activeCards[index].Count + 1, index, cardOffset, CardSelect);
@@ -160,10 +165,8 @@ namespace Spider_Solitaire
                 Grid.SetColumn(card.Image, index + 1);
                 deck.cardNum++;
                 deck.activeCards[index].Add(card);
+                await Task.Delay(30);
             }
-            Image[] newCardImages = { new1, new2, new3, new4, new5 };
-            newCardImages[NewCardNumber-1].Visibility = Visibility.Hidden;
-            NewCardNumber++;
             Refresh();
         }
 
