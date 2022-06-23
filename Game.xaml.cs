@@ -48,6 +48,7 @@ namespace Spider_Solitaire
             }
             if(valid)
             {
+                SwichHitRegistration(false);
                 for (int i = y; i < deck.activeCards[x].Count; i++)
                 {
                     _ = deck.activeCards[x][i].SelectedMove(i + 1, cardOffset); //+1 due to y being an indexer
@@ -55,7 +56,6 @@ namespace Spider_Solitaire
                 }
                 deck.activeCards[x].RemoveRange(y, deck.activeCards[x].Count-y);
                 Selected_x = x;
-                SwichHitRegistration(false);
             }
             else
             {

@@ -46,12 +46,11 @@ namespace Spider_Solitaire
         //Moves the card up
         public async Task SelectedMove(int y, int cardOffset)
         {
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < 15; i+=2)
             {
                 Image.Margin = new Thickness(0, y * cardOffset + 5 - i, 0, 0);
-                await Task.Delay(10);
+                await Task.Delay(1);
             }
-            //Image.Margin = new Thickness(0, y * 20 + 5, 0, 0);
         }
 
         //Moves the card right, left and back
