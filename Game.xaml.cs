@@ -27,17 +27,20 @@ namespace Spider_Solitaire
         int DecksSolved = 0;   //number of solved decks
 
         private Deck deck = new Deck();
-        public Game(int numberOfColours)
+        public Game(int numberOfColours, bool isNewGame)
         {
             InitializeComponent();
+            if (!isNewGame) return;
             deck.GenerateCards(numberOfColours);
             _ = deck.LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect);
+            
         }
 
         //Loads all cards that are being selected into a tmp list "Selected"
         private void CardSelect(object sender, MouseEventArgs e)
         {
             if (deck.activeCards == null || Selected.Count > 0) return;
+            //MessageBox.Show($"{Convert.ToChar(deck.values[103]+'a')} {deck.colors[103]} {((Image)sender).Source.ToString()}");
             int x = ((Image)sender).Name[0] - 97;
             int y = ((Image)sender).Name[1] - 65;
             bool valid = deck.activeCards[x][y].Visible;

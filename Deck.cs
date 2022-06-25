@@ -8,13 +8,14 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using System.IO;
 
 namespace Spider_Solitaire
 {
     internal class Deck
     {
         public int[] values = new int[8 * 13];  //8 total columns with 13 cards each
-        public int[] colors = new int[8 * 13];
+        public char[] colors = new char[8 * 13];
         public int cardNum = 0; //used to iterate throgh the deck while handing out new cards
 
         public List<Card>[] activeCards = new List<Card>[10];   //array of lists containing currently held out cards
@@ -32,10 +33,8 @@ namespace Spider_Solitaire
         {
             bool picked;
             int[] coloursPool = new int[numberOfCoulours * 13];
-            for (int i = 0; i < numberOfCoulours * 13; i++)
-            {
-                coloursPool[i] = 8 / numberOfCoulours;
-            }
+            for (int i = 0; i < numberOfCoulours * 13; i++) coloursPool[i] = 8 / numberOfCoulours;
+
             for (int i = 0; i < 8 * 13; i++)
             {
                 picked = false;
@@ -44,17 +43,17 @@ namespace Spider_Solitaire
                     int rng = random.Next(coloursPool.Length);
                     if (coloursPool[rng] > 0)
                     {
-                        if (rng >= 3 * 13) colors[i] = 'b';    //y == 1 && 1 == color
+                        if (rng >= 3 * 13) colors[i] = 'b';
                         else if (rng >= 2 * 13) colors[i] = 'a';
                         else if (rng >= 1 * 13) colors[i] = 'b';
                         else colors[i] = 'c';
-                        values[i] = rng % 13 + 1;  //y==0 && 0 == value
+                        values[i] = rng % 13 + 1;
                         coloursPool[rng]--;
                         picked = true;
                     }
                 }
             }
-            if (!IsValidDeck()) GenerateCards(numberOfCoulours); 
+            if (!IsValidDeck()) GenerateCards(numberOfCoulours);
         }
 
         //method determines whether the generated deck is valid according to a generation ruleset
@@ -117,6 +116,37 @@ namespace Spider_Solitaire
             await Task.Delay(10);
             cardNum++;
             if (cardNum < 54) await LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect);
+            else SaveDeck();
+        }
+
+        //saves the currently generated deck to a file
+        public void SaveDeck()
+        {
+            MessageBox.Show("Saving");
+            if (File.Exists(@"autosave.soli")) File.Delete(@"autosave.soli");
+            try
+            {
+                string[] data = {"First line", "Second line"};
+
+                var sb = new StringBuilder();
+                for (int i = 0; i < 8 * 13; i++)
+                {
+                    if (i >= 54) MessageBox.Show($"{Convert.ToChar(values[i]+96)} {colors[i]}");
+                    sb.Append((char)(values[i]+96));
+                }
+                data[0] = sb.ToString();
+                for (int i = 0; i < 8 * 13; i++)
+                {
+                    File.AppendAllText(@"autosave.soli", Convert.ToChar(colors[i]).ToString());
+                }
+
+                File.WriteAllLines(@"autosave.soli", data);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
         }
     }
 }

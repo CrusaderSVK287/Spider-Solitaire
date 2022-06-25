@@ -27,7 +27,7 @@ namespace Spider_Solitaire
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Game game = new Game(Convert.ToInt32(numOfColours.Text));
+            Game game = new Game(Convert.ToInt32(numOfColours.Text),true);
             NavigationService.Navigate(game);
         }
 

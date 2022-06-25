@@ -28,9 +28,9 @@ namespace Spider_Solitaire
         //inicialised image properties
         private void CreateImage(int y, int x, int offset, MouseButtonEventHandler CardSelect)
         {
+            GetColour();
             Image.Width = 89;
             Image.Height = 120;
-            Image.Source = new BitmapImage(new Uri(@"assets/" + (Visible ? $"{Value}{Colour}" : "uncovered") + ".png", UriKind.Relative));
             Image.HorizontalAlignment = HorizontalAlignment.Center;
             Image.VerticalAlignment = VerticalAlignment.Top;
             Image.Visibility = Visibility.Visible;
