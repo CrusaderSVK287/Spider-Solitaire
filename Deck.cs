@@ -46,7 +46,7 @@ namespace Spider_Solitaire
                     {
                         if (rng >= 3 * 13) colors[i] = 'b';
                         else if (rng >= 2 * 13) colors[i] = 'a';
-                        else if (rng >= 1 * 13) colors[i] = 'b';
+                        else if (rng >= 1 * 13) colors[i] = 'd';
                         else colors[i] = 'c';
                         values[i] = rng % 13 + 1;
                         coloursPool[rng]--;
