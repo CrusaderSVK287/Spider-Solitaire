@@ -159,7 +159,7 @@ namespace Spider_Solitaire
 
             for (int index = 0; index < 10; index++)
             {
-                Card card = new Card(deck.values[deck.cardNum], (char)deck.colors[deck.cardNum],true,
+                Card card = new Card(deck.values[deck.cardNum], deck.colors[deck.cardNum],true,
                     deck.activeCards[index].Count + 1, index, cardOffset, CardSelect);
                 SolitaireGrid.Children.Add(card.Image);
                 Grid.SetColumn(card.Image, index + 1);

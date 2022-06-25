@@ -31,6 +31,7 @@ namespace Spider_Solitaire
         //randomly generates the card deck from with the cards are given out in order
         public void GenerateCards(in int numberOfCoulours)
         {
+            if (File.Exists(@"autosave.soli")) File.Delete(@"autosave.soli");
             bool picked;
             int[] coloursPool = new int[numberOfCoulours * 13];
             for (int i = 0; i < numberOfCoulours * 13; i++) coloursPool[i] = 8 / numberOfCoulours;
@@ -52,6 +53,7 @@ namespace Spider_Solitaire
                         picked = true;
                     }
                 }
+                File.AppendAllText(@"autosave.soli", $"{Convert.ToChar(values[i]+96)}{colors[i]}\n");
             }
             if (!IsValidDeck()) GenerateCards(numberOfCoulours);
         }
@@ -107,7 +109,7 @@ namespace Spider_Solitaire
         public async Task LayOutStartingCardsRecursive(int cardOffset, Grid SolitaireGrid, MouseButtonEventHandler CardSelect)
         {
             int index = cardNum % 10;
-            Card card = new Card(values[cardNum], (char)colors[cardNum], (cardNum <= 43) ? false : true, 
+            Card card = new (values[cardNum], colors[cardNum], (cardNum <= 43) ? /*false*/true : true, 
                 activeCards[index].Count+1,index, cardOffset, CardSelect);
             if (card == null) return;
             activeCards[index].Add(card);
@@ -116,31 +118,27 @@ namespace Spider_Solitaire
             await Task.Delay(10);
             cardNum++;
             if (cardNum < 54) await LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect);
-            else SaveDeck();
+            //else SaveDeck();
         }
 
         //saves the currently generated deck to a file
         public void SaveDeck()
         {
-            MessageBox.Show("Saving");
             if (File.Exists(@"autosave.soli")) File.Delete(@"autosave.soli");
             try
             {
-                string[] data = {"First line", "Second line"};
-
-                var sb = new StringBuilder();
-                for (int i = 0; i < 8 * 13; i++)
+                var sbValues = new StringBuilder();
+                var sbColors = new StringBuilder();
+                for (int i = 0; i < 8*13; i++)
                 {
-                    if (i >= 54) MessageBox.Show($"{Convert.ToChar(values[i]+96)} {colors[i]}");
-                    sb.Append((char)(values[i]+96));
+                    Card card = new(values[i],colors[i],false);
+                    sbValues.Append(Convert.ToChar(card.Value + 96));
+                    sbColors.Append(card.Colour);
+                    //File.AppendAllText(@"autosave.soli", $"{Convert.ToChar(card.Value + 96)}{card.Colour}\n");
+                    //await Task.Delay(10);
                 }
-                data[0] = sb.ToString();
-                for (int i = 0; i < 8 * 13; i++)
-                {
-                    File.AppendAllText(@"autosave.soli", Convert.ToChar(colors[i]).ToString());
-                }
-
-                File.WriteAllLines(@"autosave.soli", data);
+                File.AppendAllText(@"autosave.soli", $"{sbValues}\n{sbColors}\n");
+                MessageBox.Show("saved");
             }
             catch (Exception ex)
             {

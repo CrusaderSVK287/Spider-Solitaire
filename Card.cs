@@ -25,6 +25,14 @@ namespace Spider_Solitaire
             CreateImage(y,x,offset,CardSelect);
         }
 
+        public Card(int value, char colour, bool visible)
+        {
+            Value = value;
+            Colour = colour;
+            Visible = visible;
+            Image = new Image();
+        }
+
         //inicialised image properties
         private void CreateImage(int y, int x, int offset, MouseButtonEventHandler CardSelect)
         {
