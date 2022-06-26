@@ -21,26 +21,35 @@ namespace Spider_Solitaire
     public partial class Game : Page
     {
         const int cardOffset = 20;  //used to render the cards apart from each other
+        public Menu _menu;
+        public bool AnimationPlaying = false;   //used to track whether an animation is playing to avoid confusions
 
         private List<Card> Selected = new List<Card>(); //currenly selected card/s
         int Selected_x, NewCardNumber = 1; //indexes of the currently selected card (and cards underneeth)
         int DecksSolved = 0;   //number of solved decks
 
         private Deck deck = new Deck();
-        public Game(int numberOfColours, bool isNewGame)
+        public Game(int numberOfColours, bool isNewGame, Menu menu)
         {
             InitializeComponent();
-            if (!isNewGame) return;
-            deck.GenerateCards(numberOfColours);
+            _menu = menu;
+
+            if (isNewGame)
+            {
+                deck.GenerateCards(numberOfColours);
+            }
+            else
+            {
+                deck.LoadDeck();
+                deck.LoadCommands();
+            }
             _ = deck.LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect);
-            
         }
 
         //Loads all cards that are being selected into a tmp list "Selected"
         private void CardSelect(object sender, MouseEventArgs e)
         {
             if (deck.activeCards == null || Selected.Count > 0) return;
-            //MessageBox.Show($"{Convert.ToChar(deck.values[103]+'a')} {deck.colors[103]} {((Image)sender).Source.ToString()}");
             int x = ((Image)sender).Name[0] - 97;
             int y = ((Image)sender).Name[1] - 65;
             bool valid = deck.activeCards[x][y].Visible;
@@ -73,6 +82,9 @@ namespace Spider_Solitaire
             if((deck.activeCards[column_index].Count == 0 || deck.activeCards[column_index].Last().Value-1 == Selected[0].Value) 
                 && column_index != Selected_x)
             {
+                
+                Command.LogCommand(new Command(CommandType.select, new string[] { Selected[0].Image.Name }));
+
                 deck.activeCards[column_index].AddRange(Selected);
                 foreach(var item in deck.activeCards[column_index])
                 {
@@ -86,6 +98,7 @@ namespace Spider_Solitaire
                     Grid.SetColumn(item.Image, column_index + 1);
                     item.Image.Margin = new Thickness(0, (deck.activeCards[column_index].IndexOf(item)+1) * cardOffset + 5,0,0);
                 }
+                Command.LogCommand(new Command(CommandType.move, new string[] { column_index.ToString() }));
             }
             else
             {
@@ -145,13 +158,15 @@ namespace Spider_Solitaire
 
         public async void NewCardsClick(object sender, MouseButtonEventArgs e)
         {
-            if (NewCardNumber > 5) return;
+            if (NewCardNumber > 5 || AnimationPlaying) return;
             for (int i = 0; i < 10; i++)
             {
                 if (deck.activeCards[i].Count > 0) continue;
                 MessageBox.Show("You cannot add new card to an empty column");
                 return;
             }
+            AnimationPlaying = true;
+            Command.LogCommand(new Command(CommandType.add, null));
 
             Image[] newCardImages = { new1, new2, new3, new4, new5 };
             newCardImages[NewCardNumber - 1].Visibility = Visibility.Hidden;
@@ -168,6 +183,7 @@ namespace Spider_Solitaire
                 await Task.Delay(30);
             }
             Refresh();
+            AnimationPlaying = false;
         }
 
         //makes sure that all cards are up and the correct ones are being shown
@@ -188,7 +204,6 @@ namespace Spider_Solitaire
                 }
             }
         }
-
         private void SwichHitRegistration(bool hit)
         {
             for (int i = 0; i < 10; i++)
@@ -198,6 +213,11 @@ namespace Spider_Solitaire
                     item.Image.IsHitTestVisible = hit;
                 }
             }
+        }
+
+        private void exit_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(_menu);
         }
     }
 }

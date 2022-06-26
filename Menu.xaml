@@ -11,6 +11,8 @@
     <Grid Background="DarkGreen">
         <TextBlock Text="TEST"/>
         <Button Content="PLAY TEST" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click" Name="play"/>
+        <Button Content="LOAD" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Load_Click" Name="load" Margin="0,150,0,0"/>
         <TextBlock Text="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0" FontSize="30" MouseLeftButtonUp="TextBlock_MouseLeftButtonUp" MouseRightButtonUp="TextBlock_MouseRightButtonUp" Name="numOfColours"/>
+        <Button Content="Settings" HorizontalAlignment="Left" Margin="575,535,0,0" VerticalAlignment="Top" Name="settings" Click="settings_Click"/>
     </Grid>
 </Page>

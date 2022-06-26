@@ -53,8 +53,12 @@ namespace Spider_Solitaire
                         picked = true;
                     }
                 }
-                File.AppendAllText(@"autosave.soli", $"{Convert.ToChar(values[i]+96)}{colors[i]}\n");
+
+                try { File.AppendAllText(@"autosave.soli", $"{Convert.ToChar(values[i] + 96)}{colors[i]}\n"); }
+                catch (Exception ex) { MessageBox.Show(ex.Message); }
             }
+            try { File.AppendAllText(@"autosave.soli", "-null-\n"); }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
             if (!IsValidDeck()) GenerateCards(numberOfCoulours);
         }
 
@@ -118,31 +122,48 @@ namespace Spider_Solitaire
             await Task.Delay(10);
             cardNum++;
             if (cardNum < 54) await LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect);
-            //else SaveDeck();
         }
 
-        //saves the currently generated deck to a file
-        public void SaveDeck()
+        //loads the currently saved deck, if there is any
+        public void LoadDeck()
         {
-            if (File.Exists(@"autosave.soli")) File.Delete(@"autosave.soli");
             try
             {
-                var sbValues = new StringBuilder();
-                var sbColors = new StringBuilder();
-                for (int i = 0; i < 8*13; i++)
+                int line = 1;
+                foreach (var item in File.ReadAllLines(@"autosave.soli"))
                 {
-                    Card card = new(values[i],colors[i],false);
-                    sbValues.Append(Convert.ToChar(card.Value + 96));
-                    sbColors.Append(card.Colour);
-                    //File.AppendAllText(@"autosave.soli", $"{Convert.ToChar(card.Value + 96)}{card.Colour}\n");
-                    //await Task.Delay(10);
+                    if (line != 105 && item.Length != 2) throw new FileFormatException();
+                    if (line == 105 && item.Length != 6 && !item.Contains("-null-\n")) throw new FileFormatException();
+                    if (line == 105) break;
+
+                    values[line - 1] = Convert.ToInt32(item[0])-96;
+                    colors[line - 1] = item[1];
+
+                    line++;
                 }
-                File.AppendAllText(@"autosave.soli", $"{sbValues}\n{sbColors}\n");
-                MessageBox.Show("saved");
+                if (line < 105) throw new FileFormatException();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.ToString(),"Error", MessageBoxButton.OK,MessageBoxImage.Error);
+                return;
+            }
+        }
+
+        public void LoadCommands()
+        {
+            try
+            {
+                int line = 0;
+                foreach (var item in File.ReadAllLines(@"autosave.soli"))
+                {
+                    if (++line <= 105) continue;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
         }
