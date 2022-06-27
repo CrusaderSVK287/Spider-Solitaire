@@ -27,7 +27,7 @@ namespace Spider_Solitaire
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Game game = new Game(Convert.ToInt32(numOfColours.Text));
+            Game game = new Game(Convert.ToInt32(numOfColours.Text),true,this);
             NavigationService.Navigate(game);
         }
 
@@ -41,6 +41,18 @@ namespace Spider_Solitaire
         {
             if (Convert.ToInt16(numOfColours.Text) <= 1) return;
             numOfColours.Text = (Convert.ToInt16(numOfColours.Text) / 2).ToString();
+        }
+
+        private void Load_Click(object sender, RoutedEventArgs e)
+        {
+            Game game = new Game(Convert.ToInt32(numOfColours.Text), false, this);
+            NavigationService.Navigate(game);
+        }
+
+        private void settings_Click(object sender, RoutedEventArgs e)
+        {
+            try { throw new NotImplementedException();}
+            catch (Exception ex) { MessageBox.Show(ex.ToString(),"Warning",MessageBoxButton.OK,MessageBoxImage.Warning);}
         }
     }
 }
