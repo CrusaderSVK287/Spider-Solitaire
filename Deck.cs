@@ -110,18 +110,18 @@ namespace Spider_Solitaire
         }
 
         // Method to Lay out the cards that the game starts with onto the game field
-        public async Task LayOutStartingCardsRecursive(int cardOffset, Grid SolitaireGrid, MouseButtonEventHandler CardSelect)
+        public async Task LayOutStartingCardsRecursive(int cardOffset, Grid SolitaireGrid, MouseButtonEventHandler CardSelect, bool Loading)
         {
             int index = cardNum % 10;
-            Card card = new (values[cardNum], colors[cardNum], (cardNum <= 43) ? /*false*/true : true, 
+            Card card = new (values[cardNum], colors[cardNum], (cardNum <= 43) ? /*false*/false : true, 
                 activeCards[index].Count+1,index, cardOffset, CardSelect);
             if (card == null) return;
             activeCards[index].Add(card);
             SolitaireGrid.Children.Add(card.Image);
             Grid.SetColumn(card.Image, index + 1);
-            await Task.Delay(10);
+            if(!Loading)await Task.Delay(10);
             cardNum++;
-            if (cardNum < 54) await LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect);
+            if (cardNum < 54) await LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect, Loading);
         }
 
         //loads the currently saved deck, if there is any
@@ -150,7 +150,9 @@ namespace Spider_Solitaire
             }
         }
 
-        public void LoadCommands()
+        public static void LoadCommands(Action<object, MouseButtonEventArgs> CardSelect,
+                                 Action<object,MouseButtonEventArgs> ColumnClick,
+                                 Action<object,MouseButtonEventArgs> NewCardsClick)
         {
             try
             {
@@ -158,7 +160,17 @@ namespace Spider_Solitaire
                 foreach (var item in File.ReadAllLines(@"autosave.soli"))
                 {
                     if (++line <= 105) continue;
-
+                    switch (item[0])
+                    {
+                        case 'S': Command.ExecuteSelect(CardSelect, new string[] { $"{item[1]}{item[2]}" });
+                            break;
+                        case 'M': Command.ExecuteMove(ColumnClick, new string[] { $"col{item[1]}" });
+                            break;
+                        case 'A': Command.ExecuteAdd(NewCardsClick);
+                            break;
+                        default:
+                            throw new FileFormatException();
+                    }
                 }
             }
             catch (Exception ex)

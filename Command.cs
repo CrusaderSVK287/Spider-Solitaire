@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Spider_Solitaire
 {
@@ -16,6 +18,7 @@ namespace Spider_Solitaire
     }
     internal class Command
     {
+        private readonly MouseDevice? _mouseDevice;
         public readonly CommandType type;
         public string[]? args;
 
@@ -63,20 +66,32 @@ namespace Spider_Solitaire
 
         private static void LogSelect(string indexes)
         {
-            try { File.AppendAllText(@"autosave.soli", $"S{indexes}\n"); }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            File.AppendAllText(@"autosave.soli", $"S{indexes}\n");
         }
 
         private static void LogMove(int index)
         {
-            try { File.AppendAllText(@"autosave.soli", $"M{index}\n"); }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            File.AppendAllText(@"autosave.soli", $"M{index}\n");
         }
 
         private static void LogAdd()
         {
-            try { File.AppendAllText(@"autosave.soli", $"A\n"); }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            File.AppendAllText(@"autosave.soli", $"A\n");
+        }
+
+        public static void ExecuteSelect(Action<object, MouseButtonEventArgs> CardSelect, string[] args)
+        {
+            Image img = new() { Name = args[0] };
+            CardSelect(img,new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
+        }
+        public static void ExecuteMove(Action<object, MouseButtonEventArgs> ColumnClick, string[] args)
+        {
+            Grid grid = new() { Name = args[0] };
+            ColumnClick(grid, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
+        }
+        public static void ExecuteAdd(Action<object, MouseButtonEventArgs> NewCardsClick)
+        {
+            NewCardsClick(new Image(), new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
         }
     }
 }
