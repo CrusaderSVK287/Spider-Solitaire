@@ -14,8 +14,9 @@ namespace Spider_Solitaire
     {
         public readonly int Value;
         public readonly char Colour;
-        public bool Visible;
+        public bool Visible { get; set; }
         public Image Image;
+        private bool AnimationPlaying { get; set; } = false;
         public Card(int value, char colour, bool visible, int y, int x, int offset, MouseButtonEventHandler CardSelect)
         {
             Value = value;
@@ -46,16 +47,21 @@ namespace Spider_Solitaire
         //Moves the card up
         public async Task SelectedMove(int y, int cardOffset)
         {
+            if (AnimationPlaying == true) return;
+            AnimationPlaying = true;
             for (int i = 0; i < 15; i+=2)
             {
                 Image.Margin = new Thickness(0, y * cardOffset + 5 - i, 0, 0);
                 await Task.Delay(1);
             }
+            AnimationPlaying = false;
         }
 
         //Moves the card right, left and back
         public async Task InvalidMove(int y, int cardOffset)
         {
+            if (AnimationPlaying == true) return;
+            AnimationPlaying = true;
             for (int i = 0; i <= 20; i += 2)
             {
                 Image.Margin = new Thickness(i, y * cardOffset + 5, 0, 0);
@@ -71,6 +77,7 @@ namespace Spider_Solitaire
                 Image.Margin = new Thickness(i, y * cardOffset + 5, 0, 0);
                 await Task.Delay(2);
             }
+            AnimationPlaying = false;
         }
 
         public void GetColour()
