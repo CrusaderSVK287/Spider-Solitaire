@@ -252,5 +252,22 @@ namespace Spider_Solitaire
             if (game != null) NavigationService.Navigate(game);
             _destroy();
         }
+
+        private void RestartClick(object sender, RoutedEventArgs e)
+        {
+            if (AnimationPlaying || Selected.Count > 0) return;
+            MessageBoxResult result = MessageBox.Show("Are you sure? This action will reset the game to the starting point,\nthere is no going back",
+                "Information", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.No) return;
+            try
+            {
+                var Lines = File.ReadAllLines(@"autosave.soli");
+                File.WriteAllLines(@"autosave.soli", Lines.Take(105).ToArray());
+            }
+            catch (Exception ex) { MessageBox.Show(ex.ToString(), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning); }
+            Game game = new Game(_numberOfColours, false, _menu, _destroy);
+            if (game != null) NavigationService.Navigate(game);
+            _destroy();
+        }
     }
 }
