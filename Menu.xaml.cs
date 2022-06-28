@@ -20,6 +20,7 @@ namespace Spider_Solitaire
     /// </summary>
     public partial class Menu : Page
     {
+        public Game? game;
         public Menu()
         {
             InitializeComponent();
@@ -27,7 +28,7 @@ namespace Spider_Solitaire
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Game game = new Game(Convert.ToInt32(numOfColours.Text),true,this);
+            game = new Game(Convert.ToInt32(numOfColours.Text),true,this, DestroyGameReference);
             NavigationService.Navigate(game);
         }
 
@@ -45,7 +46,7 @@ namespace Spider_Solitaire
 
         private void Load_Click(object sender, RoutedEventArgs e)
         {
-            Game game = new Game(Convert.ToInt32(numOfColours.Text), false, this);
+            game = new Game(Convert.ToInt32(numOfColours.Text), false, this, DestroyGameReference);
             NavigationService.Navigate(game);
         }
 
@@ -53,6 +54,14 @@ namespace Spider_Solitaire
         {
             try { throw new NotImplementedException();}
             catch (Exception ex) { MessageBox.Show(ex.ToString(),"Warning",MessageBoxButton.OK,MessageBoxImage.Warning);}
+        }
+
+        private void DestroyGameReference()
+        {
+            if (game == null) return;
+            game.SolitaireGrid.Children.Clear();
+            game.SolitaireGrid = null;
+            game = null;
         }
     }
 }
