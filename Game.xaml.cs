@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,9 @@ namespace Spider_Solitaire
     {
         const int cardOffset = 20;  //used to render the cards apart from each other
         public Menu _menu;
+        public Action _destroy; //used as a delegate from menu.cs, destroys all references to current game for garbage collector to free the memory
+        public readonly int _numberOfColours;
+        public CommandType LastCommand { get; set; }
         public bool AnimationPlaying { get; set; } = false;   //used to track whether an animation is playing to avoid confusions
         public bool Loading { get; set; } = false;
         private List<Card> Selected { get; set; } = new(); //currenly selected card/s
@@ -30,11 +34,12 @@ namespace Spider_Solitaire
         int DecksSolved { get; set; } = 0;   //number of solved decks
 
         private Deck deck = new Deck();
-        public Game(int numberOfColours, bool isNewGame, Menu menu)
+        public Game(int numberOfColours, bool isNewGame, Menu menu, Action Destroy)
         {
             InitializeComponent();
+            KeepAlive = false;
             _menu = menu;
-
+            LastCommand = CommandType.select;
             if (isNewGame)
             {
                 deck.GenerateCards(numberOfColours);
@@ -48,6 +53,8 @@ namespace Spider_Solitaire
                 Deck.LoadCommands(CardSelect,ColumnClick,NewCardsClick);
                 Loading = false;
             }
+            _numberOfColours = numberOfColours;
+            _destroy = Destroy;
         }
 
         //Loads all cards that are being selected into a tmp list "Selected"
@@ -103,6 +110,7 @@ namespace Spider_Solitaire
                     item.Image.Margin = new Thickness(0, (deck.activeCards[column_index].IndexOf(item)+1) * cardOffset + 5,0,0);
                 }
                 if (!Loading) Command.LogCommand(new Command(CommandType.move, new string[] { column_index.ToString() }));
+                LastCommand = CommandType.move;
             }
             else
             {
@@ -188,6 +196,7 @@ namespace Spider_Solitaire
             }
             Refresh();
             AnimationPlaying = false;
+            LastCommand = CommandType.add;
         }
 
         //makes sure that all cards are up and the correct ones are being shown
@@ -219,9 +228,24 @@ namespace Spider_Solitaire
             }
         }
 
-        private void exit_Click(object sender, RoutedEventArgs e)
+        private void ExitClick(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(_menu);
+            _destroy();
+        }
+
+        private void BackClick(object sender, RoutedEventArgs e)
+        {
+            if (LastCommand == CommandType.select || AnimationPlaying || Selected.Count > 0) return;
+            try
+            {
+                var Lines = File.ReadAllLines(@"autosave.soli");
+                File.WriteAllLines(@"autosave.soli", Lines.Take(Lines.Length - (int)LastCommand).ToArray());
+            }
+            catch (Exception ex) { MessageBox.Show(ex.ToString(), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning); }
+            Game game = new Game(_numberOfColours, false, _menu, _destroy);
+            if (game != null) NavigationService.Navigate(game);
+            _destroy();
         }
     }
 }

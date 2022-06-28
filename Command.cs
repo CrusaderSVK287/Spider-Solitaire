@@ -10,15 +10,14 @@ using System.Windows.Input;
 
 namespace Spider_Solitaire
 {
-    enum CommandType
+    public enum CommandType
     {
-        select,
-        move,
-        add
+        select, //Used when cards are selected
+        add,    //Used when player adds new cards
+        move    //used when selected cards are moved to another pile
     }
     internal class Command
     {
-        private readonly MouseDevice? _mouseDevice;
         public readonly CommandType type;
         public string[]? args;
 
