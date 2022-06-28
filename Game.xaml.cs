@@ -124,7 +124,7 @@ namespace Spider_Solitaire
             IsDeckSolved();
             Refresh();
             SwichHitRegistration(true);
-            if (DecksSolved == 8) MessageBox.Show("Victory");
+            if (DecksSolved == 8) Victory();
         }
 
         private void IsDeckSolved()
@@ -226,6 +226,11 @@ namespace Spider_Solitaire
                     item.Image.IsHitTestVisible = hit;
                 }
             }
+        }
+        private void Victory()
+        {
+            if (File.Exists(@"autosave.soli")) File.Delete(@"autosave.soli");
+            MessageBox.Show("Victory");
         }
 
         private void ExitClick(object sender, RoutedEventArgs e)
