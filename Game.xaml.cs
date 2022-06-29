@@ -272,6 +272,29 @@ namespace Spider_Solitaire
 
         private void HintClick(object sender, RoutedEventArgs e)
         {
+            if (Selected.Count > 0 || AnimationPlaying) return;
+            //checks the last cards of each column accounting for colour
+            for (int i = 0; i < 10; i++)    //itterates through all the columns
+            {
+                if (deck.activeCards[i] == null) continue;
+                foreach (var item in deck.activeCards[i])   //itterates through the column itself
+                {
+                    if (item.Visible == false) continue;
+                    if (!CardMoveable(deck.activeCards[i], deck.activeCards[i].IndexOf(item))) continue;
+                    for (int j = 0; j < 10; j++)
+                    {
+                        if (deck.activeCards[j].Count == 0 || j == i) continue;
+                        if (deck.activeCards[j].Last().Value == item.Value + 1 &&
+                            deck.activeCards[j].Last().Colour == item.Colour)
+                        {
+                            ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            //checks the last cards of each volumn NOT accounting for colour
             for (int i = 0; i < 10; i++)    //itterates through all the columns
             {
                 if (deck.activeCards[i] == null) continue;
@@ -280,18 +303,6 @@ namespace Spider_Solitaire
 
                     if (item.Visible == false) continue;
                     if (!CardMoveable(deck.activeCards[i], deck.activeCards[i].IndexOf(item))) continue;
-                    //checks the last cards of each column accounting for colour
-                    for (int j = 0; j < 10; j++)
-                    {
-                        if (deck.activeCards[j].Count == 0 || j==i) continue;
-                        if (deck.activeCards[j].Last().Value == item.Value + 1 &&
-                            deck.activeCards[j].Last().Colour == item.Colour)
-                        {
-                            ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
-                            return;
-                        }
-                    }
-                    //checks the last cards of each volumn NOT accounting for colour
                     for (int j = 0; j < 10; j++)
                     {
                         if (deck.activeCards[j].Count == 0 || j == i) continue;
@@ -301,7 +312,18 @@ namespace Spider_Solitaire
                             return;
                         }
                     }
-                    //checks for columns with no cards
+                }
+            }
+
+            //checks for columns with no cards
+            for (int i = 0; i < 10; i++)    //itterates through all the columns
+            {
+                if (deck.activeCards[i] == null) continue;
+                foreach (var item in deck.activeCards[i])   //itterates through the column itself
+                {
+
+                    if (item.Visible == false) continue;
+                    if (!CardMoveable(deck.activeCards[i], deck.activeCards[i].IndexOf(item))) continue;
                     for (int j = 0; j < 10; j++)
                     {
                         if (deck.activeCards[j].Count == 0 && j!=i)
