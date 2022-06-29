@@ -270,9 +270,113 @@ namespace Spider_Solitaire
             _destroy();
         }
 
-        private async void HintClick(object sender, RoutedEventArgs e)
+        private void HintClick(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < 10; i++)    //itterates through all the columns
+            {
+                if (deck.activeCards[i] == null) continue;
+                foreach (var item in deck.activeCards[i])   //itterates through the column itself
+                {
+
+                    if (item.Visible == false) continue;
+                    if (!CardMoveable(deck.activeCards[i], deck.activeCards[i].IndexOf(item))) continue;
+                    //checks the last cards of each column accounting for colour
+                    for (int j = 0; j < 10; j++)
+                    {
+                        if (deck.activeCards[j].Count == 0 || j==i) continue;
+                        if (deck.activeCards[j].Last().Value == item.Value + 1 &&
+                            deck.activeCards[j].Last().Colour == item.Colour)
+                        {
+                            ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
+                            return;
+                        }
+                    }
+                    //checks the last cards of each volumn NOT accounting for colour
+                    for (int j = 0; j < 10; j++)
+                    {
+                        if (deck.activeCards[j].Count == 0 || j == i) continue;
+                        if (deck.activeCards[j].Last().Value == item.Value + 1)
+                        {
+                            ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
+                            return;
+                        }
+                    }
+                    //checks for columns with no cards
+                    for (int j = 0; j < 10; j++)
+                    {
+                        if (deck.activeCards[j].Count == 0 && j!=i)
+                        {
+                            ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        //determines whether the current card can be moved
+        private static bool CardMoveable(List<Card> pile,int startingIndex)
+        {
+            for (int i = startingIndex+1, sub = 1; i < pile.Count; i++, sub++)
+            {
+                if (pile[i].Colour != pile[startingIndex].Colour ||
+                    pile[i].Value != pile[startingIndex].Value - sub) return false;
+            }
+            return true;
+        }
+
+       /* for (int i = y+1, tmp=1; i<deck.activeCards[x].Count && valid; i++, tmp++)
+            {
+                if (deck.activeCards[x][y].Colour != deck.activeCards[x][i].Colour 
+                    || deck.activeCards[x][y].Value != deck.activeCards[x][i].Value + tmp) valid = false;
+            }*/
+
+
+    private async void ShowHintFrames(int columnIndex, int startingCardIndex, int destinationColumnIndex)
         {
             List<Image> hintFrames = new List<Image>();
+            for(int i = startingCardIndex; i < deck.activeCards[columnIndex].Count; i++)
+            {
+                Image image = new()
+                {
+                    Width = 95,
+                    Height = 120,
+                    Source = new BitmapImage(new Uri(@"assets/hint_frame.png", UriKind.Relative)),
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Stretch = Stretch.None,
+                    IsHitTestVisible = false,
+                    Margin = new Thickness(0, (i+1) * cardOffset + 2, 0, 0)
+                };
+                SolitaireGrid.Children.Add(image);
+                Grid.SetColumn(image, columnIndex+1);
+                hintFrames.Add(image);
+            }
+            hintFrames.Last().Height = 126;
+
+            Image imageTwo = new()
+            {
+                Width = 95,
+                Height = 126,
+                Source = new BitmapImage(new Uri(@"assets/hint_frame.png", UriKind.Relative)),
+                VerticalAlignment = VerticalAlignment.Top,
+                Stretch = Stretch.None,
+                IsHitTestVisible = false,
+                Margin = new Thickness(0, (deck.activeCards[destinationColumnIndex].Count+1) * cardOffset + 2, 0, 0)
+            };
+            SolitaireGrid.Children.Add(imageTwo);
+            Grid.SetColumn(imageTwo, destinationColumnIndex + 1);
+            hintFrames.Add(imageTwo);
+
+            for (int y = 0; y < 100 && Selected.Count == 0; y++) { await Task.Delay(50); }
+            foreach (var item in hintFrames)
+            {
+                if(item != null && SolitaireGrid != null)SolitaireGrid.Children.Remove(item);
+            }
+        }
+    }
+}
+
+/*          List<Image> hintFrames = new List<Image>();
             int i = 0;
             foreach(var item in deck.activeCards[3])
             {
@@ -297,7 +401,4 @@ namespace Spider_Solitaire
             foreach(var item in hintFrames)
             {
                 SolitaireGrid.Children.Remove(item);
-            }
-        }
-    }
-}
+            }*/
