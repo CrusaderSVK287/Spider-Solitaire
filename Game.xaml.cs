@@ -273,13 +273,30 @@ namespace Spider_Solitaire
         private async void HintClick(object sender, RoutedEventArgs e)
         {
             List<Image> hintFrames = new List<Image>();
+            int i = 0;
             foreach(var item in deck.activeCards[3])
             {
-                if(item.Visible == false) continue;
-                Image image = new Image();
-                image.Width = 95;
-                image.Height = 126;
-                image.Source = new BitmapImage(new Uri(@"assets/hint_frame.png", UriKind.Relative));
+                i++;
+                if (item.Visible == false) continue;
+                Image image = new()
+                {
+                    Width = 95,
+                    Height = 120,
+                    Source = new BitmapImage(new Uri(@"assets/hint_frame.png", UriKind.Relative)),
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Stretch = Stretch.None,
+                    IsHitTestVisible = false,
+                    Margin = new Thickness(0,i * cardOffset +2 ,0,0)
+                };
+                SolitaireGrid.Children.Add(image);
+                Grid.SetColumn(image, 4);
+                hintFrames.Add(image);
+            }
+            hintFrames.Last().Height = 126;
+            for(int y = 0; y < 100 && Selected.Count==0 ; y++) { await Task.Delay(50); }
+            foreach(var item in hintFrames)
+            {
+                SolitaireGrid.Children.Remove(item);
             }
         }
     }
