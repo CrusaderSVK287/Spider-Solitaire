@@ -61,6 +61,7 @@
     <None Remove="assets\9b.png" />
     <None Remove="assets\9c.png" />
     <None Remove="assets\9d.png" />
+    <None Remove="assets\hint_frame.png" />
     <None Remove="assets\uncovered.png" />
   </ItemGroup>
 
@@ -117,6 +118,7 @@
     <Resource Include="assets\9b.png" />
     <Resource Include="assets\9c.png" />
     <Resource Include="assets\9d.png" />
+    <Resource Include="assets\hint_frame.png" />
     <Resource Include="assets\uncovered.png" />
   </ItemGroup>
 

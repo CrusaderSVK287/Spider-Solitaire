@@ -264,10 +264,199 @@ namespace Spider_Solitaire
                 var Lines = File.ReadAllLines(@"autosave.soli");
                 File.WriteAllLines(@"autosave.soli", Lines.Take(105).ToArray());
             }
-            catch (Exception ex) { MessageBox.Show(ex.ToString(), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning); }
+            catch (Exception ex) { MessageBox.Show(ex.ToString(), "Restart", MessageBoxButton.OK, MessageBoxImage.Warning); }
             Game game = new Game(_numberOfColours, false, _menu, _destroy);
             if (game != null) NavigationService.Navigate(game);
             _destroy();
         }
+
+        private void HintClick(object sender, RoutedEventArgs e)
+        {
+            if (Selected.Count > 0 || AnimationPlaying) return;
+
+            //Parent = same color, value +1, Half-Parent = different color, value +1.
+            //internal method, checks whether a card doesnt already lay on it's "parent" card (e.g. 7A is under 8A),
+            //this is to prevent really unhelpfull hints
+
+            static bool LaysOnParentCard(List<Card> pile, Card child)
+            {
+                if (pile.Count < 2) return false;
+                Card? previous = Deck.PreviousCard(pile, child);
+                return previous != null && IsParent(child,previous);
+            }
+
+            static bool LaysOnHalfParentCard(List<Card> pile, Card child)
+            {
+                if (pile.Count < 2) return false;
+                Card? previous = Deck.PreviousCard(pile, child);
+                return previous != null && IsHalfParent(child, previous);
+            }
+
+            static bool IsParent(Card child, Card parent)
+            {
+                return child.Colour==parent.Colour && child.Value == parent.Value-1;
+            }
+
+            static bool IsHalfParent(Card child, Card parent)
+            {
+                return child.Value == parent.Value - 1;
+            }
+
+            //checks the last cards of each column accounting for colour
+            for (int i = 0; i < 10; i++)    //itterates through all the columns
+            {
+                if (deck.activeCards[i] == null) continue;
+                foreach (var item in deck.activeCards[i])   //itterates through the column itself
+                {
+                    if (item.Visible == false) continue;
+                    if (!CardMoveable(deck.activeCards[i], deck.activeCards[i].IndexOf(item))) continue;
+                    for (int j = 0; j < 10; j++)
+                    {
+                        if (deck.activeCards[j].Count == 0 || j == i) continue;
+                        if (deck.activeCards[j].Last().Value == item.Value + 1 &&
+                            deck.activeCards[j].Last().Colour == item.Colour)
+                        {
+                            if (LaysOnParentCard(deck.activeCards[i], item)) goto EndOfForeachLoopOne;
+                            ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
+                            return;
+                        }
+                    }
+                }
+                EndOfForeachLoopOne:;
+            }
+
+            //checks the last cards of each volumn NOT accounting for colour
+            for (int i = 0; i < 10; i++)    //itterates through all the columns
+            {
+                if (deck.activeCards[i] == null) continue;
+                foreach (var item in deck.activeCards[i])   //itterates through the column itself
+                {
+
+                    if (item.Visible == false) continue;
+                    if (!CardMoveable(deck.activeCards[i], deck.activeCards[i].IndexOf(item))) continue;
+                    for (int j = 0; j < 10; j++)
+                    {
+                        if (deck.activeCards[j].Count == 0 || j == i) continue;
+                        if (deck.activeCards[j].Last().Value == item.Value + 1)
+                        {
+                            if (LaysOnParentCard(deck.activeCards[i], item) || 
+                                (LaysOnHalfParentCard(deck.activeCards[i],item) && IsHalfParent(item,deck.activeCards[j].Last()))
+                                ) goto EndOfForeachLoopTwo;
+                            ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
+                            return;
+                        }
+                    }
+                }
+                EndOfForeachLoopTwo:;
+            }
+
+            //checks for columns with no cards
+            for (int i = 0; i < 10; i++)    //itterates through all the columns
+            {
+                if (deck.activeCards[i] == null) continue;
+                foreach (var item in deck.activeCards[i])   //itterates through the column itself
+                {
+
+                    if (item.Visible == false) continue;
+                    if (!CardMoveable(deck.activeCards[i], deck.activeCards[i].IndexOf(item))) continue;
+                    for (int j = 0; j < 10; j++)
+                    {
+                        if (deck.activeCards[j].Count == 0 && j!=i)
+                        {
+                            ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            //check whether the player can add new cards
+            if(NewCardNumber <= 5)
+            {
+                ShowHintFrames(NewCardNumber);
+                return;
+            }
+
+            //no possible meaningfull move was found
+            MessageBoxResult result = MessageBox.Show("No more possible moves found, consider taking a few steps back,\nrestarting the game or starting a new game.\n\nWould you like to restart the game with the same deck?"
+                , "No more moves",MessageBoxButton.YesNo,MessageBoxImage.Information);
+            if(result == MessageBoxResult.Yes) RestartClick(new Image(), new RoutedEventArgs());
+        }
+
+        //determines whether the current card can be moved
+        private static bool CardMoveable(List<Card> pile,int startingIndex)
+        {
+            for (int i = startingIndex+1, sub = 1; i < pile.Count; i++, sub++)
+            {
+                if (pile[i].Colour != pile[startingIndex].Colour ||
+                    pile[i].Value != pile[startingIndex].Value - sub) return false;
+            }
+            return true;
+        }
+
+    private async void ShowHintFrames(int columnIndex, int startingCardIndex, int destinationColumnIndex)
+        {
+            List<Image> hintFrames = new List<Image>();
+            for(int i = startingCardIndex; i < deck.activeCards[columnIndex].Count; i++)
+            {
+                Image image = new()
+                {
+                    Width = 95,
+                    Height = 120,
+                    Source = new BitmapImage(new Uri(@"assets/hint_frame.png", UriKind.Relative)),
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Stretch = Stretch.None,
+                    IsHitTestVisible = false,
+                    Margin = new Thickness(0, (i+1) * cardOffset + 2, 0, 0)
+                };
+                SolitaireGrid.Children.Add(image);
+                Grid.SetColumn(image, columnIndex+1);
+                hintFrames.Add(image);
+            }
+            hintFrames.Last().Height = 126;
+
+            int yMargin = (deck.activeCards[destinationColumnIndex].Count == 0) ? 1 : deck.activeCards[destinationColumnIndex].Count;
+            Image imageTwo = new()
+            {
+                Width = 95,
+                Height = 126,
+                Source = new BitmapImage(new Uri(@"assets/hint_frame.png", UriKind.Relative)),
+                VerticalAlignment = VerticalAlignment.Top,
+                Stretch = Stretch.None,
+                IsHitTestVisible = false,
+                Margin = new Thickness(0, yMargin * cardOffset + 2, 0, 0)
+            };
+            SolitaireGrid.Children.Add(imageTwo);
+            Grid.SetColumn(imageTwo, destinationColumnIndex + 1);
+            hintFrames.Add(imageTwo);
+
+            for (int y = 0; y < 100 && Selected.Count == 0 && !AnimationPlaying; y++) { await Task.Delay(25); }
+            foreach (var item in hintFrames)
+            {
+                if(item != null && SolitaireGrid != null)SolitaireGrid.Children.Remove(item);
+            }
+        }
+
+        private async void ShowHintFrames(int newCardNumber)
+        {
+            Image image = new()
+            {
+                Width = 95,
+                Height = 126,
+                Source = new BitmapImage(new Uri(@"assets/hint_frame.png", UriKind.Relative)),
+                VerticalAlignment = VerticalAlignment.Top,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Stretch = Stretch.None,
+                IsHitTestVisible = false,
+                Margin = new Thickness((-5*(5-newCardNumber))-3, 0, 0, 0)
+            };
+            SolitaireGrid.Children.Add(image);
+            Grid.SetColumn(image, 10);
+            Grid.SetRow(image, 1);
+
+            for (int y = 0; y < 100 && Selected.Count == 0 && !AnimationPlaying; y++) { await Task.Delay(25); }
+            if (image != null && SolitaireGrid != null) SolitaireGrid.Children.Remove(image);
+        }
+
     }
 }

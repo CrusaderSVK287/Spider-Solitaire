@@ -124,6 +124,19 @@ namespace Spider_Solitaire
             if (cardNum < 54) await LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect, Loading);
         }
 
+        //returnes a Card one index before the input
+        public static Card? PreviousCard(List<Card> pile, Card input)
+        {
+            if (pile.Count < 2) return null;
+            Card previous = pile[0];
+            for (int i = 1; i < pile.Count; i++)
+            {
+                if(pile[i].Equals(input)) return previous;
+                previous = pile[i];
+            }
+            return null;
+        }
+
         //loads the currently saved deck, if there is any
         public void LoadDeck()
         {
