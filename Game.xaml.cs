@@ -269,5 +269,18 @@ namespace Spider_Solitaire
             if (game != null) NavigationService.Navigate(game);
             _destroy();
         }
+
+        private async void HintClick(object sender, RoutedEventArgs e)
+        {
+            List<Image> hintFrames = new List<Image>();
+            foreach(var item in deck.activeCards[3])
+            {
+                if(item.Visible == false) continue;
+                Image image = new Image();
+                image.Width = 95;
+                image.Height = 126;
+                image.Source = new BitmapImage(new Uri(@"assets/hint_frame.png", UriKind.Relative));
+            }
+        }
     }
 }
