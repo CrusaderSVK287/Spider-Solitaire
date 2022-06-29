@@ -352,7 +352,7 @@ namespace Spider_Solitaire
                 hintFrames.Add(image);
             }
             hintFrames.Last().Height = 126;
-
+            
             Image imageTwo = new()
             {
                 Width = 95,
@@ -361,7 +361,7 @@ namespace Spider_Solitaire
                 VerticalAlignment = VerticalAlignment.Top,
                 Stretch = Stretch.None,
                 IsHitTestVisible = false,
-                Margin = new Thickness(0, (deck.activeCards[destinationColumnIndex].Count+1) * cardOffset + 2, 0, 0)
+                Margin = new Thickness(0, (deck.activeCards[destinationColumnIndex].Count) * cardOffset + 2, 0, 0)
             };
             SolitaireGrid.Children.Add(imageTwo);
             Grid.SetColumn(imageTwo, destinationColumnIndex + 1);
