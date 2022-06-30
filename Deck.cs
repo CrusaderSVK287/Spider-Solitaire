@@ -132,7 +132,7 @@ namespace Spider_Solitaire
         public async Task LayOutStartingCardsRecursive(int cardOffset, Grid SolitaireGrid, MouseButtonEventHandler CardSelect, bool Loading)
         {
             int index = cardNum % 10;
-            Card card = new (values[cardNum], colors[cardNum], (cardNum <= 43) ? /*false*/false : true, 
+            Card card = new (values[cardNum], colors[cardNum], (cardNum <= 43) ? false : true, 
                 activeCards[index].Count+1,index, cardOffset, CardSelect);
             if (card == null) return;
             activeCards[index].Add(card);
@@ -183,8 +183,8 @@ namespace Spider_Solitaire
         }
 
         public static void LoadCommands(Action<object, MouseButtonEventArgs> CardSelect,
-                                 Action<object,MouseButtonEventArgs> ColumnClick,
-                                 Action<object,MouseButtonEventArgs> NewCardsClick)
+                                        Action<object, MouseButtonEventArgs> ColumnClick,
+                                        Action<object, MouseButtonEventArgs> NewCardsClick)
         {
             try
             {
@@ -194,7 +194,7 @@ namespace Spider_Solitaire
                     if (++line <= 105) continue;
                     switch (item[0])
                     {
-                        case 'S': Command.ExecuteSelect(CardSelect, new string[] { $"{item[1]}{item[2]}" });
+                        case 'S': Command.ExecuteSelect(CardSelect, new string[] { item[1..] });
                             break;
                         case 'M': Command.ExecuteMove(ColumnClick, new string[] { $"col{item[1]}" });
                             break;

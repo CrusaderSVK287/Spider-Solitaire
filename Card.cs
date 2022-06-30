@@ -48,7 +48,16 @@ namespace Spider_Solitaire
             string name = "";   //first letter, lowercase, indicates which column index wise the image is at, and the second one, uppercase
                                 //indicates on which position y wise the image (card) is
             name += (char)(x + 97); //index == x
-            name += (char)(y + 64);
+
+            char a = (char)(y + 64);
+            char b = 'A';
+            while(a > 'Z')
+            {
+                a -= (char)26;
+                b++;
+            }
+            name+=$"{a}{b}";
+
             Image.Name = name;
         }
 
