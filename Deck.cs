@@ -86,7 +86,7 @@ namespace Spider_Solitaire
                 }
             }
 
-            //6 or more of the same values of cards in the same row (starting from the first row, fifth card)
+            //5 or more of the same values of cards in the same row (starting from the first row, fifth card)
             for (int i = 4; i < 8 * 13; i += 10)  //jumps from line to line
             {
                 for (int j = i; j < i + 5; j++)  //itterates thrugh current line 
@@ -96,7 +96,7 @@ namespace Spider_Solitaire
                     {
                         if (values[k] == values[j]) count++;
                     }
-                    if (count > 5) return false;
+                    if (count > 4) return false;
                 }
             }
 
@@ -106,6 +106,25 @@ namespace Spider_Solitaire
                 if(values[i]==13) count++;
                 if(count > 3) return false;
             }
+
+            //at least 4 different values in one line after 54th card
+            for (int i = 54; i < 8*13; i+=10)
+            {
+                int[] cardValues = new int[10];
+                for (int j = i, index=0; j < i+10; j++,index++)
+                {
+                    cardValues[index] = values[j];
+                }
+                Array.Sort(cardValues);
+                int n = 1;
+                for (int j = 0; j < 9; j++)
+                {
+                    if (cardValues[j] != cardValues[j + 1]) n++;
+                }
+                if (n < 4) return false;
+            }
+
+
             return true;
         }
 

@@ -457,6 +457,5 @@ namespace Spider_Solitaire
             for (int y = 0; y < 100 && Selected.Count == 0 && !AnimationPlaying; y++) { await Task.Delay(25); }
             if (image != null && SolitaireGrid != null) SolitaireGrid.Children.Remove(image);
         }
-
     }
 }
