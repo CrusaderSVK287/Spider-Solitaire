@@ -63,6 +63,14 @@ namespace Spider_Solitaire
             if (deck.activeCards == null || Selected.Count > 0) return;
             int x = ((Image)sender).Name[0] - 97;
             int y = ((Image)sender).Name[1] - 65;
+
+            char n = ((Image)sender).Name[2];
+            while (n > 'A')
+            {
+                y += 26;    //-64 so it's not 65-65=0 in case of 'A'
+                n--;
+            }
+            
             bool valid = deck.activeCards[x][y].Visible;
             for (int i = y+1, tmp=1; i < deck.activeCards[x].Count && valid; i++, tmp++)
             {
@@ -101,7 +109,15 @@ namespace Spider_Solitaire
                 {
                     string name = "";
                     name += (char)(column_index + 97);
-                    name += (char)(deck.activeCards[column_index].IndexOf(item) + 65);
+                    char a = (char)(deck.activeCards[column_index].IndexOf(item) + 65);
+                    char b = 'A';
+                    while (a > 'Z')
+                    {
+                        a -= (char)26;
+                        b++;
+                    }
+                    name += $"{a}{b}";
+
                     item.Image.Name = name;
                 }
                 foreach(var item in deck.activeCards[column_index])
