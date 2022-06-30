@@ -282,14 +282,14 @@ namespace Spider_Solitaire
             {
                 if (pile.Count < 2) return false;
                 Card? previous = Deck.PreviousCard(pile, child);
-                return previous != null && IsParent(child,previous);
+                return previous != null && previous.Visible && IsParent(child,previous);
             }
 
             static bool LaysOnHalfParentCard(List<Card> pile, Card child)
             {
                 if (pile.Count < 2) return false;
                 Card? previous = Deck.PreviousCard(pile, child);
-                return previous != null && IsHalfParent(child, previous);
+                return previous != null && previous.Visible && IsHalfParent(child, previous);
             }
 
             static bool IsParent(Card child, Card parent)
@@ -353,7 +353,8 @@ namespace Spider_Solitaire
             //checks for columns with no cards
             for (int i = 0; i < 10; i++)    //itterates through all the columns
             {
-                if (deck.activeCards[i] == null) continue;
+                if (deck.activeCards[i] == null || deck.activeCards[i].Count==0) continue;
+                if (CardMoveable(deck.activeCards[i], 0)) continue;
                 foreach (var item in deck.activeCards[i])   //itterates through the column itself
                 {
 
@@ -378,7 +379,7 @@ namespace Spider_Solitaire
             }
 
             //no possible meaningfull move was found
-            MessageBoxResult result = MessageBox.Show("No more possible moves found, consider taking a few steps back,\nrestarting the game or starting a new game.\n\nWould you like to restart the game with the same deck?"
+            MessageBoxResult result = MessageBox.Show("No more possible meaningfull moves found, consider taking a few steps back,\nrestarting the game or starting a new game.\n\nWould you like to restart the game with the same deck?"
                 , "No more moves",MessageBoxButton.YesNo,MessageBoxImage.Information);
             if(result == MessageBoxResult.Yes) RestartClick(new Image(), new RoutedEventArgs());
         }
