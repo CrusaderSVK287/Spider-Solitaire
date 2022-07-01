@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
+using System.Diagnostics;
 
 namespace Spider_Solitaire
 {
@@ -26,42 +28,68 @@ namespace Spider_Solitaire
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            game = new Game(Convert.ToInt32(numOfColours.Text),true,this, DestroyGameReference);
-            NavigationService.Navigate(game);
-        }
-
-        private void TextBlock_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (Convert.ToInt16(numOfColours.Text) >= 4) return;
-            numOfColours.Text = (Convert.ToInt16(numOfColours.Text) * 2).ToString();
-        }
-
-        private void TextBlock_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (Convert.ToInt16(numOfColours.Text) <= 1) return;
-            numOfColours.Text = (Convert.ToInt16(numOfColours.Text) / 2).ToString();
-        }
-
-        private void Load_Click(object sender, RoutedEventArgs e)
-        {
-            game = new Game(Convert.ToInt32(numOfColours.Text), false, this, DestroyGameReference);
-            NavigationService.Navigate(game);
-        }
-
-        private void settings_Click(object sender, RoutedEventArgs e)
-        {
-            try { throw new NotImplementedException();}
-            catch (Exception ex) { MessageBox.Show(ex.ToString(),"Warning",MessageBoxButton.OK,MessageBoxImage.Warning);}
-        }
-
         private void DestroyGameReference()
         {
             if (game == null) return;
             game.SolitaireGrid.Children.Clear();
             game.SolitaireGrid = null;
             game = null;
+        }
+
+        private void OneSuiteNewGameClick(object sender, RoutedEventArgs e)
+        {
+            StartGame(1, true);
+        }
+
+        private void TwoSuiteNewGameClick(object sender, RoutedEventArgs e)
+        {
+            StartGame(2, true);
+        }
+
+        private void FourSuiteNewGameClick(object sender, RoutedEventArgs e)
+        {
+            StartGame(4, true);
+        }
+
+        private void LoadGameClick(object sender, RoutedEventArgs e)
+        {
+            if (File.Exists(@"autosave.soli")) StartGame(-1, false);
+            else
+            {
+                Load.IsEnabled = false;
+                MessageBox.Show("The save file is missing.","Warning",MessageBoxButton.OK,MessageBoxImage.Exclamation);
+            }
+        }
+
+        private void StartGame(int numberOfSuits, bool isNewGame)
+        {
+            game = new Game(numberOfSuits, isNewGame, this, DestroyGameReference);
+            NavigationService.Navigate(game);
+        }
+
+        private void MenuLoaded(object sender, RoutedEventArgs e)
+        {
+            Load.IsEnabled = File.Exists(@"autosave.soli");
+        }
+
+        private void HowToPlayClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void StatsClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void GitHubClick(object sender, RoutedEventArgs e)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "https://github.com/CrusaderSVK287/Spider-Solitaire",
+                UseShellExecute = true
+            };
+            Process.Start(psi);
         }
     }
 }

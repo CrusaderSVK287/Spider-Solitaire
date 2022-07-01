@@ -14,6 +14,7 @@
         ResizeMode="CanResizeWithGrip"
         AllowsTransparency="True"
         >
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -22,16 +23,35 @@
         <Grid Grid.Row="0" 
               Background="Black"
               MouseLeftButtonDown="DragWindow">
-            <TextBlock Text="test" Foreground="White"/>
-            <Button Content="EXIT" 
-                    HorizontalAlignment="Left" 
-                    Margin="1070,0,0,0" 
-                    FontSize="15" 
-                    Width="50"
+            <Button Content="X" 
+                    Foreground="White"
+                    HorizontalAlignment="Right"
+                    FontWeight="Medium"
+                    Margin="0,0,0,0" 
+                    FontSize="15"
                     Name="ExitButton"
                     Click="ExitButtonClick"
-                    Height="30"
-                    VerticalAlignment="Top"/>
+                    VerticalAlignment="Top">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="Black"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Red"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="30" Height="30"
+                                Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
         </Grid>
         <Frame Grid.Row="1" Name="SolitaireFrame" Source="Menu.xaml" NavigationUIVisibility="Hidden"/>
     </Grid>

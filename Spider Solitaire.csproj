@@ -63,6 +63,9 @@
     <None Remove="assets\9d.png" />
     <None Remove="assets\greenbg.png" />
     <None Remove="assets\hint_frame.png" />
+    <None Remove="assets\Logo.png" />
+    <None Remove="assets\menuLogo.png" />
+    <None Remove="assets\star.png" />
     <None Remove="assets\uncovered.png" />
   </ItemGroup>
 
@@ -121,6 +124,9 @@
     <Resource Include="assets\9d.png" />
     <Resource Include="assets\greenbg.png" />
     <Resource Include="assets\hint_frame.png" />
+    <Resource Include="assets\Logo.png" />
+    <Resource Include="assets\menuLogo.png" />
+    <Resource Include="assets\star.png" />
     <Resource Include="assets\uncovered.png" />
   </ItemGroup>
 
