@@ -8,7 +8,14 @@
       d:DesignHeight="800" d:DesignWidth="1150"
       Title="Menu" MinWidth="1000" MinHeight="600">
 
-    <Grid Background="DarkGreen">
+    <Grid>
+        <Grid.Background>
+            <ImageBrush>
+                <ImageBrush.ImageSource>
+                    <BitmapImage UriSource="assets/greenbg.png"/>
+                </ImageBrush.ImageSource>
+            </ImageBrush>
+        </Grid.Background>
         <TextBlock Text="TEST"/>
         <Button Content="PLAY TEST" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click" Name="play"/>
         <Button Content="LOAD" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Load_Click" Name="load" Margin="0,150,0,0"/>

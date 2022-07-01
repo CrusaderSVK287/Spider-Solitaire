@@ -23,5 +23,15 @@ namespace Spider_Solitaire
         {
             InitializeComponent();
         }
+
+        private void DragWindow(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
+
+        private void ExitButtonClick(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

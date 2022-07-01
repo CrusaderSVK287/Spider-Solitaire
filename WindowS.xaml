@@ -5,8 +5,34 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Spider_Solitaire"
         mc:Ignorable="d"
-        Title="Spider Solitaire" Height="800" Width="1150" MinWidth="1000" MinHeight="700">
+        Title="Spider Solitaire"
+        Height="800"
+        Width="1150"
+        MinWidth="1000"
+        MinHeight="700"
+        WindowStyle="None"
+        ResizeMode="CanResizeWithGrip"
+        AllowsTransparency="True"
+        >
     <Grid>
-        <Frame Name="SolitaireFrame" Source="Menu.xaml" NavigationUIVisibility="Hidden"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" 
+              Background="Black"
+              MouseLeftButtonDown="DragWindow">
+            <TextBlock Text="test" Foreground="White"/>
+            <Button Content="EXIT" 
+                    HorizontalAlignment="Left" 
+                    Margin="1070,0,0,0" 
+                    FontSize="15" 
+                    Width="50"
+                    Name="ExitButton"
+                    Click="ExitButtonClick"
+                    Height="30"
+                    VerticalAlignment="Top"/>
+        </Grid>
+        <Frame Grid.Row="1" Name="SolitaireFrame" Source="Menu.xaml" NavigationUIVisibility="Hidden"/>
     </Grid>
 </Window>

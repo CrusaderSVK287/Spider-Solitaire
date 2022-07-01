@@ -272,8 +272,8 @@ namespace Spider_Solitaire
         private void RestartClick(object sender, RoutedEventArgs e)
         {
             if (AnimationPlaying || Selected.Count > 0) return;
-            MessageBoxResult result = MessageBox.Show("Are you sure? This action will reset the game to the starting point,\nthere is no going back",
-                "Information", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            MessageBoxResult result = MessageBox.Show("This action will reset the game to the starting point,\nthere is no going back",
+                "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.No) return;
             try
             {
