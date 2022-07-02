@@ -95,7 +95,7 @@ namespace Spider_Solitaire
             }
         }
 
-        private void ColumnClick(object sender, MouseButtonEventArgs e)
+        private async void ColumnClick(object sender, MouseButtonEventArgs e)
         {
             if (Selected == null || Selected.Count == 0) return;
             int column_index = ((Grid)sender).Name[3] - '0';
@@ -138,14 +138,16 @@ namespace Spider_Solitaire
                 }
             }
             Selected.Clear();
-            IsDeckSolved();
+            await IsDeckSolved();
             Refresh();
             SwichHitRegistration(true);
             if (DecksSolved == 8) Victory();
         }
 
-        private void IsDeckSolved()
+        private async Task IsDeckSolved()
         {
+            while(AnimationPlaying) {if(!Loading) await Task.Delay(1); }
+            AnimationPlaying = true;
             for (int i = 0; i < 10; i++) //iterates through all columns
             {
                 foreach (var item in deck.activeCards[i])
@@ -158,9 +160,11 @@ namespace Spider_Solitaire
                     {
                         if (deck.activeCards[i][j].Value != value || deck.activeCards[i][j].Colour != item.Colour) goto EndOfForeachLoop;
                     }
-                    for (int j = index; j < deck.activeCards[i].Count; j++)
+
+                    for (int j = deck.activeCards[i].Count-1; j >= index; j--)
                     {
-                        deck.activeCards[i][j].Image.Visibility = Visibility.Hidden;
+                        if(!Loading)await Task.Delay(25);
+                        SolitaireGrid.Children.Remove(deck.activeCards[i][j].Image);
                     }
 
                     Image Image = new Image
@@ -179,10 +183,12 @@ namespace Spider_Solitaire
 
                     deck.activeCards[i].RemoveRange(index, 13); //13 cards in full set
                     DecksSolved++;
+                    AnimationPlaying = false;
                     return;
                 }
             EndOfForeachLoop:;
             }
+            AnimationPlaying = false;
         }
 
         public async void NewCardsClick(object sender, MouseButtonEventArgs e)
@@ -412,7 +418,7 @@ namespace Spider_Solitaire
             return true;
         }
 
-    private async void ShowHintFrames(int columnIndex, int startingCardIndex, int destinationColumnIndex)
+        private async void ShowHintFrames(int columnIndex, int startingCardIndex, int destinationColumnIndex)
         {
             List<Image> hintFrames = new List<Image>();
             for(int i = startingCardIndex; i < deck.activeCards[columnIndex].Count; i++)
@@ -476,6 +482,7 @@ namespace Spider_Solitaire
             if (image != null && SolitaireGrid != null) SolitaireGrid.Children.Remove(image);
         }
 
+        //Lays out the dark green outlines
         private void LayOutCardOutlines()
         {
             for (int i = 0; i < 10; i++)
@@ -496,6 +503,8 @@ namespace Spider_Solitaire
             }
         }
 
+
+        //handles the button changing background
         private async void SPButtons_MouseEnter(object sender, MouseEventArgs e)
         {
             while(SPButtons.IsMouseOver == true)
