@@ -11,14 +11,16 @@
         Width="1150"
         MinWidth="1000"
         MinHeight="700"
-        WindowStyle="None"
-        AllowsTransparency="True"
+        WindowStyle="SingleBorderWindow"
         WindowStartupLocation="CenterScreen"
         WindowState="Normal"
     >
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0"
-                      ResizeBorderThickness="5"/>
+                      ResizeBorderThickness="5"
+                      CornerRadius="0"
+                      GlassFrameThickness="0"
+                      UseAeroCaptionButtons="True"/>
     </WindowChrome.WindowChrome>
 
     <Border BorderBrush="Black" BorderThickness="2" CornerRadius="0">
