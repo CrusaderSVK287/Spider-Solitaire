@@ -23,16 +23,23 @@ namespace Spider_Solitaire
         public WindowS()
         {
             InitializeComponent();
+            MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
+            MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth;
         }
 
         private void DragWindow(object sender, MouseButtonEventArgs e)
         {
+            if(e.ClickCount > 1) MinMaxClick(new Button(),new RoutedEventArgs());
             DragMove();
         }
 
         private void ExitButtonClick(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+        private void MinMaxClick(object sender, RoutedEventArgs e)
+        {
+            WindowState = (WindowState == WindowState.Normal)? WindowState.Maximized : WindowState.Normal;
         }
     }
 }
