@@ -40,6 +40,7 @@ namespace Spider_Solitaire
             KeepAlive = false;
             _menu = menu;
             LastCommand = CommandType.select;
+            LayOutCardOutlines();
             if (isNewGame)
             {
                 deck.GenerateCards(numberOfColours);
@@ -473,6 +474,39 @@ namespace Spider_Solitaire
 
             for (int y = 0; y < 100 && Selected.Count == 0 && !AnimationPlaying; y++) { await Task.Delay(25); }
             if (image != null && SolitaireGrid != null) SolitaireGrid.Children.Remove(image);
+        }
+
+        private void LayOutCardOutlines()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Image image = new()
+                {
+                    Width = 89,
+                    Height = 120,
+                    Source = new BitmapImage(new Uri(@"assets/card_outline.png", UriKind.Relative)),
+                    VerticalAlignment = VerticalAlignment.Top,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Stretch = Stretch.None,
+                    IsHitTestVisible = false,
+                    Margin = new Thickness(0, cardOffset + 5, 0, 0)
+                };
+                SolitaireGrid.Children.Add(image);
+                Grid.SetColumn(image, i + 1);
+            }
+        }
+
+        private async void SPButtons_MouseEnter(object sender, MouseEventArgs e)
+        {
+            while(SPButtons.IsMouseOver == true)
+            {
+                if (Exit.IsMouseOver == true) InformationBox.Text = "Exit";
+                else if (Restart.IsMouseOver == true) InformationBox.Text = "Restart";
+                else if (Back.IsMouseOver == true) InformationBox.Text = "Undo";
+                else if (Hint.IsMouseOver == true) InformationBox.Text = "Hint";
+                await Task.Delay(50);
+            }
+            InformationBox.Text = " ";
         }
     }
 }
