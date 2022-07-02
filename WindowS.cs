@@ -37,9 +37,28 @@ namespace Spider_Solitaire
         {
             Close();
         }
+
+        private void MinimizeButtonClick(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
         private void MinMaxClick(object sender, RoutedEventArgs e)
         {
-            WindowState = (WindowState == WindowState.Normal)? WindowState.Maximized : WindowState.Normal;
+            if (WindowState == WindowState.Normal)
+            {
+                WindowState = WindowState.Maximized;
+                MinMaxButton.Content = "🗗";
+            }
+            else
+            {
+                WindowState = WindowState.Normal;
+                MinMaxButton.Content = "🗖";
+            }
+        }
+
+        private void SettingsClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Not yet implemented", "Warning", MessageBoxButton.OK, MessageBoxImage.Stop);
         }
     }
 }

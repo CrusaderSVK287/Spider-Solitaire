@@ -20,6 +20,7 @@
         <WindowChrome CaptionHeight="0"
                       ResizeBorderThickness="5"/>
     </WindowChrome.WindowChrome>
+
     <Border BorderBrush="Black" BorderThickness="2" CornerRadius="0">
         <Grid>
             <Grid.RowDefinitions>
@@ -29,10 +30,9 @@
             <Grid Grid.Row="0" 
               Background="Black"
               MouseLeftButtonDown="DragWindow">
-                <Button Content="X" 
+                <Button Content="✕" 
                     Foreground="White"
                     HorizontalAlignment="Right"
-                    FontWeight="Medium"
                     Margin="0,0,0,0" 
                     FontSize="15"
                     Name="ExitButton"
@@ -59,10 +59,9 @@
                     </Button.Template>
                 </Button>
 
-                <Button Content="_" 
+                <Button Content="🗖" 
                     Foreground="White"
                     HorizontalAlignment="Right"
-                    FontWeight="Medium"
                     Margin="0,0,30,0" 
                     FontSize="15"
                     Name="MinMaxButton"
@@ -72,7 +71,7 @@
                             <Setter Property="Background" Value="Black"/>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="Red"/>
+                                    <Setter Property="Background" Value="Gray"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -80,6 +79,63 @@
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Border Width="30" Height="30"
+                                Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Button Content="🗕" 
+                    Foreground="White"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,60,0" 
+                    FontSize="15"
+                    Name="MinimizeButton"
+                    Click="MinimizeButtonClick"
+                    VerticalAlignment="Top">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="Black"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Gray"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Button Content="Settings ⚙" 
+                    Foreground="White"
+                    HorizontalAlignment="Left"
+                    Margin="10,0,0,0" 
+                    FontSize="15"
+                    Name="SettingsButton"
+                    Click="SettingsClick">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="Black"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Gray"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="100" Height="30"
                                 Background="{TemplateBinding Background}">
                                 <ContentPresenter VerticalAlignment="Center"
                                               HorizontalAlignment="Center"/>
