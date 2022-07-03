@@ -5,8 +5,148 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Spider_Solitaire"
         mc:Ignorable="d"
-        Title="Spider Solitaire" Height="800" Width="1150" MinWidth="1000" MinHeight="700">
-    <Grid>
-        <Frame Name="SolitaireFrame" Source="Menu.xaml" NavigationUIVisibility="Hidden"/>
-    </Grid>
+        Title="Spider Solitaire"
+        Name="MainWindow"
+        Height="800"
+        Width="1150"
+        MinWidth="1000"
+        MinHeight="700"
+        WindowStyle="SingleBorderWindow"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Normal"
+    >
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0"
+                      ResizeBorderThickness="5"
+                      CornerRadius="0"
+                      GlassFrameThickness="0"
+                      UseAeroCaptionButtons="True"/>
+    </WindowChrome.WindowChrome>
+
+    <Border BorderBrush="Black" BorderThickness="2" CornerRadius="0">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" 
+              Background="Black"
+              MouseLeftButtonDown="DragWindow">
+                <Button Content="✕" 
+                    Foreground="White"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,0,0" 
+                    FontSize="15"
+                    Name="ExitButton"
+                    Click="ExitButtonClick"
+                    VerticalAlignment="Top">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="Black"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Red"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Button Content="🗖" 
+                    Foreground="White"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,30,0" 
+                    FontSize="15"
+                    Name="MinMaxButton"
+                    Click="MinMaxClick">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="Black"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Gray"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Button Content="🗕" 
+                    Foreground="White"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,60,0" 
+                    FontSize="15"
+                    Name="MinimizeButton"
+                    Click="MinimizeButtonClick"
+                    VerticalAlignment="Top">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="Black"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Gray"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="30" Height="30"
+                                Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Button Content="Settings ⚙" 
+                    Foreground="White"
+                    HorizontalAlignment="Left"
+                    Margin="10,0,0,0" 
+                    FontSize="15"
+                    Name="SettingsButton"
+                    Click="SettingsClick">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="Black"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Gray"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Width="100" Height="30"
+                                Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+            <Frame Grid.Row="1" Name="SolitaireFrame" Source="Menu.xaml" NavigationUIVisibility="Hidden"/>
+        </Grid>
+    </Border>
 </Window>

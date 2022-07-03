@@ -8,7 +8,10 @@
       d:DesignHeight="800" d:DesignWidth="1150"
       Title="Game" MinWidth="1000" MinHeight="650">
 
-    <Grid Background="DarkGreen" Name="SolitaireGrid">
+    <Grid Name="SolitaireGrid">
+        <Grid.Background>
+            <ImageBrush ImageSource="assets/greenbg.png"/>
+        </Grid.Background>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="50"/>
             <ColumnDefinition/>
@@ -24,9 +27,7 @@
             <ColumnDefinition Width="50"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition>
-                
-            </RowDefinition>
+            <RowDefinition/>
             <RowDefinition Height="140"/>
         </Grid.RowDefinitions>
         <Grid Grid.Column="1" Background="Transparent" MouseLeftButtonUp="ColumnClick" Name="col0"/>
@@ -40,15 +41,168 @@
         <Grid Grid.Column="9" Background="Transparent" MouseLeftButtonUp="ColumnClick" Name="col8"/>
         <Grid Grid.Column="10" Background="Transparent" MouseLeftButtonUp="ColumnClick" Name="col9"/>
         <Grid Grid.Row="1" Grid.Column="10">
-            <Image Source="assets/uncovered.png" Height="120" Width="89" VerticalAlignment="Top" Name="new5" HorizontalAlignment="Left" Margin="0,0,0,0" MouseLeftButtonUp="NewCardsClick"/>
-            <Image Source="assets/uncovered.png" Height="120" Width="89" VerticalAlignment="Top" Name="new4" HorizontalAlignment="Left" Margin="-5,0,0,0" MouseLeftButtonUp="NewCardsClick"/>
-            <Image Source="assets/uncovered.png" Height="120" Width="89" VerticalAlignment="Top" Name="new3" HorizontalAlignment="Left" Margin="-10,0,0,0" MouseLeftButtonUp="NewCardsClick"/>
-            <Image Source="assets/uncovered.png" Height="120" Width="89" VerticalAlignment="Top" Name="new2" HorizontalAlignment="Left" Margin="-15,0,0,0" MouseLeftButtonUp="NewCardsClick"/>
-            <Image Source="assets/uncovered.png" Height="120" Width="89" VerticalAlignment="Top" Name="new1" HorizontalAlignment="Left" Margin="-20,0,0,0" MouseLeftButtonUp="NewCardsClick"/>
+            <Image Source="assets/uncovered.png" Height="120" Width="89" VerticalAlignment="Top" Name="new5" HorizontalAlignment="Left" Margin="0,0,0,0" MouseLeftButtonUp="NewCardsClick" Grid.ColumnSpan="2"/>
+            <Image Source="assets/uncovered.png" Height="120" Width="89" VerticalAlignment="Top" Name="new4" HorizontalAlignment="Left" Margin="-5,0,0,0" MouseLeftButtonUp="NewCardsClick" Grid.ColumnSpan="2"/>
+            <Image Source="assets/uncovered.png" Height="120" Width="89" VerticalAlignment="Top" Name="new3" HorizontalAlignment="Left" Margin="-10,0,0,0" MouseLeftButtonUp="NewCardsClick" Grid.ColumnSpan="2"/>
+            <Image Source="assets/uncovered.png" Height="120" Width="89" VerticalAlignment="Top" Name="new2" HorizontalAlignment="Left" Margin="-15,0,0,0" MouseLeftButtonUp="NewCardsClick" Grid.ColumnSpan="2"/>
+            <Image Source="assets/uncovered.png" Height="120" Width="89" VerticalAlignment="Top" Name="new1" HorizontalAlignment="Left" Margin="-20,0,0,0" MouseLeftButtonUp="NewCardsClick" Grid.ColumnSpan="2"/>
         </Grid>
-        <Button Grid.Column="6" Content="EXIT" HorizontalAlignment="Left" Margin="31,0,0,0" Grid.Row="1" VerticalAlignment="Center" Name="Exit" Click="ExitClick"/>
-        <Button Grid.Column="6" Content="BACK" HorizontalAlignment="Left" Margin="-31,0,0,0" Grid.Row="1" VerticalAlignment="Center" Name="Back" Click="BackClick"/>
-        <Button Grid.Column="6" Content="RESTART" HorizontalAlignment="Left" Margin="-102,0,0,0" Grid.Row="1" VerticalAlignment="Center" Name="Restart" Click="RestartClick"/>
-        <Button Grid.Column="6" Content="HINT" HorizontalAlignment="Left" Margin="-152,0,0,0" Grid.Row="1" VerticalAlignment="Center" Name="Hint" Click="HintClick"/>
+        <TextBlock Name="VictoryText" 
+                   Text="Victory!" 
+                   FontSize="130"
+                   FontWeight="Heavy"
+                   Grid.ColumnSpan="12"
+                   Foreground="White"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   IsHitTestVisible="False"
+                   Visibility="Hidden"
+                   TextAlignment="Center"
+                   />
+        <Grid Grid.Row="1" Grid.ColumnSpan="12">
+            <TextBlock Name="InformationBox"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       Margin="0,10,0,0"
+                       Foreground="White"
+                       FontSize="20"
+                       TextWrapping="Wrap"
+                       MaxWidth="400"
+                       MaxHeight="55"
+                       Text=""/>
+
+            <StackPanel Orientation="Horizontal" Height="50" 
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Center"
+                        Margin="0,0,0,20"
+                        Name="SPButtons"
+                        MouseEnter="SPButtons_MouseEnter">
+
+                <Button
+                    Name="Exit"
+                    Margin="5,0,5,0"
+                    Click="ExitClick"
+                    Width="50"
+                    Height="50">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <ImageBrush ImageSource="assets/home_icon_unpressed.png"/>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="assets/home_icon_pressed.png"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"/>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Button
+                    Name="Restart"
+                    Margin="5,0,5,0"
+                    Click="RestartClick"
+                    Width="50"
+                    Height="50">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <ImageBrush ImageSource="assets/restart_icon_unpressed.png"/>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="assets/restart_icon_pressed.png"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"/>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Button
+                    Name="Back"
+                    Margin="5,0,5,0"
+                    Click="BackClick"
+                    Width="50"
+                    Height="50">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <ImageBrush ImageSource="assets/back_icon_unpressed.png"/>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="assets/back_icon_pressed.png"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"/>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Button
+                    Name="Hint"
+                    Margin="5,0,5,0"
+                    Click="HintClick"
+                    Width="50"
+                    Height="50">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <ImageBrush ImageSource="assets/hint_icon_unpressed.png"/>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <ImageBrush ImageSource="assets/hint_icon_pressed.png"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"/>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+            
+        </Grid>
     </Grid>
 </Page>

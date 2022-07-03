@@ -6,6 +6,7 @@
     <RootNamespace>Spider_Solitaire</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -61,8 +62,25 @@
     <None Remove="assets\9b.png" />
     <None Remove="assets\9c.png" />
     <None Remove="assets\9d.png" />
+    <None Remove="assets\back_icon_pressed.png" />
+    <None Remove="assets\back_icon_unpressed.png" />
+    <None Remove="assets\card_outline.png" />
+    <None Remove="assets\greenbg.png" />
     <None Remove="assets\hint_frame.png" />
+    <None Remove="assets\hint_icon_pressed.png" />
+    <None Remove="assets\hint_icon_unpressed.png" />
+    <None Remove="assets\home_icon_pressed.png" />
+    <None Remove="assets\home_icon_unpressed.png" />
+    <None Remove="assets\Logo.png" />
+    <None Remove="assets\menuLogo.png" />
+    <None Remove="assets\restart_icon_pressed.png" />
+    <None Remove="assets\restart_icon_unpressed.png" />
+    <None Remove="assets\star.png" />
     <None Remove="assets\uncovered.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -118,7 +136,20 @@
     <Resource Include="assets\9b.png" />
     <Resource Include="assets\9c.png" />
     <Resource Include="assets\9d.png" />
+    <Resource Include="assets\back_icon_pressed.png" />
+    <Resource Include="assets\back_icon_unpressed.png" />
+    <Resource Include="assets\card_outline.png" />
+    <Resource Include="assets\greenbg.png" />
     <Resource Include="assets\hint_frame.png" />
+    <Resource Include="assets\hint_icon_pressed.png" />
+    <Resource Include="assets\hint_icon_unpressed.png" />
+    <Resource Include="assets\home_icon_pressed.png" />
+    <Resource Include="assets\home_icon_unpressed.png" />
+    <Resource Include="assets\Logo.png" />
+    <Resource Include="assets\menuLogo.png" />
+    <Resource Include="assets\restart_icon_pressed.png" />
+    <Resource Include="assets\restart_icon_unpressed.png" />
+    <Resource Include="assets\star.png" />
     <Resource Include="assets\uncovered.png" />
   </ItemGroup>
 

@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Shell;
 
 namespace Spider_Solitaire
 {
@@ -22,6 +23,50 @@ namespace Spider_Solitaire
         public WindowS()
         {
             InitializeComponent();
+            MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
+            MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth;
+            _ = ChangeMinMaxButtonContent();
+        }
+
+        private async Task ChangeMinMaxButtonContent()
+        {
+            MinMaxButton.Content = (WindowState == WindowState.Normal) ? "🗖" : "🗗";
+            await Task.Delay(250);
+            _ = ChangeMinMaxButtonContent();
+        }
+
+        private void DragWindow(object sender, MouseButtonEventArgs e)
+        {
+            if(e.ClickCount > 1) MinMaxClick(new Button(),new RoutedEventArgs());
+            DragMove();
+        }
+
+        private void ExitButtonClick(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void MinimizeButtonClick(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+        private void MinMaxClick(object sender, RoutedEventArgs e)
+        {
+            if (WindowState == WindowState.Normal)
+            {
+                WindowState = WindowState.Maximized;
+                MinMaxButton.Content = "🗗";
+            }
+            else
+            {
+                WindowState = WindowState.Normal;
+                MinMaxButton.Content = "🗖";
+            }
+        }
+
+        private void SettingsClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Not yet implemented", "Warning", MessageBoxButton.OK, MessageBoxImage.Stop);
         }
     }
 }
