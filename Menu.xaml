@@ -37,7 +37,8 @@
                     FontSize="25"
                     Name="OneSuit"
                     Margin="0,10,0,10"
-                    Click="OneSuiteNewGameClick">
+                    Click="OneSuiteNewGameClick"
+                    FontWeight="Light">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="Background" Value="Green"/>
@@ -69,7 +70,8 @@
                     FontSize="25"
                     Name="TwoSuit"
                     Margin="0,10,0,10"
-                    Click="TwoSuiteNewGameClick">
+                    Click="TwoSuiteNewGameClick"
+                    FontWeight="Light">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="Background" Value="Green"/>
@@ -101,7 +103,8 @@
                     FontSize="25"
                     Name="FourSuit"
                     Margin="0,10,0,10"
-                    Click="FourSuiteNewGameClick">
+                    Click="FourSuiteNewGameClick"
+                    FontWeight="Light">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="Background" Value="Green"/>
@@ -133,7 +136,8 @@
                     FontSize="25"
                     Name="Load"
                     Margin="0,10,0,10"
-                    Click="LoadGameClick">
+                    Click="LoadGameClick"
+                    FontWeight="Light">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="Background" Value="Green"/>
@@ -166,7 +170,8 @@
                     FontSize="20"
                     Name="HowToPlay"
                     Margin="0,10,5,10"
-                    Click="HowToPlayClick">
+                    Click="HowToPlayClick"
+                    FontWeight="Light">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Background" Value="Green"/>
@@ -198,7 +203,8 @@
                     FontSize="20"
                     Name="Stats"
                     Margin="5,10,0,10"
-                    Click="StatsClick">
+                    Click="StatsClick"
+                    FontWeight="Light">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Background" Value="Green"/>
@@ -262,13 +268,18 @@
                 <RowDefinition Height="150"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Image HorizontalAlignment="Center" VerticalAlignment="Top"
-                   Margin="0,20,0,0"
-                   Source="assets/logo.png"
-                   RenderOptions.BitmapScalingMode="Fant"
-                   Stretch="None">
-            </Image>
-
+            <Border Width="600" Height="100" VerticalAlignment="Bottom"
+                    Background="Green"
+                    BorderBrush="#f5d51f"
+                    BorderThickness="3"
+                    CornerRadius="50">
+                <TextBlock Text="Welcome to spider solitaire!" 
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Foreground="White"
+                       FontSize="40"
+                       FontWeight="Light"/>
+            </Border>
             <ScrollViewer Grid.Row="1"
                           HorizontalAlignment="Center" VerticalAlignment="Center" Margin="100,50,100,50"
                           MaxHeight="800"
@@ -278,7 +289,6 @@
                           VerticalScrollBarVisibility="Hidden"
                           VerticalContentAlignment="Top">
                 <StackPanel Name="SPInformation">
-                    <TextBlock Text="Welcome to spider solitaire!" TextAlignment="Center"/>
                     <TextBlock Text="If you don't know how to play spider solitaire feel free to see the How to play section" TextWrapping="Wrap" TextAlignment="Center"/>
                     <TextBlock Text="Visit Statistics to see your performances" TextAlignment="Center"/>
                     <TextBlock Text="Have fun" TextAlignment="Center"/>
