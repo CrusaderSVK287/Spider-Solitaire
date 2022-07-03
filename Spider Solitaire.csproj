@@ -6,6 +6,7 @@
     <RootNamespace>Spider_Solitaire</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -76,6 +77,10 @@
     <None Remove="assets\restart_icon_unpressed.png" />
     <None Remove="assets\star.png" />
     <None Remove="assets\uncovered.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
