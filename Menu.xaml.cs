@@ -124,11 +124,11 @@ namespace Spider_Solitaire
                 Orientation = Orientation.Horizontal,
             };
             SPInformation.Children.Add(d);
-            for (int C = 1; C <= 13; C++)
+            for (int C = 13; C >= 1; C--)
             {
                 Image img = new()
                 {
-                    Width = (C==13)?89:25,
+                    Width = (C==1)?89:25,
                     Height = 120,
                     Stretch = Stretch.None,
                     Source = new BitmapImage(new Uri(@"assets/" + C.ToString() + "c.png", UriKind.Relative)),
@@ -268,14 +268,14 @@ namespace Spider_Solitaire
             {
                 Height = 100,
                 Width = 275,
-                Text = "This button gives you a hint by highlighting a card or cards that can be picked up and a suggested place to put down.\n\n\n",
+                Text = "This button gives you a hint by highlighting a card or cards that can be picked up and a suggested place to put down.",
                 TextWrapping = TextWrapping.Wrap,
             };
             buttonsFour.Children.Add(buttonFourDesc);
 
             TextBlock Advanced = new()
             {
-                Text = "Advanced features",
+                Text = "\nAdvanced features",
                 FontSize = 40
             };
             SPInformation.Children.Add(Advanced);
@@ -286,7 +286,7 @@ namespace Spider_Solitaire
             SPInformation.Children.Clear();
             TextBlock tb = new()
             {
-                Text = "Not yet implemented",
+                Text = "Lorem ipsum is not implementum",
             };
             SPInformation.Children.Add(tb);
         }
