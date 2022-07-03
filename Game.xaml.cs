@@ -200,7 +200,9 @@ namespace Spider_Solitaire
             for (int i = 0; i < 10; i++)
             {
                 if (deck.activeCards[i].Count > 0) continue;
-                MessageBox.Show("You cannot add new card to an empty column");
+                InformationBox.Text = "You cannot deal a new row while any of the columns are empty";
+                await Task.Delay(10000);
+                InformationBox.Text = " ";
                 return;
             }
             AnimationPlaying = true;

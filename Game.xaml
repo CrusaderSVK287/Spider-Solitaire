@@ -57,6 +57,7 @@
                    VerticalAlignment="Center"
                    IsHitTestVisible="False"
                    Visibility="Hidden"
+                   TextAlignment="Center"
                    />
         <Grid Grid.Row="1" Grid.ColumnSpan="12">
             <TextBlock Name="InformationBox"
