@@ -275,10 +275,15 @@
                           MaxWidth="600"
                           Foreground="White"
                           FontSize="18"
-                          VerticalScrollBarVisibility="Hidden">
-                <TextBlock TextWrapping="Wrap" Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut porttitor leo a diam sollicitudin tempor. Varius sit amet mattis vulputate enim nulla aliquet. Pulvinar sapien et ligula ullamcorper malesuada proin libero nunc consequat. Dignissim cras tincidunt lobortis feugiat vivamus at augue eget. Quam viverra orci sagittis eu volutpat odio facilisis mauris sit. Nibh mauris cursus mattis molestie. Pharetra pharetra massa massa ultricies mi quis hendrerit. Tristique senectus et netus et malesuada fames. Rhoncus mattis rhoncus urna neque viverra justo nec. Sit amet risus nullam eget felis eget. Arcu non odio euismod lacinia at quis risus sed. Vestibulum lorem sed risus ultricies tristique nulla aliquet enim tortor. Sed euismod nisi porta lorem mollis aliquam ut porttitor. Enim neque volutpat ac tincidunt vitae semper. Bibendum ut tristique et egestas quis ipsum suspendisse. Lacus vel facilisis volutpat est velit egestas dui. Nunc eget lorem dolor sed viverra. Sagittis eu volutpat odio facilisis mauris sit amet massa vitae. Volutpat blandit aliquam etiam erat velit scelerisque in.
-Ultricies lacus sed turpis tincidunt. Amet purus gravida quis blandit turpis cursus in hac. Justo donec enim diam vulputate ut pharetra sit. Urna condimentum mattis pellentesque id nibh tortor id. Dignissim convallis aenean et tortor at risus viverra adipiscing at. Nunc sed id semper risus in hendrerit. Ultrices dui sapien eget mi. A cras semper auctor neque vitae tempus. Nisl tincidunt eget nullam non nisi est. Duis at consectetur lorem donec massa. Quis ipsum suspendisse ultrices gravida dictum fusce ut placerat.
-Ac turpis egestas integer eget aliquet nibh praesent tristique. Ultrices in iaculis nunc sed augue lacus viverra. Porta lorem mollis aliquam ut porttitor leo a. Id donec ultrices tincidunt arcu non sodales neque sodales ut. Odio pellentesque diam volutpat commodo. Netus et malesuada fames ac turpis. Enim diam vulputate ut pharetra sit amet aliquam id diam. Urna duis convallis convallis tellus. Sed turpis tincidunt id aliquet risus feugiat in. Malesuada bibendum arcu vitae elementum curabitur. A scelerisque purus semper eget duis. Nisi vitae suscipit tellus mauris a diam. Turpis cursus in hac habitasse. Aliquet porttitor lacus luctus accumsan tortor. Amet mattis vulputate enim nulla aliquet. Varius duis at consectetur lorem donec. Hac habitasse platea dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Nisl nunc mi ipsum faucibus. Quis viverra nibh cras pulvinar mattis nunc."/>
+                          VerticalScrollBarVisibility="Hidden"
+                          VerticalContentAlignment="Top">
+                <StackPanel Name="SPInformation">
+                    <TextBlock Text="Welcome to spider solitaire!" TextAlignment="Center"/>
+                    <TextBlock Text="If you don't know how to play spider solitaire feel free to see the How to play section" TextWrapping="Wrap" TextAlignment="Center"/>
+                    <TextBlock Text="Visit Statistics to see your performances" TextAlignment="Center"/>
+                    <TextBlock Text="Have fun" TextAlignment="Center"/>
+
+                </StackPanel>
             </ScrollViewer>
         </Grid>
     </Grid>
