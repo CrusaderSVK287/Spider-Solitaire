@@ -95,6 +95,7 @@ namespace Spider_Solitaire
             }
         }
 
+        //Handles movement of cards from one column to another
         private async void ColumnClick(object sender, MouseButtonEventArgs e)
         {
             if (Selected == null || Selected.Count == 0) return;
@@ -144,6 +145,7 @@ namespace Spider_Solitaire
             if (DecksSolved == 8) Victory();
         }
 
+        //Checks whether a deck is solved
         private async Task IsDeckSolved()
         {
             while(AnimationPlaying) {if(!Loading) await Task.Delay(1); }
@@ -191,6 +193,7 @@ namespace Spider_Solitaire
             AnimationPlaying = false;
         }
 
+        //Handles dealing of new row of cards
         public async void NewCardsClick(object sender, MouseButtonEventArgs e)
         {
             if (NewCardNumber > 5 || AnimationPlaying) return;
@@ -240,6 +243,8 @@ namespace Spider_Solitaire
                 }
             }
         }
+
+        //switches hittestvisible property of cards
         private void SwichHitRegistration(bool hit)
         {
             for (int i = 0; i < 10; i++)
@@ -250,10 +255,20 @@ namespace Spider_Solitaire
                 }
             }
         }
-        private void Victory()
+
+        //handels victory "screen"
+        private async void Victory()
         {
             if (File.Exists(@"autosave.soli")) File.Delete(@"autosave.soli");
-            MessageBox.Show("Victory");
+            Hint.IsEnabled = false;
+            Back.IsEnabled = false;
+            Restart.IsEnabled = false;
+            Exit.IsEnabled = false;
+            await Task.Delay(500);
+            VictoryText.Visibility = Visibility.Visible;
+            await Task.Delay(5000);
+            NavigationService.Navigate(_menu);
+            _destroy();
         }
 
         private void ExitClick(object sender, RoutedEventArgs e)
@@ -418,6 +433,7 @@ namespace Spider_Solitaire
             return true;
         }
 
+        //Renders the gold hint frames based on column and starting index
         private async void ShowHintFrames(int columnIndex, int startingCardIndex, int destinationColumnIndex)
         {
             List<Image> hintFrames = new List<Image>();
@@ -461,6 +477,8 @@ namespace Spider_Solitaire
             }
         }
 
+
+        //Renders gold hint frames based on how many new rows have been dealt
         private async void ShowHintFrames(int newCardNumber)
         {
             Image image = new()

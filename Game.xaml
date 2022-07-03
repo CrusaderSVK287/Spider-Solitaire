@@ -47,6 +47,17 @@
             <Image Source="assets/uncovered.png" Height="120" Width="89" VerticalAlignment="Top" Name="new2" HorizontalAlignment="Left" Margin="-15,0,0,0" MouseLeftButtonUp="NewCardsClick" Grid.ColumnSpan="2"/>
             <Image Source="assets/uncovered.png" Height="120" Width="89" VerticalAlignment="Top" Name="new1" HorizontalAlignment="Left" Margin="-20,0,0,0" MouseLeftButtonUp="NewCardsClick" Grid.ColumnSpan="2"/>
         </Grid>
+        <TextBlock Name="VictoryText" 
+                   Text="Victory!" 
+                   FontSize="130"
+                   FontWeight="Heavy"
+                   Grid.ColumnSpan="12"
+                   Foreground="White"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   IsHitTestVisible="False"
+                   Visibility="Hidden"
+                   />
         <Grid Grid.Row="1" Grid.ColumnSpan="12">
             <TextBlock Name="InformationBox"
                        HorizontalAlignment="Center"
