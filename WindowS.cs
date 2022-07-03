@@ -25,6 +25,14 @@ namespace Spider_Solitaire
             InitializeComponent();
             MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
             MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth;
+            _ = ChangeMinMaxButtonContent();
+        }
+
+        private async Task ChangeMinMaxButtonContent()
+        {
+            MinMaxButton.Content = (WindowState == WindowState.Normal) ? "🗖" : "🗗";
+            await Task.Delay(250);
+            _ = ChangeMinMaxButtonContent();
         }
 
         private void DragWindow(object sender, MouseButtonEventArgs e)
