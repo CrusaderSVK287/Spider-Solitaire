@@ -23,8 +23,6 @@ namespace Spider_Solitaire
         public WindowS()
         {
             InitializeComponent();
-            MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
-            MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth;
             _ = ChangeMinMaxButtonContent();
         }
 

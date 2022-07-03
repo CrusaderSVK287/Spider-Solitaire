@@ -145,7 +145,6 @@
     <Resource Include="assets\hint_icon_unpressed.png" />
     <Resource Include="assets\home_icon_pressed.png" />
     <Resource Include="assets\home_icon_unpressed.png" />
-    <Resource Include="assets\Logo.png" />
     <Resource Include="assets\menuLogo.png" />
     <Resource Include="assets\restart_icon_pressed.png" />
     <Resource Include="assets\restart_icon_unpressed.png" />
