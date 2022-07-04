@@ -70,5 +70,18 @@ namespace Spider_Solitaire
             }
             catch (Exception e) { MessageBox.Show(e.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error); return; }
         }
+
+        public static void CreateFile()
+        {
+            if (File.Exists(@"statistics.txt")) return;
+            File.Create(@"statistics.txt");
+            try
+            {
+                string[] lines = new string[18];
+                for (int i = 0; i < 18; i++) { lines[i] = "0"; }
+                File.WriteAllLines(@"statistics.txt", lines);
+            }
+            catch (Exception e) { MessageBox.Show(e.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error); return; }
+        }
     }
 }

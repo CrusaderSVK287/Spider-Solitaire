@@ -163,6 +163,7 @@ namespace Spider_Solitaire
         {
             if (MessageBox.Show("This will reset all statistics to 0.\nThere is no going back", "Are you sure?",
                 MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) return;
+            Statistics.ResetStatistics();
         }
 
         private void DefaultSettButtonClick(object sender, RoutedEventArgs e)
