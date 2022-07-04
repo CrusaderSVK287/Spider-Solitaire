@@ -22,17 +22,18 @@ namespace Spider_Solitaire
     public partial class Game : Page
     {
         private int cardOffset { get; set; }  //used to render the cards apart from each other
-        public Menu _menu;
-        public Action _destroy; //used as a delegate from menu.cs, destroys all references to current game for garbage collector to free the memory
-        public readonly int _numberOfColours;
+        private readonly Menu _menu;
+        private readonly Action _destroy; //used as a delegate from menu.cs, destroys all references to current game for garbage collector to free the memory
+        private readonly int _numberOfColours;
         private readonly Settings settings;
-        public CommandType LastCommand { get; set; }
-        public bool AnimationPlaying { get; set; } = false;   //used to track whether an animation is playing to avoid confusions
-        public bool Loading { get; set; } = false;
+        private CommandType LastCommand { get; set; }
+        private bool AnimationPlaying { get; set; } = false;   //used to track whether an animation is playing to avoid confusions
+        private bool Loading { get; set; } = false;
         private List<Card> Selected { get; set; } = new(); //currenly selected card/s
-        int Selected_x { get; set; } //indexes of the currently selected card (and cards underneeth)
-        int NewCardNumber { get; set; } = 1;
-        int DecksSolved { get; set; } = 0;   //number of solved decks
+        private int Selected_x { get; set; } //indexes of the currently selected card (and cards underneeth)
+        private int NewCardNumber { get; set; } = 1;
+        private int DecksSolved { get; set; } = 0;   //number of solved decks
+        private int RemainingHints { get; set; }    //number of remaining hints
 
         private Deck deck = new Deck();
         public Game(int numberOfColours, bool isNewGame, Menu menu, Action Destroy)
@@ -43,6 +44,7 @@ namespace Spider_Solitaire
             LastCommand = CommandType.select;
             settings = new();
             cardOffset = settings.CardSpacing;
+            RemainingHints = GetHints();
             LayOutCardOutlines();
             if (isNewGame)
             {
@@ -188,6 +190,7 @@ namespace Spider_Solitaire
 
                     deck.activeCards[i].RemoveRange(index, 13); //13 cards in full set
                     DecksSolved++;
+                    if (RemainingHints >= 0) RemainingHints++;
                     AnimationPlaying = false;
                     return;
                 }
@@ -317,6 +320,10 @@ namespace Spider_Solitaire
         {
             if (Selected.Count > 0 || AnimationPlaying) return;
 
+            if (settings.HintMode == 2) return;
+            HintBoxUpdate();
+            if(RemainingHints == 0) return;
+
             //Parent = same color, value +1, Half-Parent = different color, value +1.
             //internal method, checks whether a card doesnt already lay on it's "parent" card (e.g. 7A is under 8A),
             //this is to prevent really unhelpfull hints
@@ -427,6 +434,22 @@ namespace Spider_Solitaire
             if(result == MessageBoxResult.Yes) RestartClick(new Image(), new RoutedEventArgs());
         }
 
+        //Updates the information on amount of hints
+        private async void HintBoxUpdate()
+        {
+            if (RemainingHints == 0)
+            {
+                HintBox.Text = "No more hints available";
+            }
+            if (RemainingHints > 0)
+            {
+                RemainingHints--;
+                HintBox.Text = $"You have {RemainingHints} hint{(RemainingHints==1?"":"s")} remaining";
+            }
+            await Task.Delay(5000);
+            HintBox.Text = "";
+        }
+
         //determines whether the current card can be moved
         private static bool CardMoveable(List<Card> pile,int startingIndex)
         {
@@ -446,11 +469,11 @@ namespace Spider_Solitaire
             {
                 Image image = new()
                 {
-                    Width = 95,
-                    Height = 120,
+                    Width = Convert.ToInt32(95.0f * settings.CardSizeFactor),
+                    Height = Convert.ToInt32(120.0f * settings.CardSizeFactor),
                     Source = new BitmapImage(new Uri(@"assets/hint_frame.png", UriKind.Relative)),
                     VerticalAlignment = VerticalAlignment.Top,
-                    Stretch = Stretch.None,
+                    Stretch = Stretch.UniformToFill,
                     IsHitTestVisible = false,
                     Margin = new Thickness(0, (i+1) * cardOffset + 2, 0, 0)
                 };
@@ -458,16 +481,16 @@ namespace Spider_Solitaire
                 Grid.SetColumn(image, columnIndex+1);
                 hintFrames.Add(image);
             }
-            hintFrames.Last().Height = 126;
+            hintFrames.Last().Height = Convert.ToInt32(126.0f * settings.CardSizeFactor);
 
             int yMargin = (deck.activeCards[destinationColumnIndex].Count == 0) ? 1 : deck.activeCards[destinationColumnIndex].Count;
             Image imageTwo = new()
             {
-                Width = 95,
-                Height = 126,
+                Width = Convert.ToInt32(95.0f * settings.CardSizeFactor),
+                Height = Convert.ToInt32(126.0f * settings.CardSizeFactor),
                 Source = new BitmapImage(new Uri(@"assets/hint_frame.png", UriKind.Relative)),
                 VerticalAlignment = VerticalAlignment.Top,
-                Stretch = Stretch.None,
+                Stretch = Stretch.UniformToFill,
                 IsHitTestVisible = false,
                 Margin = new Thickness(0, yMargin * cardOffset + 2, 0, 0)
             };
@@ -589,6 +612,12 @@ namespace Spider_Solitaire
                 }
                 return true;
             }
+        }
+
+        private int GetHints()
+        {
+            if (settings.HintMode == 2) Hint.IsEnabled = false;
+            return (settings.HintMode == 0) ? -1 : 3;
         }
     }
 }
