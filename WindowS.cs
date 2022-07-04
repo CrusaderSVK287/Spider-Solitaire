@@ -24,6 +24,7 @@ namespace Spider_Solitaire
         {
             InitializeComponent();
             _ = ChangeMinMaxButtonContent();
+            Settings.WriteSettingsFile();
         }
 
         private async Task ChangeMinMaxButtonContent()

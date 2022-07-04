@@ -535,8 +535,8 @@ namespace Spider_Solitaire
             {
                 Image image = new()
                 {
-                    Width = 89,
-                    Height = 120,
+                    Width = Convert.ToInt32(89.0f * settings.CardSizeFactor),
+                    Height = Convert.ToInt32(120.0f * settings.CardSizeFactor),
                     Source = new BitmapImage(new Uri(@"assets/card_outline.png", UriKind.Relative)),
                     VerticalAlignment = VerticalAlignment.Top,
                     HorizontalAlignment = HorizontalAlignment.Center,

@@ -20,6 +20,11 @@
         <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left"
                    Height="70" Width="240"
                    Margin="5,225,0,0" Background="WhiteSmoke"/>
+        <TextBlock Text="Note: You can scroll with mouse wheel to change values" 
+                   FontSize="9" 
+                   VerticalAlignment="Top" HorizontalAlignment="Left" 
+                   Margin="8,110,0,0"/>
+
 
         <TextBlock Text="Visuals" FontSize="20" FontWeight="Medium" 
                    VerticalAlignment="Top" HorizontalAlignment="Left" 

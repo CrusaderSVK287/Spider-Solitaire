@@ -66,7 +66,7 @@ namespace Spider_Solitaire
             }
         }
 
-        private bool WriteSettingsFile()
+        public static bool WriteSettingsFile()
         {
             if (File.Exists(@"settings.txt")) return false; ;
             try
@@ -83,7 +83,6 @@ namespace Spider_Solitaire
             catch (Exception e)
             {
                 MessageBox.Show(e.ToString(),"Error",MessageBoxButton.OK,MessageBoxImage.Error);
-                CancelButtonClick(new Button(),new RoutedEventArgs());
                 return false;
             }
             return true;
