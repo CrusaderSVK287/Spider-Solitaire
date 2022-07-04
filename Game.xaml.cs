@@ -85,7 +85,7 @@ namespace Spider_Solitaire
                 SwichHitRegistration(false);
                 for (int i = y; i < deck.activeCards[x].Count; i++)
                 {
-                    if (!Loading) _ = deck.activeCards[x][i].SelectedMove(i + 1, cardOffset); //+1 due to y being an indexer
+                    if (!Loading) _ = deck.activeCards[x][i].SelectedMove(i + 1, cardOffset, settings.PlayAnimations); //+1 due to y being an indexer
                     Selected.Add(deck.activeCards[x][i]);
                 }
                 deck.activeCards[x].RemoveRange(y, deck.activeCards[x].Count-y);
@@ -93,7 +93,7 @@ namespace Spider_Solitaire
             }
             else
             {
-                if (!Loading) _ = deck.activeCards[x][y].InvalidMove(y + 1, cardOffset);  //+1 due to y being an indexer
+                if (!Loading && settings.PlayAnimations) _ = deck.activeCards[x][y].InvalidMove(y + 1, cardOffset);  //+1 due to y being an indexer
             }
         }
 
@@ -167,7 +167,7 @@ namespace Spider_Solitaire
 
                     for (int j = deck.activeCards[i].Count-1; j >= index; j--)
                     {
-                        if(!Loading)await Task.Delay(25);
+                        if(!Loading && settings.PlayAnimations) await Task.Delay(25);
                         SolitaireGrid.Children.Remove(deck.activeCards[i][j].Image);
                     }
 
@@ -222,7 +222,7 @@ namespace Spider_Solitaire
                 Grid.SetColumn(card.Image, index + 1);
                 deck.cardNum++;
                 deck.activeCards[index].Add(card);
-                if (!Loading) await Task.Delay(30);
+                if (!Loading && settings.PlayAnimations) await Task.Delay(30);
             }
             Refresh();
             AnimationPlaying = false;

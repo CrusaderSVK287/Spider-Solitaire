@@ -62,14 +62,14 @@ namespace Spider_Solitaire
         }
 
         //Moves the card up
-        public async Task SelectedMove(int y, int cardOffset)
+        public async Task SelectedMove(int y, int cardOffset, bool playAnimation)
         {
             if (AnimationPlaying == true) return;
             AnimationPlaying = true;
             for (int i = 0; i < 15; i+=2)
             {
                 Image.Margin = new Thickness(0, y * cardOffset + 5 - i, 0, 0);
-                await Task.Delay(1);
+                if(playAnimation) await Task.Delay(1);
             }
             AnimationPlaying = false;
         }
