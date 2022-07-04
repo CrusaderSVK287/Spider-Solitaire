@@ -26,7 +26,7 @@ namespace Spider_Solitaire
         public Menu()
         {
             InitializeComponent();
-            TextBlock tb = new TextBlock();
+            HowToPlayClick(new Button(),new RoutedEventArgs());
         }
 
         private void DestroyGameReference()

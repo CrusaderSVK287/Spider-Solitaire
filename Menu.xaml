@@ -289,9 +289,6 @@
                           VerticalScrollBarVisibility="Hidden"
                           VerticalContentAlignment="Top">
                 <StackPanel Name="SPInformation">
-                    <TextBlock Text="If you don't know how to play spider solitaire feel free to see the How to play section" TextWrapping="Wrap" TextAlignment="Center"/>
-                    <TextBlock Text="Visit Statistics to see your performances" TextAlignment="Center"/>
-                    <TextBlock Text="Have fun" TextAlignment="Center"/>
 
                 </StackPanel>
             </ScrollViewer>

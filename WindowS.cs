@@ -64,7 +64,15 @@ namespace Spider_Solitaire
 
         private void SettingsClick(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Not yet implemented", "Warning", MessageBoxButton.OK, MessageBoxImage.Stop);
+            Settings settings = new Settings(EnableSettingsButton);
+            settings.Owner = this;
+            settings.Show();
+            SettingsButton.IsEnabled = false;
+        }
+
+        private void EnableSettingsButton()
+        {
+            SettingsButton.IsEnabled = true;
         }
     }
 }
