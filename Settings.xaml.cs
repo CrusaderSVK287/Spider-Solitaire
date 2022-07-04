@@ -164,7 +164,6 @@ namespace Spider_Solitaire
         {
             if (MessageBox.Show("This will reset all statistics to 0.\nThere is no going back", "Are you sure?",
                 MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) return;
-            MessageBox.Show("Statistics had been reset");
         }
 
         private void DefaultSettButtonClick(object sender, RoutedEventArgs e)
@@ -187,7 +186,7 @@ namespace Spider_Solitaire
                                  HintModeBox.SelectedIndex,
                                  PlayAnimationsBox.IsChecked == true)
                 == false) return;
-            MessageBox.Show("Settings have been applied.\nYou may now close the window","Applied",MessageBoxButton.OK,MessageBoxImage.Information);
+            MessageBox.Show("Settings have been applied.\nYou may now close the window.\nIf you are in game, please reload it in order\nfor changes to take effect","Applied",MessageBoxButton.OK,MessageBoxImage.Information);
         }
     }
 }
