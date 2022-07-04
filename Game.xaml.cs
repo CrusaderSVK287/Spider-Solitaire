@@ -25,6 +25,7 @@ namespace Spider_Solitaire
         public Menu _menu;
         public Action _destroy; //used as a delegate from menu.cs, destroys all references to current game for garbage collector to free the memory
         public readonly int _numberOfColours;
+        private readonly Settings settings;
         public CommandType LastCommand { get; set; }
         public bool AnimationPlaying { get; set; } = false;   //used to track whether an animation is playing to avoid confusions
         public bool Loading { get; set; } = false;
@@ -40,17 +41,18 @@ namespace Spider_Solitaire
             KeepAlive = false;
             _menu = menu;
             LastCommand = CommandType.select;
+            settings = new();
             LayOutCardOutlines();
             if (isNewGame)
             {
                 deck.GenerateCards(numberOfColours);
-                _ = deck.LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect, Loading);
+                _ = deck.LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect, Loading, settings.PlayAnimations);
             }
             else
             {
                 Loading = true;
                 deck.LoadDeck();
-                _ = deck.LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect, Loading);
+                _ = deck.LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect, Loading, settings.PlayAnimations);
                 Deck.LoadCommands(CardSelect,ColumnClick,NewCardsClick);
                 Loading = false;
             }
@@ -536,6 +538,56 @@ namespace Spider_Solitaire
                 await Task.Delay(50);
             }
             InformationBox.Text = " ";
+        }
+
+        private class Settings
+        {
+            public float CardSizeFactor { get; set; }
+            public int CardSpacing { get; set; }
+            public bool PlayAnimations { get; set; }
+            public int HintMode { get; set; }
+
+            public Settings()
+            {
+                LoadSettings();
+            }
+
+            private bool LoadSettings()
+            {
+                if (!File.Exists(@"settings.txt")) return false;
+                try
+                {
+                    string[] lines = File.ReadAllLines(@"settings.txt");
+                    for (int i = 0; i < 4; i++)
+                    {
+                        string[] data = lines[i].Split(' ');
+                        if (data.Length != 2) throw new FileFormatException();
+                        switch (i)
+                        {
+                            case 0:
+                                CardSizeFactor = (float)Convert.ToDouble(data[1]) / 100.0f;
+                                break;
+                            case 1:
+                                CardSpacing = Convert.ToInt32(data[1]);
+                                break;
+                            case 2:
+                                HintMode = Convert.ToInt32(data[1]);
+                                break;
+                            case 3:
+                                PlayAnimations = (data[1] == "1") ? true : false;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+                return true;
+            }
         }
     }
 }
