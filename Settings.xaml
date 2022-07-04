@@ -8,7 +8,8 @@
         Title="Settings" Height="400" Width="250"
         ResizeMode="NoResize"
         Unloaded="Window_Unloaded"
-        Background="White">
+        Background="White"
+        WindowStartupLocation="CenterOwner">
     <Grid>
         <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left"
                    Height="75" Width="240"

@@ -21,6 +21,7 @@ namespace Spider_Solitaire
     public partial class Settings : Window
     {
         private Action _ReenableSettingsButton;
+
         public Settings(Action ReenableSettingsButton)
         {
             InitializeComponent();
