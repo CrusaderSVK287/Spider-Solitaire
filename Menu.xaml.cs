@@ -26,7 +26,7 @@ namespace Spider_Solitaire
         public Menu()
         {
             InitializeComponent();
-            TextBlock tb = new TextBlock();
+            HowToPlayClick(new Button(),new RoutedEventArgs());
         }
 
         private void DestroyGameReference()
@@ -275,10 +275,26 @@ namespace Spider_Solitaire
 
             TextBlock Advanced = new()
             {
-                Text = "\nAdvanced features",
+                Text = "\nAdvanced features and settings",
+                TextWrapping = TextWrapping.Wrap,
                 FontSize = 40
             };
             SPInformation.Children.Add(Advanced);
+
+            TextBlock j = new()
+            {
+                Text = "In settings, you can find some things that you can change. You can find the settings button in the top left corner with a ⚙ (gear) symbol on it\n\n" +
+                "Card size determines the scale at which the cards will be rendered, ranging from 50% to 200%, 100% being the default.\n" +
+                "Card spacing determines how far apart will cards be, default is 20 however if you play with 4 suits I is a good idea to increase it to 25 or 30 in order to be able to recognize suits from each other.\n" +
+                "Hint mode affects gameplay. There are 3 modes:\n\n" +
+                "-Enabled (default) - no restrictions\n" +
+                "-Restricted - you have limited number of hints. At the start of the game you have 3 hints and you gain 1 for each assembled suit, together you can get 10 hints (you get 11th when you win)\n" +
+                "-Disabled - You cannot use hints\n\n" +
+                "Additionaly, there are two buttons, one resets all settings to default, the other one erases all statistics\n" +
+                "You need to apply the settings when you change something, otherwise they will not be reflected",
+                TextWrapping = TextWrapping.Wrap,
+            };
+            SPInformation.Children.Add(j);
         }
 
         private void StatsClick(object sender, RoutedEventArgs e)

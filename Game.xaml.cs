@@ -21,17 +21,19 @@ namespace Spider_Solitaire
     /// </summary>
     public partial class Game : Page
     {
-        const int cardOffset = 20;  //used to render the cards apart from each other
-        public Menu _menu;
-        public Action _destroy; //used as a delegate from menu.cs, destroys all references to current game for garbage collector to free the memory
-        public readonly int _numberOfColours;
-        public CommandType LastCommand { get; set; }
-        public bool AnimationPlaying { get; set; } = false;   //used to track whether an animation is playing to avoid confusions
-        public bool Loading { get; set; } = false;
+        private int cardOffset { get; set; }  //used to render the cards apart from each other
+        private readonly Menu _menu;
+        private readonly Action _destroy; //used as a delegate from menu.cs, destroys all references to current game for garbage collector to free the memory
+        private readonly int _numberOfColours;
+        private readonly Settings settings;
+        private CommandType LastCommand { get; set; }
+        private bool AnimationPlaying { get; set; } = false;   //used to track whether an animation is playing to avoid confusions
+        private bool Loading { get; set; } = false;
         private List<Card> Selected { get; set; } = new(); //currenly selected card/s
-        int Selected_x { get; set; } //indexes of the currently selected card (and cards underneeth)
-        int NewCardNumber { get; set; } = 1;
-        int DecksSolved { get; set; } = 0;   //number of solved decks
+        private int Selected_x { get; set; } //indexes of the currently selected card (and cards underneeth)
+        private int NewCardNumber { get; set; } = 1;
+        private int DecksSolved { get; set; } = 0;   //number of solved decks
+        private int RemainingHints { get; set; }    //number of remaining hints
 
         private Deck deck = new Deck();
         public Game(int numberOfColours, bool isNewGame, Menu menu, Action Destroy)
@@ -40,17 +42,20 @@ namespace Spider_Solitaire
             KeepAlive = false;
             _menu = menu;
             LastCommand = CommandType.select;
+            settings = new();
+            cardOffset = settings.CardSpacing;
+            RemainingHints = GetHints();
             LayOutCardOutlines();
             if (isNewGame)
             {
                 deck.GenerateCards(numberOfColours);
-                _ = deck.LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect, Loading);
+                _ = deck.LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect, Loading, settings.PlayAnimations, settings.CardSizeFactor);
             }
             else
             {
                 Loading = true;
                 deck.LoadDeck();
-                _ = deck.LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect, Loading);
+                _ = deck.LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect, Loading, settings.PlayAnimations, settings.CardSizeFactor);
                 Deck.LoadCommands(CardSelect,ColumnClick,NewCardsClick);
                 Loading = false;
             }
@@ -83,7 +88,7 @@ namespace Spider_Solitaire
                 SwichHitRegistration(false);
                 for (int i = y; i < deck.activeCards[x].Count; i++)
                 {
-                    if (!Loading) _ = deck.activeCards[x][i].SelectedMove(i + 1, cardOffset); //+1 due to y being an indexer
+                    if (!Loading) _ = deck.activeCards[x][i].SelectedMove(i + 1, cardOffset, settings.PlayAnimations); //+1 due to y being an indexer
                     Selected.Add(deck.activeCards[x][i]);
                 }
                 deck.activeCards[x].RemoveRange(y, deck.activeCards[x].Count-y);
@@ -91,7 +96,7 @@ namespace Spider_Solitaire
             }
             else
             {
-                if (!Loading) _ = deck.activeCards[x][y].InvalidMove(y + 1, cardOffset);  //+1 due to y being an indexer
+                if (!Loading && settings.PlayAnimations) _ = deck.activeCards[x][y].InvalidMove(y + 1, cardOffset);  //+1 due to y being an indexer
             }
         }
 
@@ -165,7 +170,7 @@ namespace Spider_Solitaire
 
                     for (int j = deck.activeCards[i].Count-1; j >= index; j--)
                     {
-                        if(!Loading)await Task.Delay(25);
+                        if(!Loading && settings.PlayAnimations) await Task.Delay(25);
                         SolitaireGrid.Children.Remove(deck.activeCards[i][j].Image);
                     }
 
@@ -185,6 +190,7 @@ namespace Spider_Solitaire
 
                     deck.activeCards[i].RemoveRange(index, 13); //13 cards in full set
                     DecksSolved++;
+                    if (RemainingHints >= 0) RemainingHints++;
                     AnimationPlaying = false;
                     return;
                 }
@@ -215,12 +221,12 @@ namespace Spider_Solitaire
             for (int index = 0; index < 10; index++)
             {
                 Card card = new Card(deck.values[deck.cardNum], deck.colors[deck.cardNum],true,
-                    deck.activeCards[index].Count + 1, index, cardOffset, CardSelect);
+                    deck.activeCards[index].Count + 1, index, cardOffset, CardSelect, settings.CardSizeFactor);
                 SolitaireGrid.Children.Add(card.Image);
                 Grid.SetColumn(card.Image, index + 1);
                 deck.cardNum++;
                 deck.activeCards[index].Add(card);
-                if (!Loading) await Task.Delay(30);
+                if (!Loading && settings.PlayAnimations) await Task.Delay(30);
             }
             Refresh();
             AnimationPlaying = false;
@@ -313,6 +319,10 @@ namespace Spider_Solitaire
         private void HintClick(object sender, RoutedEventArgs e)
         {
             if (Selected.Count > 0 || AnimationPlaying) return;
+
+            if (settings.HintMode == 2) return;
+            HintBoxUpdate();
+            if(RemainingHints == 0) return;
 
             //Parent = same color, value +1, Half-Parent = different color, value +1.
             //internal method, checks whether a card doesnt already lay on it's "parent" card (e.g. 7A is under 8A),
@@ -424,6 +434,22 @@ namespace Spider_Solitaire
             if(result == MessageBoxResult.Yes) RestartClick(new Image(), new RoutedEventArgs());
         }
 
+        //Updates the information on amount of hints
+        private async void HintBoxUpdate()
+        {
+            if (RemainingHints == 0)
+            {
+                HintBox.Text = "No more hints available";
+            }
+            if (RemainingHints > 0)
+            {
+                RemainingHints--;
+                HintBox.Text = $"You have {RemainingHints} hint{(RemainingHints==1?"":"s")} remaining";
+            }
+            await Task.Delay(5000);
+            HintBox.Text = "";
+        }
+
         //determines whether the current card can be moved
         private static bool CardMoveable(List<Card> pile,int startingIndex)
         {
@@ -443,11 +469,11 @@ namespace Spider_Solitaire
             {
                 Image image = new()
                 {
-                    Width = 95,
-                    Height = 120,
+                    Width = Convert.ToInt32(95.0f * settings.CardSizeFactor),
+                    Height = Convert.ToInt32(120.0f * settings.CardSizeFactor),
                     Source = new BitmapImage(new Uri(@"assets/hint_frame.png", UriKind.Relative)),
                     VerticalAlignment = VerticalAlignment.Top,
-                    Stretch = Stretch.None,
+                    Stretch = Stretch.UniformToFill,
                     IsHitTestVisible = false,
                     Margin = new Thickness(0, (i+1) * cardOffset + 2, 0, 0)
                 };
@@ -455,16 +481,16 @@ namespace Spider_Solitaire
                 Grid.SetColumn(image, columnIndex+1);
                 hintFrames.Add(image);
             }
-            hintFrames.Last().Height = 126;
+            hintFrames.Last().Height = Convert.ToInt32(126.0f * settings.CardSizeFactor);
 
             int yMargin = (deck.activeCards[destinationColumnIndex].Count == 0) ? 1 : deck.activeCards[destinationColumnIndex].Count;
             Image imageTwo = new()
             {
-                Width = 95,
-                Height = 126,
+                Width = Convert.ToInt32(95.0f * settings.CardSizeFactor),
+                Height = Convert.ToInt32(126.0f * settings.CardSizeFactor),
                 Source = new BitmapImage(new Uri(@"assets/hint_frame.png", UriKind.Relative)),
                 VerticalAlignment = VerticalAlignment.Top,
-                Stretch = Stretch.None,
+                Stretch = Stretch.UniformToFill,
                 IsHitTestVisible = false,
                 Margin = new Thickness(0, yMargin * cardOffset + 2, 0, 0)
             };
@@ -536,6 +562,62 @@ namespace Spider_Solitaire
                 await Task.Delay(50);
             }
             InformationBox.Text = " ";
+        }
+
+        private class Settings
+        {
+            public float CardSizeFactor { get; set; }
+            public int CardSpacing { get; set; }
+            public bool PlayAnimations { get; set; }
+            public int HintMode { get; set; }
+
+            public Settings()
+            {
+                LoadSettings();
+            }
+
+            private bool LoadSettings()
+            {
+                if (!File.Exists(@"settings.txt")) return false;
+                try
+                {
+                    string[] lines = File.ReadAllLines(@"settings.txt");
+                    for (int i = 0; i < 4; i++)
+                    {
+                        string[] data = lines[i].Split(' ');
+                        if (data.Length != 2) throw new FileFormatException();
+                        switch (i)
+                        {
+                            case 0:
+                                CardSizeFactor = (float)Convert.ToDouble(data[1]) / 100.0f;
+                                break;
+                            case 1:
+                                CardSpacing = Convert.ToInt32(data[1]);
+                                break;
+                            case 2:
+                                HintMode = Convert.ToInt32(data[1]);
+                                break;
+                            case 3:
+                                PlayAnimations = (data[1] == "1") ? true : false;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        private int GetHints()
+        {
+            if (settings.HintMode == 2) Hint.IsEnabled = false;
+            return (settings.HintMode == 0) ? -1 : 3;
         }
     }
 }
