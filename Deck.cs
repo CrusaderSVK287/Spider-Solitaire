@@ -129,18 +129,18 @@ namespace Spider_Solitaire
         }
 
         // Method to Lay out the cards that the game starts with onto the game field
-        public async Task LayOutStartingCardsRecursive(int cardOffset, Grid SolitaireGrid, MouseButtonEventHandler CardSelect, bool Loading, bool PlayAnimation)
+        public async Task LayOutStartingCardsRecursive(int cardOffset, Grid SolitaireGrid, MouseButtonEventHandler CardSelect, bool Loading, bool PlayAnimation, float Scale)
         {
             int index = cardNum % 10;
             Card card = new (values[cardNum], colors[cardNum], (cardNum <= 43) ? false : true, 
-                activeCards[index].Count+1,index, cardOffset, CardSelect);
+                activeCards[index].Count+1,index, cardOffset, CardSelect, Scale);
             if (card == null) return;
             activeCards[index].Add(card);
             SolitaireGrid.Children.Add(card.Image);
             Grid.SetColumn(card.Image, index + 1);
             if(!Loading && PlayAnimation)await Task.Delay(10);
             cardNum++;
-            if (cardNum < 54) await LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect, Loading, PlayAnimation);
+            if (cardNum < 54) await LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect, Loading, PlayAnimation, Scale);
         }
 
         //returnes a Card one index before the input

@@ -17,13 +17,13 @@ namespace Spider_Solitaire
         public bool Visible { get; set; }
         public Image Image;
         private bool AnimationPlaying { get; set; } = false;
-        public Card(int value, char colour, bool visible, int y, int x, int offset, MouseButtonEventHandler CardSelect)
+        public Card(int value, char colour, bool visible, int y, int x, int offset, MouseButtonEventHandler CardSelect, float Scale)
         {
             Value = value;
             Colour = colour;
             Visible = visible;
             Image = new Image();
-            CreateImage(y,x,offset,CardSelect);
+            CreateImage(y,x,offset,CardSelect, Scale);
         }
 
         public Card(int value, char colour, bool visible)
@@ -35,11 +35,11 @@ namespace Spider_Solitaire
         }
 
         //inicialised image properties
-        private void CreateImage(int y, int x, int offset, MouseButtonEventHandler CardSelect)
+        private void CreateImage(int y, int x, int offset, MouseButtonEventHandler CardSelect, float Scale)
         {
             GetColour();
-            Image.Width = 89;
-            Image.Height = 120;
+            Image.Width = Convert.ToInt32(89.0f*Scale);
+            Image.Height = Convert.ToInt32(120.0f*Scale);
             Image.HorizontalAlignment = HorizontalAlignment.Center;
             Image.VerticalAlignment = VerticalAlignment.Top;
             Image.Visibility = Visibility.Visible;

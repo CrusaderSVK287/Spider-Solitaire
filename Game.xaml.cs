@@ -21,7 +21,7 @@ namespace Spider_Solitaire
     /// </summary>
     public partial class Game : Page
     {
-        const int cardOffset = 20;  //used to render the cards apart from each other
+        private int cardOffset { get; set; }  //used to render the cards apart from each other
         public Menu _menu;
         public Action _destroy; //used as a delegate from menu.cs, destroys all references to current game for garbage collector to free the memory
         public readonly int _numberOfColours;
@@ -42,17 +42,18 @@ namespace Spider_Solitaire
             _menu = menu;
             LastCommand = CommandType.select;
             settings = new();
+            cardOffset = settings.CardSpacing;
             LayOutCardOutlines();
             if (isNewGame)
             {
                 deck.GenerateCards(numberOfColours);
-                _ = deck.LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect, Loading, settings.PlayAnimations);
+                _ = deck.LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect, Loading, settings.PlayAnimations, settings.CardSizeFactor);
             }
             else
             {
                 Loading = true;
                 deck.LoadDeck();
-                _ = deck.LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect, Loading, settings.PlayAnimations);
+                _ = deck.LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect, Loading, settings.PlayAnimations, settings.CardSizeFactor);
                 Deck.LoadCommands(CardSelect,ColumnClick,NewCardsClick);
                 Loading = false;
             }
@@ -217,7 +218,7 @@ namespace Spider_Solitaire
             for (int index = 0; index < 10; index++)
             {
                 Card card = new Card(deck.values[deck.cardNum], deck.colors[deck.cardNum],true,
-                    deck.activeCards[index].Count + 1, index, cardOffset, CardSelect);
+                    deck.activeCards[index].Count + 1, index, cardOffset, CardSelect, settings.CardSizeFactor);
                 SolitaireGrid.Children.Add(card.Image);
                 Grid.SetColumn(card.Image, index + 1);
                 deck.cardNum++;
