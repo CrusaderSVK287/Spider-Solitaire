@@ -150,8 +150,7 @@ namespace Spider_Solitaire
                 }
             }
             Selected.Clear();
-            try { await IsSuitAssembled(); }
-            catch { }
+            await IsSuitAssembled();
             Refresh();
             SwichHitRegistration(true);
             if (DecksSolved == 8) Victory();
@@ -195,6 +194,8 @@ namespace Spider_Solitaire
                     Grid.SetRow(Image, 1);
                     Grid.SetColumn(Image, 3);
 
+                    char c = deck.activeCards[i].Last().Colour; //used by statistics, hence why it's here before removerange
+
                     deck.activeCards[i].RemoveRange(index, 13); //13 cards in full set
                     DecksSolved++;
                     if (RemainingHints >= 0) RemainingHints++;
@@ -202,7 +203,6 @@ namespace Spider_Solitaire
                     if (!Loading)
                     {
                         Statistics.IncreaseStat(StatisticType.SuitsAssembled);
-                        char c = deck.activeCards[i].Last().Colour;
                         if (c == 'a') Statistics.IncreaseStat(StatisticType.SuitClubsAssembled);
                         if (c == 'b') Statistics.IncreaseStat(StatisticType.SuitDiamondsAssembled);
                         if (c == 'c') Statistics.IncreaseStat(StatisticType.SuitSpadesAssembled);
