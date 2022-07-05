@@ -260,6 +260,13 @@
                     </Button.Template>
                 </Button>
             </StackPanel>
+            <TextBlock Text="Version 1.0" 
+                       VerticalAlignment="Bottom"
+                       HorizontalAlignment="Left"
+                       Foreground="LightGray"
+                       Margin="5,0,0,5"
+                       FontSize="15"
+                       FontWeight="Light"/>
         </Grid>
 
         <Grid Grid.Column="1">
