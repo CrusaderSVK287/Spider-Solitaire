@@ -60,6 +60,21 @@ namespace Spider_Solitaire
             catch (Exception e) { MessageBox.Show(e.ToString(),"Error",MessageBoxButton.OK,MessageBoxImage.Error); return; }
         }
 
+        //increments by 1
+        public static void IncreaseStat(StatisticType type)
+        {
+            if (!File.Exists(@"statistics.txt") || type == StatisticType.OneWinPercentage ||
+                                                   type == StatisticType.TwoWinPercentage ||
+                                                   type == StatisticType.FourWinPercentage) return;
+            try
+            {
+                var lines = File.ReadAllLines(@"statistics.txt");
+                lines[(int)type] = (Convert.ToInt32(lines[(int)type]) + 1).ToString();
+                File.WriteAllLines(@"statistics.txt", lines);
+            }
+            catch (Exception e) { MessageBox.Show(e.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error); return; }
+        }
+
         public static void ResetStatistics()
         {
             try
@@ -73,15 +88,7 @@ namespace Spider_Solitaire
 
         public static void CreateFile()
         {
-            if (File.Exists(@"statistics.txt")) return;
-            File.Create(@"statistics.txt");
-            try
-            {
-                string[] lines = new string[18];
-                for (int i = 0; i < 18; i++) { lines[i] = "0"; }
-                File.WriteAllLines(@"statistics.txt", lines);
-            }
-            catch (Exception e) { MessageBox.Show(e.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error); return; }
+            if (!File.Exists(@"statistics.txt")) ResetStatistics();
         }
     }
 }
