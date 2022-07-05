@@ -286,9 +286,9 @@ namespace Spider_Solitaire
         {
             if (File.Exists(@"autosave.soli")) File.Delete(@"autosave.soli");
             Statistics.IncreaseStat(StatisticType.GamesWon);
-            if (_numberOfColours == 1) Statistics.IncreaseStat(StatisticType.OneSuitGamesWon);
-            if (_numberOfColours == 2) Statistics.IncreaseStat(StatisticType.TwoSuitGamesWon);
-            if (_numberOfColours == 4) Statistics.IncreaseStat(StatisticType.FourSuitGamesWon);
+            if (deck.colors.Any(e => e=='b' || e=='a')) Statistics.IncreaseStat(StatisticType.FourSuitGamesWon);
+            else if (deck.colors.Any(e => e == 'd')) Statistics.IncreaseStat(StatisticType.TwoSuitGamesWon);
+            else if (deck.colors.Any(e => e == 'c')) Statistics.IncreaseStat(StatisticType.OneSuitGamesWon);
 
             Hint.IsEnabled = false;
             Back.IsEnabled = false;
