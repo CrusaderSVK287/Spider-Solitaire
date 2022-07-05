@@ -157,10 +157,40 @@ namespace Spider_Solitaire
             {
                 Text = "Since the biggest card is a King, it means that Kings can only be moved into empty columns. On the other hand, since aces are the smallest card," +
                 " no card can be places on them. Once you run out of possible moves, you can deal another row of 10 cards by clicking on the blue uncovered cards in the bottom right corner. This will add one card to each column. You cannot have an empty column when dealing new cards however." +
-                "\n\nThis is basically it for basic game mechanics, scroll down for button explanation and advanced features.\n\n",
+                "\n\nThis is basically it for basic game mechanics, scroll down for button explanation and advanced features. You can play a game with a very easy deck of cards by clicking on the text below\n\n",
                 TextWrapping = TextWrapping.Wrap,
             };
             SPInformation.Children.Add(h);
+
+            Border border = new()
+            {
+                Width = 200,
+                Height = 50,
+                BorderBrush = Brushes.Gold,
+                BorderThickness = new Thickness(3),
+                CornerRadius = new CornerRadius(30),
+            };
+            SPInformation.Children.Add(border);
+            TextBlock button = new()
+            {
+                Text = "Tutorial",
+                Background = Brushes.Transparent,
+                Foreground = Brushes.White,
+                Width = 200,
+                Height = 50,
+                Margin = new Thickness(70,8,0,0),
+            };
+            button.MouseLeftButtonUp += TutorialGame;
+            void TutorialGame(object sender, MouseButtonEventArgs e)
+            {
+                try
+                {
+                    File.WriteAllText(@"autosave.soli", "mc ac mc bc jc gc hc mc fc cc jc dc ic ec ic bc dc hc fc kc mc mc lc jc jc bc dc hc ic bc cc hc dc jc ic hc lc ec ac cc ec cc jc kc dc fc dc ec gc gc lc dc kc fc ac jc bc gc gc lc cc ac jc dc lc cc fc ec hc mc lc mc hc cc bc gc mc kc fc ac ec ic fc lc hc fc lc cc ac ic kc kc ec ic ac kc kc ac ic bc bc ec gc gc -null- ".Replace(' ', '\n'));
+                    LoadGameClick(new Button(), new RoutedEventArgs());
+                }
+                catch (Exception ex) { MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error); return; }
+            }
+            border.Child = button;
 
             TextBlock ButtonExplanation = new()
             {
