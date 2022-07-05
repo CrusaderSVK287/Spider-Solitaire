@@ -90,5 +90,11 @@ namespace Spider_Solitaire
         {
             if (!File.Exists(@"statistics.txt")) ResetStatistics();
         }
+
+        public static string[]? GetStats()
+        {
+            if (!File.Exists(@"statistics.txt")) return null;
+            return File.ReadAllLines(@"statistics.txt");
+        }
     }
 }

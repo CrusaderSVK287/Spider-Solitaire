@@ -563,7 +563,7 @@ namespace Spider_Solitaire
                     Source = new BitmapImage(new Uri(@"assets/card_outline.png", UriKind.Relative)),
                     VerticalAlignment = VerticalAlignment.Top,
                     HorizontalAlignment = HorizontalAlignment.Center,
-                    Stretch = Stretch.None,
+                    Stretch = Stretch.UniformToFill,
                     IsHitTestVisible = false,
                     Margin = new Thickness(0, cardOffset + 5, 0, 0)
                 };
