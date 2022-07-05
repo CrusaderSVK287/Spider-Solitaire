@@ -49,6 +49,11 @@ namespace Spider_Solitaire
             if (isNewGame)
             {
                 deck.GenerateCards(numberOfColours);
+                Statistics.IncreaseStat(StatisticType.GamesStarted);
+                if (numberOfColours == 1) Statistics.IncreaseStat(StatisticType.OneSuitGamesStarted);
+                if (numberOfColours == 2) Statistics.IncreaseStat(StatisticType.TwoSuitGamesStarted);
+                if (numberOfColours == 2) Statistics.IncreaseStat(StatisticType.FourSuitGamesStarted);
+
                 _ = deck.LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect, Loading, settings.PlayAnimations, settings.CardSizeFactor);
             }
             else
@@ -134,6 +139,7 @@ namespace Spider_Solitaire
                 }
                 if (!Loading) Command.LogCommand(new Command(CommandType.move, new string[] { column_index.ToString() }));
                 LastCommand = CommandType.move;
+                if (!Loading) Statistics.IncreaseStat(StatisticType.CardsMoved, Selected.Count);
             }
             else
             {
@@ -144,14 +150,14 @@ namespace Spider_Solitaire
                 }
             }
             Selected.Clear();
-            await IsDeckSolved();
+            await IsSuitAssembled();
             Refresh();
             SwichHitRegistration(true);
             if (DecksSolved == 8) Victory();
         }
 
         //Checks whether a deck is solved
-        private async Task IsDeckSolved()
+        private async Task IsSuitAssembled()
         {
             while(AnimationPlaying) {if(!Loading) await Task.Delay(1); }
             AnimationPlaying = true;
@@ -188,10 +194,21 @@ namespace Spider_Solitaire
                     Grid.SetRow(Image, 1);
                     Grid.SetColumn(Image, 3);
 
+                    char c = deck.activeCards[i].Last().Colour; //used by statistics, hence why it's here before removerange
+
                     deck.activeCards[i].RemoveRange(index, 13); //13 cards in full set
                     DecksSolved++;
                     if (RemainingHints >= 0) RemainingHints++;
                     AnimationPlaying = false;
+                    if (!Loading)
+                    {
+                        Statistics.IncreaseStat(StatisticType.SuitsAssembled);
+                        if (c == 'a') Statistics.IncreaseStat(StatisticType.SuitClubsAssembled);
+                        if (c == 'b') Statistics.IncreaseStat(StatisticType.SuitDiamondsAssembled);
+                        if (c == 'c') Statistics.IncreaseStat(StatisticType.SuitSpadesAssembled);
+                        if (c == 'd') Statistics.IncreaseStat(StatisticType.SuitHeartsAssembled);
+                    }
+
                     return;
                 }
             EndOfForeachLoop:;
@@ -268,6 +285,11 @@ namespace Spider_Solitaire
         private async void Victory()
         {
             if (File.Exists(@"autosave.soli")) File.Delete(@"autosave.soli");
+            Statistics.IncreaseStat(StatisticType.GamesWon);
+            if (_numberOfColours == 1) Statistics.IncreaseStat(StatisticType.OneSuitGamesWon);
+            if (_numberOfColours == 2) Statistics.IncreaseStat(StatisticType.TwoSuitGamesWon);
+            if (_numberOfColours == 4) Statistics.IncreaseStat(StatisticType.FourSuitGamesWon);
+
             Hint.IsEnabled = false;
             Back.IsEnabled = false;
             Restart.IsEnabled = false;
@@ -323,6 +345,7 @@ namespace Spider_Solitaire
             if (settings.HintMode == 2) return;
             HintBoxUpdate();
             if(RemainingHints == 0) return;
+            if (!Loading) Statistics.IncreaseStat(StatisticType.HintsTaken);
 
             //Parent = same color, value +1, Half-Parent = different color, value +1.
             //internal method, checks whether a card doesnt already lay on it's "parent" card (e.g. 7A is under 8A),
@@ -540,7 +563,7 @@ namespace Spider_Solitaire
                     Source = new BitmapImage(new Uri(@"assets/card_outline.png", UriKind.Relative)),
                     VerticalAlignment = VerticalAlignment.Top,
                     HorizontalAlignment = HorizontalAlignment.Center,
-                    Stretch = Stretch.None,
+                    Stretch = Stretch.UniformToFill,
                     IsHitTestVisible = false,
                     Margin = new Thickness(0, cardOffset + 5, 0, 0)
                 };

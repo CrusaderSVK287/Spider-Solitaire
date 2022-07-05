@@ -300,11 +300,54 @@ namespace Spider_Solitaire
         private void StatsClick(object sender, RoutedEventArgs e)
         {
             SPInformation.Children.Clear();
-            TextBlock tb = new()
+            string[]? data = Statistics.GetStats();
+            if(data == null)
             {
-                Text = "Lorem ipsum is not implementum",
+                MessageBox.Show("Error opening statistics file.\nDelete the file and/or restart the application","Error",MessageBoxButton.OK,MessageBoxImage.Error);
+                HowToPlayClick(new Button(), new RoutedEventArgs());
+                return;
+            }
+            TextBlock title = new()
+            {
+                Text = "Statistics",
+                FontSize = 40,
             };
-            SPInformation.Children.Add(tb);
+
+            int percentageOne = (int) (100.0d / Convert.ToDouble(data[(int)StatisticType.OneSuitGamesStarted]) * Convert.ToDouble(data[(int)StatisticType.OneSuitGamesWon]));
+            int percentageTwo = (int)(100.0d / Convert.ToDouble(data[(int)StatisticType.TwoSuitGamesStarted]) * Convert.ToDouble(data[(int)StatisticType.TwoSuitGamesWon]));
+            int percentageFour = (int)(100.0d / Convert.ToDouble(data[(int)StatisticType.FourSuitGamesStarted]) * Convert.ToDouble(data[(int)StatisticType.FourSuitGamesWon]));
+            if (data[(int)StatisticType.OneSuitGamesStarted] == "0") percentageOne = 0;
+            if (data[(int)StatisticType.TwoSuitGamesStarted] == "0") percentageTwo = 0;
+            if (data[(int)StatisticType.FourSuitGamesStarted] == "0") percentageFour = 0;
+
+            SPInformation.Children.Add(title);
+            TextBlock stats = new()
+            {
+                Text = "\n---General---\n" +
+                $"Games started: {data[(int)StatisticType.GamesStarted]}\n" +
+                $"Games won: {data[(int)StatisticType.GamesWon]}\n" +
+                $"Cards moved: {data[(int)StatisticType.CardsMoved]}\n" +
+                $"Suits assembled: {data[(int)StatisticType.SuitsAssembled]}\n" +
+                $"Suits of spades assembled: {data[(int)StatisticType.SuitSpadesAssembled]}\n" +
+                $"Suits of hearts assembled: {data[(int)StatisticType.SuitHeartsAssembled]}\n" +
+                $"Suits of clubs assembled: {data[(int)StatisticType.SuitClubsAssembled]}\n" +
+                $"Suits of diamonds assembled: {data[(int)StatisticType.SuitDiamondsAssembled]}\n" +
+                $"Hints taken: {data[(int)StatisticType.HintsTaken]}\n" +
+                $"\n---One suit games---\n" +
+                $"One suit games played: {data[(int)StatisticType.OneSuitGamesStarted]}\n" +
+                $"One suit games won: {data[(int)StatisticType.OneSuitGamesWon]}\n" +
+                $"One suit games win percentage: {percentageOne}%\n" +
+                $"\n---Two suit games---\n" +
+                $"Two suit games played: {data[(int)StatisticType.TwoSuitGamesStarted]}\n" +
+                $"Two suit games won: {data[(int)StatisticType.TwoSuitGamesWon]}\n" +
+                $"Two suit games win percentage: {percentageTwo}%\n" +
+                $"\n---Four suit games---\n" +
+                $"Four suit games played: {data[(int)StatisticType.FourSuitGamesStarted]}\n" +
+                $"Four suit games won: {data[(int)StatisticType.FourSuitGamesWon]}\n" +
+                $"Four suit games win percentage: {percentageFour}%\n",
+                TextWrapping = TextWrapping.Wrap,
+            };
+            SPInformation.Children.Add(stats);
         }
 
         private void GitHubClick(object sender, RoutedEventArgs e)
