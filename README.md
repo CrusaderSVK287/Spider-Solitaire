@@ -2,6 +2,7 @@
 
 Game of spider solitaire.
 How to play and feature explanation is accessible from the main menu
+See the Wiki portion here on github for extensive explanation.
 
 # Features
 * Randomized decks following a set of rules to make the games fairier
