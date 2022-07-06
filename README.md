@@ -1,7 +1,7 @@
 # Spider-Solitaire
 
 Game of spider solitaire.
-How to play and feature explanation is accessible from the main menu
+How to play and feature explanation is accessible from the main menu.
 See the Wiki portion here on github for extensive explanation.
 
 # Features
