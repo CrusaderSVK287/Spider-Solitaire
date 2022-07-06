@@ -52,7 +52,7 @@ namespace Spider_Solitaire
                 Statistics.IncreaseStat(StatisticType.GamesStarted);
                 if (numberOfColours == 1) Statistics.IncreaseStat(StatisticType.OneSuitGamesStarted);
                 if (numberOfColours == 2) Statistics.IncreaseStat(StatisticType.TwoSuitGamesStarted);
-                if (numberOfColours == 2) Statistics.IncreaseStat(StatisticType.FourSuitGamesStarted);
+                if (numberOfColours == 4) Statistics.IncreaseStat(StatisticType.FourSuitGamesStarted);
 
                 _ = deck.LayOutStartingCardsRecursive(cardOffset, SolitaireGrid, CardSelect, Loading, settings.PlayAnimations, settings.CardSizeFactor);
             }
