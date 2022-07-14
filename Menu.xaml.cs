@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
 using System.Diagnostics;
+using System.Net;
 
 namespace Spider_Solitaire
 {
@@ -22,11 +23,13 @@ namespace Spider_Solitaire
     /// </summary>
     public partial class Menu : Page
     {
+
         public Game? game;
         public Menu()
         {
             InitializeComponent();
             HowToPlayClick(new Button(),new RoutedEventArgs());
+            _ = CheckForUpdate();
         }
 
         private void DestroyGameReference()
@@ -388,6 +391,68 @@ namespace Spider_Solitaire
                 UseShellExecute = true
             };
             Process.Start(psi);
+        }
+
+
+        //Handles app update checking
+        private void UpdateButtonClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Updating Lorem ipsum");
+        }
+
+        private async Task CheckForUpdate()
+        {
+            string version = "";
+            await Task.Run(() => 
+            {
+                using (var client = new WebClient())
+                {
+                    client.DownloadFile("https://github.com/CrusaderSVK287/Spider-Solitaire/releases/latest", "tmp.html");
+                };
+                foreach (var line in File.ReadAllLines(@"tmp.html"))
+                {
+                    if (!line.Contains("<title>Release Spider Solitaire version")) continue;
+                    version = line;
+                    version.Trim(' ');
+                    File.Delete(@"tmp.html");
+                    break;
+                }
+                foreach (var line in version.Split(' '))
+                {
+                    if (line == null || line.Length == 0) continue;
+                    if (line[0] >= '0' && line[0] <= '9') { version = line; break; }
+                }
+            });
+
+            int[] latestVersion = new int[3];
+            int[] currentVersion = new int[3];
+
+            int tmpIndex = 0;
+            foreach (var item in version.Split('.'))
+            {
+                latestVersion[tmpIndex++] = Convert.ToInt32(item);
+            }
+            tmpIndex = 0;
+            foreach (var item in VersionText.Text.Split(new char[] { ' ', '.'}))
+            {
+                if (item == null || item.Length == 0 || item.Contains("Version")) continue;
+                currentVersion[tmpIndex++] = Convert.ToInt32(item);
+            }
+            if (!IsUpToDate(currentVersion,latestVersion)) UpdateButton.Visibility = Visibility.Visible;
+        }
+
+        private static bool IsUpToDate(int[] current, int[] latest)
+        {
+            //major
+            if (current[0] < latest[0]) return false;
+
+            //minor
+            if (current[1] < latest[1]) return false;
+
+            //bugfix
+            if (current[2] < latest[2]) return false;
+            
+            return true;
         }
     }
 }

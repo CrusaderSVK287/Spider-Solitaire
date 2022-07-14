@@ -22,6 +22,8 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <Button Width="80" Height="80" Content="TEST" HorizontalAlignment="Left" VerticalAlignment="Top" Click="UpdateButtonClick" Name="UpdateButton" Visibility="Hidden"/>
+
         <Grid Grid.Column="0">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
                         Margin="50,-50,0,0">
@@ -266,7 +268,8 @@
                        Foreground="LightGray"
                        Margin="5,0,0,5"
                        FontSize="15"
-                       FontWeight="Light"/>
+                       FontWeight="Light"
+                       Name="VersionText"/>
         </Grid>
 
         <Grid Grid.Column="1">
