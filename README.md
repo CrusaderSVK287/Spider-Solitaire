@@ -13,6 +13,7 @@ See the Wiki portion here on github for extensive explanation.
 * Statistics tracking
 * Save an unfinished game for later
 * Tweak some aspects of the game to your preferences
+* Semi-Automatic updates when new version drops
 
 # Requirements
 
@@ -24,6 +25,7 @@ this application can only run on Windows operating system.
 
 If you do not have it installed, install .Net 6.0 desktop runtime from here https://dotnet.microsoft.com/en-us/download/dotnet/6.0/runtime.
 Select Windws and under "Run desktop apps" click download x64 (or 86x if the 64 doesn't work) and then install
-Afterwards go onto releases https://github.com/CrusaderSVK287/Spider-Solitaire/releases open latest and scroll down and donwload the "Spider solitaire v x.x.x"
+Afterwards go onto releases https://github.com/CrusaderSVK287/Spider-Solitaire/releases open latest and scroll down and donwload the "Spider solitaire v x.x.x" 
+(Recommended is with the updater)
 zip file. After that extract it and your are done.
 To open the app, open the folder and then open the Spider Solitaire.exe
