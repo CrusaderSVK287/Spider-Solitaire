@@ -22,8 +22,6 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Button Width="80" Height="80" Content="TEST" HorizontalAlignment="Left" VerticalAlignment="Top" Click="UpdateButtonClick" Name="UpdateButton" Visibility="Hidden"/>
-
         <Grid Grid.Column="0">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
                         Margin="50,-50,0,0">
@@ -262,14 +260,49 @@
                     </Button.Template>
                 </Button>
             </StackPanel>
-            <TextBlock Text="Version 0.1.1" 
+            <TextBlock Text="Version 0.2.0" 
                        VerticalAlignment="Bottom"
                        HorizontalAlignment="Left"
                        Foreground="LightGray"
-                       Margin="5,0,0,5"
+                       Margin="15,0,0,5"
                        FontSize="15"
                        FontWeight="Light"
                        Name="VersionText"/>
+            <Button Content="Update!" 
+                    FontSize="20"
+                    Name="UpdateButton"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Click="UpdateButtonClick"
+                    Margin="5,0,0,30"
+                    FontWeight="Light"
+                    Visibility="Hidden">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="Green"/>
+                        <Setter Property="Foreground" Value="DarkSlateGray"/>
+                        <Setter Property="FontWeight" Value="Medium"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="DarkGreen"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="100" Height="40"
+                                    CornerRadius="20"
+                                    BorderBrush="#f5d51f"
+                                    BorderThickness="3"
+                                    Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
         </Grid>
 
         <Grid Grid.Column="1">
