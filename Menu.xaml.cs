@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
 using System.Diagnostics;
+using System.Net;
 
 namespace Spider_Solitaire
 {
@@ -22,11 +23,13 @@ namespace Spider_Solitaire
     /// </summary>
     public partial class Menu : Page
     {
+
         public Game? game;
         public Menu()
         {
             InitializeComponent();
             HowToPlayClick(new Button(),new RoutedEventArgs());
+            _ = CheckForUpdate();
         }
 
         private void DestroyGameReference()
@@ -388,6 +391,108 @@ namespace Spider_Solitaire
                 UseShellExecute = true
             };
             Process.Start(psi);
+        }
+
+
+        //Handles app update checking
+        private void UpdateButtonClick(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show($"Would you like to download and install the version {LatestVersion} update automatically?\n" +
+                                                      "Press yes to install automatically\n" +
+                                                      "Press no to be redirected to the download page and download the update manually\n" +
+                                                      "Press cancel to cancel the update", "Auto Update", MessageBoxButton.YesNoCancel, MessageBoxImage.Question,
+                                                      MessageBoxResult.Yes);
+            if (result == MessageBoxResult.Cancel) return;
+            if (result == MessageBoxResult.No)
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "https://github.com/CrusaderSVK287/Spider-Solitaire/releases/latest",
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
+                return;
+            }
+
+            string[] files = { "SpiderSolitaireUpdater.deps.json", "SpiderSolitaireUpdater.dll", "SpiderSolitaireUpdater.exe", "SpiderSolitaireUpdater.pdb", "SpiderSolitaireUpdater.runtimeconfig.json" };
+            foreach (string file in files)
+            {
+                if (File.Exists(@""+file)) continue;
+                result = MessageBox.Show("It seems you do not have the updater installed or it's damaged.\nWould you like to be redirected to it's repository in order to download it?", "Updater not installed",
+                    MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if(result == MessageBoxResult.Yes)
+                {
+                    var psi = new ProcessStartInfo
+                    {
+                        FileName = "https://github.com/CrusaderSVK287/Spider-Solitaire-Updater/releases/tag/v0.1.0",
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+                return;
+            }
+            File.WriteAllText(@"args.txt", LatestVersion);
+            Process.Start("SpiderSolitaireUpdater.exe");
+            Environment.Exit(0);
+        }
+
+        private string? LatestVersion { get; set; }
+
+        //checks the games repository for the newest version number
+        private async Task CheckForUpdate()
+        {
+            string version = "";
+            await Task.Run(() => 
+            {
+                using (var client = new WebClient())
+                {
+                    client.DownloadFile("https://github.com/CrusaderSVK287/Spider-Solitaire/releases/latest", "tmp.html");
+                };
+                foreach (var line in File.ReadAllLines(@"tmp.html"))
+                {
+                    if (!line.Contains("<title>Release Spider Solitaire version")) continue;
+                    version = line.Trim();
+                    File.Delete(@"tmp.html");
+                    break;
+                }
+                foreach (var line in version.Split(' '))
+                {
+                    if (line == null || line.Length == 0) continue;
+                    if (line[0] >= '0' && line[0] <= '9') { version = line; break; }
+                }
+            });
+
+            int[] latestVersion = new int[3];
+            int[] currentVersion = new int[3];
+
+            int tmpIndex = 0;
+            foreach (var item in version.Split('.'))
+            {
+                latestVersion[tmpIndex++] = Convert.ToInt32(item);
+            }
+            tmpIndex = 0;
+            foreach (var item in VersionText.Text.Split(new char[] { ' ', '.'}))
+            {
+                if (item == null || item.Length == 0 || item.Contains("Version")) continue;
+                currentVersion[tmpIndex++] = Convert.ToInt32(item);
+            }
+            LatestVersion = $"{latestVersion[0]}.{latestVersion[1]}.{latestVersion[2]}";
+            if (!IsUpToDate(currentVersion,latestVersion)) UpdateButton.Visibility = Visibility.Visible;
+        }
+
+        //compares current app version with the latest
+        private static bool IsUpToDate(int[] current, int[] latest)
+        {
+            //major
+            if (current[0] < latest[0]) return false;
+
+            //minor
+            if (current[1] < latest[1]) return false;
+
+            //bugfix
+            if (current[2] < latest[2]) return false;
+            
+            return true;
         }
     }
 }
