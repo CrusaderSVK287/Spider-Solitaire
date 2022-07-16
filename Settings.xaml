@@ -24,29 +24,34 @@
                    FontSize="9" 
                    VerticalAlignment="Top" HorizontalAlignment="Left"
                    TextWrapping="Wrap"
-                   Margin="8,110,0,0"/>
+                   Margin="8,110,0,0"
+                   Name="NoteAboutScrolling"/>
 
 
         <TextBlock Text="Visuals" FontSize="20" FontWeight="Medium" 
                    VerticalAlignment="Top" HorizontalAlignment="Left" 
-                   Margin="10,10,0,0"/>
+                   Margin="10,10,0,0"
+                   Name="VisualsText"/>
         <TextBlock Text="Card size:" FontSize="15" 
                    VerticalAlignment="Top" HorizontalAlignment="Left" 
-                   Margin="10,35,0,0"/>
+                   Margin="10,35,0,0"
+                   Name="CardSizeDesc"/>
         <TextBlock Text="100" FontSize="15" Name="CardSizeText" 
                    VerticalAlignment="Top" HorizontalAlignment="Left"
                    MouseWheel="CardSizeTextMouseWheel" Height="25" Width="35" TextAlignment="Center"
                    Margin="130,35,0,0"/>
         <TextBlock Text="Card spacing:" FontSize="15"
                    VerticalAlignment="Top" HorizontalAlignment="Left"
-                   Margin="10,60,0,0"/>
+                   Margin="10,60,0,0"
+                   Name="CardSpacingDesc"/>
         <TextBlock Text="20" FontSize="15" Name="CardSpacingText"
                    VerticalAlignment="Top" HorizontalAlignment="Left"
                    MouseWheel="CardSpacingTextMouseWheel" Width="30" Height="25" TextAlignment="Center"
                    Margin="135,60,0,0"/>
         <TextBlock Text="Play animations:" FontSize="15"
                    VerticalAlignment="Top" HorizontalAlignment="Left"
-                   Margin="10,85,0,0"/>
+                   Margin="10,85,0,0"
+                   Name="PlayAnimDesc"/>
         <CheckBox VerticalAlignment="Top" HorizontalAlignment="Left"
                   Margin="195,90,0,0" Name="PlayAnimationsBox"
                   IsChecked="True"/>
@@ -65,13 +70,16 @@
 
         <TextBlock Text="Gameplay" FontSize="20" FontWeight="Medium"
                    VerticalAlignment="Top" HorizontalAlignment="Left"
-                   Margin="10,130,0,0"/>
+                   Margin="10,130,0,0"
+                   Name="GameplayText"/>
         <TextBlock Text="Hint mode:" FontSize="15"
                    VerticalAlignment="Top" HorizontalAlignment="Left"
-                   Margin="10,160,0,0"/>
+                   Margin="10,160,0,0"
+                   Name="HintModeDesc"/>
         <TextBlock Text="Language:" FontSize="15"
                    VerticalAlignment="Top" HorizontalAlignment="Left"
-                   Margin="10,188,0,0"/>
+                   Margin="10,188,0,0"
+                   Name="LanguageDesc"/>
         <ComboBox Width="100" Height="22" Name="HintModeBox"
                   HorizontalAlignment="Left" VerticalAlignment="Top"
                   Margin="130,160,0,0" SelectedIndex="0">
@@ -86,7 +94,8 @@
 
         <TextBlock Text="Miscellaneous" FontSize="20" FontWeight="Medium"
                    VerticalAlignment="Top" HorizontalAlignment="Left"
-                   Margin="10,230,0,0"/>
+                   Margin="10,230,0,0"
+                   Name="MiscellaneousText"/>
         <Button Content="Reset statistics" Width="120" Height="25" FontSize="15"
                 VerticalAlignment="Top" HorizontalAlignment="Left"
                 Margin="10,260,0,0" Name="ResetStatisticsButton" Click="ResetStatisticsButtonClick"/>

@@ -21,11 +21,13 @@ namespace Spider_Solitaire
     public partial class Settings : Window
     {
         private readonly Action _ReenableSettingsButton;
+        private string CurrentLanguage { get; }
         private List<string> Languages { get; set; }
 
-        public Settings(Action ReenableSettingsButton)
+        public Settings(Action ReenableSettingsButton, string language)
         {
             InitializeComponent();
+            CurrentLanguage = language;
             _ReenableSettingsButton = ReenableSettingsButton;
             Languages = new List<string>();
             LoadSettings();
@@ -71,6 +73,28 @@ namespace Spider_Solitaire
                 CancelButtonClick(new Button(), new RoutedEventArgs());
                 return;
             }
+
+            VisualsText.Text = Localisation.SetText(TextType.SettingsVisuals, CurrentLanguage);
+            CardSizeDesc.Text = Localisation.SetText(TextType.SettingsCardSize, CurrentLanguage);
+            CardSpacingDesc.Text = Localisation.SetText(TextType.SettingsCardSpacing, CurrentLanguage);
+            PlayAnimDesc.Text = Localisation.SetText(TextType.SettingsPlayAnimations, CurrentLanguage);
+            NoteAboutScrolling.Text = Localisation.SetText(TextType.SettingsNoteAboutScrolling, CurrentLanguage);
+
+            GameplayText.Text = Localisation.SetText(TextType.SettingsGameplay, CurrentLanguage);
+            HintModeDesc.Text = Localisation.SetText(TextType.SettingsHintMode, CurrentLanguage);
+            LanguageDesc.Text = Localisation.SetText(TextType.SettingsLanguage, CurrentLanguage);
+
+            MiscellaneousText.Text = Localisation.SetText(TextType.SettingsMiscellaneous, CurrentLanguage);
+            ResetStatisticsButton.Content = Localisation.SetText(TextType.SettingsResetStats, CurrentLanguage);
+            DefaultSettButton.Content = Localisation.SetText(TextType.SettingsDefaultSettings, CurrentLanguage);
+
+            ApplyButton.Content = Localisation.SetText(TextType.SettingsButtonApply, CurrentLanguage);
+            CancelButton.Content = Localisation.SetText(TextType.SettingsButtonCancel, CurrentLanguage);
+
+            HintEnabled.Content = Localisation.SetText(TextType.SettingsHintModeItemEnabled, CurrentLanguage);
+            HintRestricted.Content = Localisation.SetText(TextType.SettingsHintModeItemRestricted, CurrentLanguage);
+            HintDisabled.Content = Localisation.SetText(TextType.SettingsHintModeItemDisabled, CurrentLanguage);
+            Title = Localisation.SetText(TextType.WindowSettingsButton, CurrentLanguage);
         }
 
         public static bool WriteSettingsFile()
@@ -202,7 +226,7 @@ namespace Spider_Solitaire
 
         private void ResetStatisticsButtonClick(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("This will reset all statistics to 0.\nThere is no going back", "Are you sure?",
+            if (MessageBox.Show(Localisation.SetText(TextType.SettingsResetStatsQuestion, CurrentLanguage), "Note",
                 MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) return;
             Statistics.ResetStatistics();
         }
@@ -228,7 +252,7 @@ namespace Spider_Solitaire
                                  PlayAnimationsBox.IsChecked == true,
                                  Languages[LanguageBox.SelectedIndex])
                 == false) return;
-            MessageBox.Show("Settings have been applied.\nYou may now close the window.\nIf you are in game, please reload it in order\nfor changes to take effect","Applied",MessageBoxButton.OK,MessageBoxImage.Information);
+            MessageBox.Show(Localisation.SetText(TextType.SettingsApplyMessage, CurrentLanguage),"Applied",MessageBoxButton.OK,MessageBoxImage.Information);
         }
 
         

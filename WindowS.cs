@@ -40,6 +40,7 @@ namespace Spider_Solitaire
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
+            SettingsButton.Content = Localisation.SetText(TextType.WindowSettingsButton, CurrentLanguage) + " ⚙";
             Menu menu = new(CurrentLanguage);
             SolitaireFrame.NavigationService.Navigate(menu);
         }
@@ -75,7 +76,7 @@ namespace Spider_Solitaire
 
         private void SettingsClick(object sender, RoutedEventArgs e)
         {
-            Settings settings = new(EnableSettingsButton);
+            Settings settings = new(EnableSettingsButton, CurrentLanguage);
             settings.Owner = this;
             settings.Show();
             SettingsButton.IsEnabled = false;

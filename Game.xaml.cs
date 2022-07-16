@@ -623,7 +623,7 @@ namespace Spider_Solitaire
                                 HintMode = Convert.ToInt32(data[1]);
                                 break;
                             case 3:
-                                PlayAnimations = (data[1] == "1") ? true : false;
+                                PlayAnimations = data[1] == "1";
                                 break;
                             default:
                                 break;
