@@ -2,6 +2,7 @@ Welcome to spider solitaire!
 Play with 1 suit
 Play with 2 suits
 Play with 4 suits
+Load Game
 How to play
 Statistics
 Update
@@ -44,7 +45,7 @@ Four suit games won
 Four suit games win percentage
 Would you like to download and install the version
 update automatically? →Press yes to install automatically →Press no to be redirected to the download page and download the update manually →Press cancel to cancel the update.
-It seems you do not have the updater installed or it's damaged.\nWould you like to be redirected to it's repository in order to download it?
+It seems you do not have the updater installed or it's damaged. →Would you like to be redirected to it's repository in order to download it?
 Exit
 Restart
 Undo
@@ -55,6 +56,7 @@ You have
 hints remaining
 Victory
 No more possible meaningfull moves found, consider taking a few steps back,→restarting the game or starting a new game.→→Would you like to restart the game with the same deck?
+Are you sure? This action will reset the game to the starting point, →there is no going back
 Visuals
 Card size:
 Card spacing:

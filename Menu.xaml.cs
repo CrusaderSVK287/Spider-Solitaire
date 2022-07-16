@@ -79,6 +79,7 @@ namespace Spider_Solitaire
             OneSuit.Content = Localisation.SetText(TextType.MenuOneSuitButton, CurrentLanguage);
             TwoSuit.Content = Localisation.SetText(TextType.MenuTwoSuitButton, CurrentLanguage);
             FourSuit.Content = Localisation.SetText(TextType.MenuFourSuitButton, CurrentLanguage);
+            Load.Content = Localisation.SetText(TextType.MenuLoadGameButton, CurrentLanguage);
             HowToPlay.Content = Localisation.SetText(TextType.MenuHowToPlayButton, CurrentLanguage);
             Stats.Content = Localisation.SetText(TextType.MenuStatisticsButton, CurrentLanguage);
             UpdateButton.Content = Localisation.SetText(TextType.MenuUpdateButton, CurrentLanguage);

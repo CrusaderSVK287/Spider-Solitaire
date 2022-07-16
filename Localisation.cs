@@ -32,6 +32,7 @@ namespace Spider_Solitaire
         MenuOneSuitButton,
         MenuTwoSuitButton,
         MenuFourSuitButton,
+        MenuLoadGameButton,
         MenuHowToPlayButton,
         MenuStatisticsButton,
         MenuUpdateButton,
@@ -93,6 +94,7 @@ namespace Spider_Solitaire
         GameHintTextBoxRemaining,
         GameVictoryText,
         GameNoMoreMovesPossible,
+        GameRestartQuestion,
 
         //Settings
         SettingsVisuals,

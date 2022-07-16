@@ -319,7 +319,7 @@ namespace Spider_Solitaire
                 File.WriteAllLines(@"autosave.soli", Lines.Take(Lines.Length - (int)LastCommand).ToArray());
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString(), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning); }
-            Game game = new Game(_numberOfColours, false, _menu, _destroy, CurrentLanguage);
+            Game game = new(_numberOfColours, false, _menu, _destroy, CurrentLanguage);
             if (game != null) NavigationService.Navigate(game);
             _destroy();
         }
@@ -327,8 +327,8 @@ namespace Spider_Solitaire
         private void RestartClick(object sender, RoutedEventArgs e)
         {
             if (AnimationPlaying || Selected.Count > 0) return;
-            MessageBoxResult result = MessageBox.Show("This action will reset the game to the starting point,\nthere is no going back",
-                "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            MessageBoxResult result = MessageBox.Show(Localisation.SetText(TextType.GameRestartQuestion,CurrentLanguage),
+                "Note", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.No) return;
             try
             {

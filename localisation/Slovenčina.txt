@@ -1,0 +1,78 @@
+Vitajte v pavúčom solitéri!
+Hrať s 1 farbou
+Hrať s 2 farbami
+Hrať s 4 farbami
+Načítať hru
+Ako hrať
+Štatistiky
+Aktualizovať
+Ako hrať
+Cieľom pavúčieho solitairu, ako pri všetkých solitairoch, je odstrániť všetky karty z hry. Toto sa docieli zostavením celej farebnej sady kariet. Každá sada sa skladá z 13 kariet rovnakej farby od esa po kráľa. Na zostavenie sady musí byť všetkých 13 kariet v rade za sebou. Následne sa sada odstráni z hry. Akonáhle je zostavených všetkých 8 sád, hráč vyhráva. Na obrázku nižšie sú všetky 4 farby →(z ľava: tref, káro, pika, srdce)
+Čísla na tlačítkach označujú koľko farieb bude figorovať v hre. Toto avšak nemá dopad na celkový počet kariet. Tých je stále 104 (8 sád po 13 kariet) →→Pre výber kariet na presun je potrebné kliknúť na obrázok karty. Animácia ukáže ktoré karty boli vybrané. Potom treba vybrať stĺpec kam vybrané karty položiť. Ak je vybraný nevhodný alebo ten istý stĺpec z kadiaľ boli karty vzaté, všetky sa vrátia na pôvodné miesto. Môžu sa brať iba karty ktoré sú odkryté, čiže je vydno ich farebnú sadu a hodnotu. Karta môže byť položená na kartu ktorá je za ňou v postupnosti (7 môže byť položená iba na 8, 3 na 4 atď...). Na farby sa toto pravidlo nevzťahuje a teda srdcová 9 môže ísť na pikovú 10. Na obrázku dole je zostavená celá sada pík zostupne.
+Ak sa karty zo stĺpca odstránia natoľko že najvrchnejšia je modrá karta, odhalí sa jej farba a hodnota. Akonáhle sa celí stĺpec vyčistí od kariet a je vydno zelený rámček, znamená to že stĺpec je prázdny a je možné naň uložiť hociakú kartu alebo karty. Na obrázku dole je vidno spomínaný rámček.
+Keďže najväčšia karta je Kráľ, znamená to že Kráľ môže byť presunutý iba na prázdny stĺpec. Na druhej strane, keďže eso je najmenšia karta, žiadna karta nemôže byť položená na nich. Keď dojdú možné ťahy s aktuálnymi kartami, je možné rozdať nový rad desitaich kariet kliknutím na modrú neodhalenú kartu v pravom dolnom rohu. Tým sa pridá do každého stĺpca jedna karta. Nové karty sa nemôžu vyložiť ak je nejaký stĺpec prázdny. →→To by bolo všetko pre základ hry. Ďalej sa nachádza vysvetlenie tlačidiel, nastavení a pokročilích funkcií. Na začiatok si môžete zahrať vopred nastavenú hru ktorá je veľmi ľahká. Zapnete ju stlačením nasledujúceho tlačidla.→→ 
+Tlačidlá
+V hre sa nachádajú 4 tlačidlá, každeé z nich má vlastnú funkciu.→
+Toto tlačidlo vracia do hlavného menu, na vrátenie do hry je možné stlačiť načítač hru.
+Toto tlačidlo reštartuje hru s rovnakými kartami ako na začiatku.
+Toto tlačidlo vráti posledný ťah.
+Toto tlačidlo zobrazí nápovedu. Na obrazovke sa zobrazia žlté rámčeky okolo kariet ktoré treba vziať a kam ich dať.
+Pokročilé funkcie a nastavenia
+Nastavenia sa zobrazia stlačením tlaćítka nastavenia v hornom ľavom rohu, má na sebe symbol ozubeného kolieska ⚙. →→Veľkosť kariet mení veľkosť obrázkov kariet zobrazovaných na obrazovke v rozsahu od 50% do 200%, kde 100% je predvolené. →Vzdialenosť kariet určuje ako ďaleko od seba sa karty zobrazujú, predvolená hodnota je 20 no odporúča sa zvýšiť aspoň na 25 ak hrajete so 4 farbami, inak je problém rozoznať farby od seba. ->Mód nápovedy určuje ako dostupná je nápoveda v hre. Dokopy sú 3 módy: →→-Povolená (predvolené) - žiadne obmedzenia →-Obmedzená - k dispozícii je obmedzený počet nápoved. Hra začína s tromi nápovedami a za každú zloženú sadu sa zvýši tento počet o 1, dokopy sa dá takto získať 10 nápoved. →-Vypnutá - nápoveda sa nedá použiť →→Ostávajú dve tlačidlá, jedno obnoví všetky nastavenia (okrem jazyka) na predvolené a druhé vynuluje všetky štatistiky. Ak sa niečo zmení, je potrebné ich potvrdiť stlačím tlačidla potvrdiť, inak sa zmeny neuložia
+Chyba pri otváraní súboru so štatistikami. →Vymažte súbor alebo reštartujte aplikáciu
+Štatistiky
+Všeobecné
+Začaté hry
+Vyhraté hry
+Presunuté karty
+Zostavené sady
+Zostavené sady pík 
+Zostavené sady srdcí
+Zostavené sady trefov
+Zostavené sady károv
+Použité nápovedy
+Hry s jednou farbou
+Začaté hry s jednou farbou
+Vyhrané hry s jednou farbou
+Percento vyhratých hier s jednou farbou
+Hry s dvoma farbami
+Začaté hry s dvoma farbami
+Vyhrané hry s dvoma farbami
+Percento vyhratých hier s jednou farbouHry s dvoma farbami
+Hry so štyrmi farbami
+Začaté hry so štyrmi farbami
+Vyhrané hry so štyrmi farbami
+Percento vyhratých hier so štyrmi farbami
+Chcete stiahnuť a nainštalovať verziu
+automaticky? →Stlačte yes ak áno. →Stlačte no na zobrazenie stránky na manuálne stiahnutie. →Stlačte cancel pre zrušenie
+Vyzerá to že nemáte nainštalovaný updater alebo je poškodený. →Chceli by ste byť odkázaní na jeho repozitár pre stiahnutie?
+Domov
+Reštart
+Vrátiť ťah
+Nápoveda
+Nemôžte vyložiť nové karty pokiaľ je niektorý stĺpec prázdny.
+Už nemáte žiadnu nápovedu
+Ostáva vám
+nápoveda
+Výhra
+Žiadne ďalšie zmysluplné ťahy neboli nájdene, zvážte sa vrátiť niekoľko krokov, reštartovať hru alebo začať novú hru. →→Chceli by ste reštartovať hru s rovnakými kartami?
+Ste si istý? Táto akcia resetuje hru na začiatok, →nedá sa to vrátiť
+Výzor
+Veľkosť kariet:
+Vzdialenosť kariet:
+Prehrať animácie
+Poznámka: Môžte použiť koliesko myši
+Hra
+Mód nápovedy:
+Jazyk:
+Rôzne
+Resetovať štatistiky
+Predvolené nastavenia
+Ste si istý? Toto resetuje všetky štatistiky na 0. →Táto akcia sa nedá vrátiť späť
+Nastavenia boli uložené. →Môžete zavrieť okno. →Ak ste práve v hre, načítajte ju znova aby sa →zmeny prejavili.
+Potvrdiť
+Zrušiť
+Povolená
+Obmbedzená
+Vypnutá
+Nastavenia
