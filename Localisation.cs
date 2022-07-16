@@ -53,7 +53,7 @@ namespace Spider_Solitaire
 
         //Statistics text
         MenuSPInformationStatisticsErrorOpeningFile,
-        MenuSPInformationStatisticsStatisticsTitle,
+        MenuSPInformationStatisticsTitle,
         MenuSPInformationStatisticsGeneral,
         MenuSPInformationStatisticsGamesStarted,
         MenuSPInformationStatisticsGamesWon,
@@ -65,15 +65,15 @@ namespace Spider_Solitaire
         MenuSPInformationStatisticsDiamondsAssembled,
         MenuSPInformationStatisticsHintsTaken,
         MenuSPInformationStatisticsOneSuitGames,
-        MenuSPInformationStatisticsOneSuitGamesPlyed,
+        MenuSPInformationStatisticsOneSuitGamesPlayed,
         MenuSPInformationStatisticsOneSuitGamesWon,
         MenuSPInformationStatisticsOneSuitGamesPercentage,
         MenuSPInformationStatisticsTwoSuitGames,
-        MenuSPInformationStatisticsTwoSuitGamesPlyed,
+        MenuSPInformationStatisticsTwoSuitGamesPlayed,
         MenuSPInformationStatisticsTwoSuitGamesWon,
         MenuSPInformationStatisticsTwoSuitGamesPercentage,
         MenuSPInformationStatisticsFourSuitGames,
-        MenuSPInformationStatisticsFourSuitGamesPlyed,
+        MenuSPInformationStatisticsFourSuitGamesPlayed,
         MenuSPInformationStatisticsFourSuitGamesWon,
         MenuSPInformationStatisticsFourSuitGamesPercentage,
 

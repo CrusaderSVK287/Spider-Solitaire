@@ -249,13 +249,13 @@ namespace Spider_Solitaire
             string[]? data = Statistics.GetStats();
             if(data == null)
             {
-                MessageBox.Show("Error opening statistics file.\nDelete the file and/or restart the application","Error",MessageBoxButton.OK,MessageBoxImage.Error);
+                MessageBox.Show(Localisation.SetText(TextType.MenuSPInformationStatisticsErrorOpeningFile,CurrentLanguage),"Error",MessageBoxButton.OK,MessageBoxImage.Error);
                 HowToPlayClick(new Button(), new RoutedEventArgs());
                 return;
             }
             TextBlock title = new()
             {
-                Text = "Statistics",
+                Text = Localisation.SetText(TextType.MenuSPInformationStatisticsTitle, CurrentLanguage),
                 FontSize = 40,
             };
 
@@ -269,28 +269,28 @@ namespace Spider_Solitaire
             SPInformation.Children.Add(title);
             TextBlock stats = new()
             {
-                Text = "\n---General---\n" +
-                $"Games started: {data[(int)StatisticType.GamesStarted]}\n" +
-                $"Games won: {data[(int)StatisticType.GamesWon]}\n" +
-                $"Cards moved: {data[(int)StatisticType.CardsMoved]}\n" +
-                $"Suits assembled: {data[(int)StatisticType.SuitsAssembled]}\n" +
-                $"Suits of spades assembled: {data[(int)StatisticType.SuitSpadesAssembled]}\n" +
-                $"Suits of hearts assembled: {data[(int)StatisticType.SuitHeartsAssembled]}\n" +
-                $"Suits of clubs assembled: {data[(int)StatisticType.SuitClubsAssembled]}\n" +
-                $"Suits of diamonds assembled: {data[(int)StatisticType.SuitDiamondsAssembled]}\n" +
-                $"Hints taken: {data[(int)StatisticType.HintsTaken]}\n" +
-                $"\n---One suit games---\n" +
-                $"One suit games played: {data[(int)StatisticType.OneSuitGamesStarted]}\n" +
-                $"One suit games won: {data[(int)StatisticType.OneSuitGamesWon]}\n" +
-                $"One suit games win percentage: {percentageOne}%\n" +
-                $"\n---Two suit games---\n" +
-                $"Two suit games played: {data[(int)StatisticType.TwoSuitGamesStarted]}\n" +
-                $"Two suit games won: {data[(int)StatisticType.TwoSuitGamesWon]}\n" +
-                $"Two suit games win percentage: {percentageTwo}%\n" +
-                $"\n---Four suit games---\n" +
-                $"Four suit games played: {data[(int)StatisticType.FourSuitGamesStarted]}\n" +
-                $"Four suit games won: {data[(int)StatisticType.FourSuitGamesWon]}\n" +
-                $"Four suit games win percentage: {percentageFour}%\n",
+                Text = "\n---"+Localisation.SetText(TextType.MenuSPInformationStatisticsGeneral,CurrentLanguage)+"---\n" +
+                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsGeneral, CurrentLanguage)}: {data[(int)StatisticType.GamesStarted]}\n" +
+                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsGamesWon, CurrentLanguage)}: {data[(int)StatisticType.GamesWon]}\n" +
+                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsCardsMoved, CurrentLanguage)}: {data[(int)StatisticType.CardsMoved]}\n" +
+                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsSuitsAssembled, CurrentLanguage)}: {data[(int)StatisticType.SuitsAssembled]}\n" +
+                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsSpadesAssembled, CurrentLanguage)}: {data[(int)StatisticType.SuitSpadesAssembled]}\n" +
+                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsHeartsAssembled, CurrentLanguage)}: {data[(int)StatisticType.SuitHeartsAssembled]}\n" +
+                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsClubsAssembled, CurrentLanguage)}: {data[(int)StatisticType.SuitClubsAssembled]}\n" +
+                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsDiamondsAssembled, CurrentLanguage)}: {data[(int)StatisticType.SuitDiamondsAssembled]}\n" +
+                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsHintsTaken, CurrentLanguage)}: {data[(int)StatisticType.HintsTaken]}\n" +
+                $"\n---{Localisation.SetText(TextType.MenuSPInformationStatisticsOneSuitGames, CurrentLanguage)}---\n" +
+                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsOneSuitGamesPlayed, CurrentLanguage)}: {data[(int)StatisticType.OneSuitGamesStarted]}\n" +
+                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsOneSuitGamesWon, CurrentLanguage)}: {data[(int)StatisticType.OneSuitGamesWon]}\n" +
+                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsOneSuitGamesPercentage, CurrentLanguage)}: {percentageOne}%\n" +
+                $"\n---{Localisation.SetText(TextType.MenuSPInformationStatisticsTwoSuitGames, CurrentLanguage)}---\n" +
+                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsTwoSuitGamesPlayed, CurrentLanguage)}: {data[(int)StatisticType.TwoSuitGamesStarted]}\n" +
+                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsTwoSuitGamesWon, CurrentLanguage)}: {data[(int)StatisticType.TwoSuitGamesWon]}\n" +
+                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsTwoSuitGamesPercentage, CurrentLanguage)}: {percentageTwo}%\n" +
+                $"\n---{Localisation.SetText(TextType.MenuSPInformationStatisticsFourSuitGames, CurrentLanguage)}---\n" +
+                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsFourSuitGamesPlayed, CurrentLanguage)}: {data[(int)StatisticType.FourSuitGamesStarted]}\n" +
+                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsFourSuitGamesWon, CurrentLanguage)}: {data[(int)StatisticType.FourSuitGamesWon]}\n" +
+                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsFourSuitGamesPercentage, CurrentLanguage)}: {percentageFour}%\n",
                 TextWrapping = TextWrapping.Wrap,
             };
             SPInformation.Children.Add(stats);
