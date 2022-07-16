@@ -26,6 +26,7 @@ namespace Spider_Solitaire
         private readonly Action _destroy; //used as a delegate from menu.cs, destroys all references to current game for garbage collector to free the memory
         private readonly int _numberOfColours;
         private readonly Settings settings;
+        public string CurrentLanguage { get; }
         private CommandType LastCommand { get; set; }
         private bool AnimationPlaying { get; set; } = false;   //used to track whether an animation is playing to avoid confusions
         private bool Loading { get; set; } = false;
@@ -36,7 +37,7 @@ namespace Spider_Solitaire
         private int RemainingHints { get; set; }    //number of remaining hints
 
         private Deck deck = new Deck();
-        public Game(int numberOfColours, bool isNewGame, Menu menu, Action Destroy)
+        public Game(int numberOfColours, bool isNewGame, Menu menu, Action Destroy, string language)
         {
             InitializeComponent();
             KeepAlive = false;
@@ -44,6 +45,7 @@ namespace Spider_Solitaire
             LastCommand = CommandType.select;
             settings = new();
             cardOffset = settings.CardSpacing;
+            CurrentLanguage = language;
             RemainingHints = GetHints();
             LayOutCardOutlines();
             if (isNewGame)
@@ -223,7 +225,7 @@ namespace Spider_Solitaire
             for (int i = 0; i < 10; i++)
             {
                 if (deck.activeCards[i].Count > 0) continue;
-                InformationBox.Text = "You cannot deal a new row while any of the columns are empty";
+                InformationBox.Text = Localisation.SetText(TextType.GameInformationTextEmptyColumn, CurrentLanguage);
                 await Task.Delay(10000);
                 InformationBox.Text = " ";
                 return;
@@ -295,6 +297,7 @@ namespace Spider_Solitaire
             Restart.IsEnabled = false;
             Exit.IsEnabled = false;
             await Task.Delay(500);
+            VictoryText.Text = Localisation.SetText(TextType.GameVictoryText, CurrentLanguage) + "!";
             VictoryText.Visibility = Visibility.Visible;
             await Task.Delay(5000);
             NavigationService.Navigate(_menu);
@@ -316,7 +319,7 @@ namespace Spider_Solitaire
                 File.WriteAllLines(@"autosave.soli", Lines.Take(Lines.Length - (int)LastCommand).ToArray());
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString(), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning); }
-            Game game = new Game(_numberOfColours, false, _menu, _destroy);
+            Game game = new(_numberOfColours, false, _menu, _destroy, CurrentLanguage);
             if (game != null) NavigationService.Navigate(game);
             _destroy();
         }
@@ -324,8 +327,8 @@ namespace Spider_Solitaire
         private void RestartClick(object sender, RoutedEventArgs e)
         {
             if (AnimationPlaying || Selected.Count > 0) return;
-            MessageBoxResult result = MessageBox.Show("This action will reset the game to the starting point,\nthere is no going back",
-                "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            MessageBoxResult result = MessageBox.Show(Localisation.SetText(TextType.GameRestartQuestion,CurrentLanguage),
+                "Note", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.No) return;
             try
             {
@@ -333,7 +336,7 @@ namespace Spider_Solitaire
                 File.WriteAllLines(@"autosave.soli", Lines.Take(105).ToArray());
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString(), "Restart", MessageBoxButton.OK, MessageBoxImage.Warning); }
-            Game game = new Game(_numberOfColours, false, _menu, _destroy);
+            Game game = new Game(_numberOfColours, false, _menu, _destroy, CurrentLanguage);
             if (game != null) NavigationService.Navigate(game);
             _destroy();
         }
@@ -346,7 +349,7 @@ namespace Spider_Solitaire
             HintBoxUpdate();
             if(RemainingHints == 0) return;
             if (!Loading) Statistics.IncreaseStat(StatisticType.HintsTaken);
-
+            RemainingHints--;
             //Parent = same color, value +1, Half-Parent = different color, value +1.
             //internal method, checks whether a card doesnt already lay on it's "parent" card (e.g. 7A is under 8A),
             //this is to prevent really unhelpfull hints
@@ -452,7 +455,7 @@ namespace Spider_Solitaire
             }
 
             //no possible meaningfull move was found
-            MessageBoxResult result = MessageBox.Show("No more possible meaningfull moves found, consider taking a few steps back,\nrestarting the game or starting a new game.\n\nWould you like to restart the game with the same deck?"
+            MessageBoxResult result = MessageBox.Show(Localisation.SetText(TextType.GameNoMoreMovesPossible, CurrentLanguage)
                 , "No more moves",MessageBoxButton.YesNo,MessageBoxImage.Information);
             if(result == MessageBoxResult.Yes) RestartClick(new Image(), new RoutedEventArgs());
         }
@@ -462,15 +465,14 @@ namespace Spider_Solitaire
         {
             if (RemainingHints == 0)
             {
-                HintBox.Text = "No more hints available";
+                HintBox.Text = Localisation.SetText(TextType.GameHintTextBoxNoMoreHints, CurrentLanguage);
             }
             if (RemainingHints > 0)
             {
-                RemainingHints--;
-                HintBox.Text = $"You have {RemainingHints} hint{(RemainingHints==1?"":"s")} remaining";
+                HintBox.Text = $"{Localisation.SetText(TextType.GameHintTextBoxYouHave, CurrentLanguage)} {RemainingHints-1} {Localisation.SetText(TextType.GameHintTextBoxRemaining, CurrentLanguage)}";
             }
             await Task.Delay(5000);
-            HintBox.Text = "";
+            HintBox.Text = " ";
         }
 
         //determines whether the current card can be moved
@@ -578,10 +580,10 @@ namespace Spider_Solitaire
         {
             while(SPButtons.IsMouseOver == true)
             {
-                if (Exit.IsMouseOver == true) InformationBox.Text = "Exit";
-                else if (Restart.IsMouseOver == true) InformationBox.Text = "Restart";
-                else if (Back.IsMouseOver == true) InformationBox.Text = "Undo";
-                else if (Hint.IsMouseOver == true) InformationBox.Text = "Hint";
+                if (Exit.IsMouseOver == true) InformationBox.Text = Localisation.SetText(TextType.GameInformationTextButtonsHome,CurrentLanguage);
+                else if (Restart.IsMouseOver == true) InformationBox.Text = Localisation.SetText(TextType.GameInformationTextButtonsRestart, CurrentLanguage);
+                else if (Back.IsMouseOver == true) InformationBox.Text = Localisation.SetText(TextType.GameInformationTextButtonsUndo, CurrentLanguage);
+                else if (Hint.IsMouseOver == true) InformationBox.Text = Localisation.SetText(TextType.GameInformationTextButtonsHint, CurrentLanguage);
                 await Task.Delay(50);
             }
             InformationBox.Text = " ";
@@ -621,7 +623,7 @@ namespace Spider_Solitaire
                                 HintMode = Convert.ToInt32(data[1]);
                                 break;
                             case 3:
-                                PlayAnimations = (data[1] == "1") ? true : false;
+                                PlayAnimations = data[1] == "1";
                                 break;
                             default:
                                 break;

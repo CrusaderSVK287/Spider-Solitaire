@@ -260,7 +260,7 @@
                     </Button.Template>
                 </Button>
             </StackPanel>
-            <TextBlock Text="Version 0.2.0" 
+            <TextBlock Text="Version 0.3.0" 
                        VerticalAlignment="Bottom"
                        HorizontalAlignment="Left"
                        Foreground="LightGray"
@@ -321,7 +321,8 @@
                        HorizontalAlignment="Center"
                        Foreground="White"
                        FontSize="40"
-                       FontWeight="Light"/>
+                       FontWeight="Light"
+                       Name="WelcomeBanner"/>
             </Border>
             <ScrollViewer Grid.Row="1"
                           HorizontalAlignment="Center" VerticalAlignment="Center" Margin="100,50,100,50"

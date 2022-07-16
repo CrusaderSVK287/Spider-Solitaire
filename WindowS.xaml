@@ -14,6 +14,7 @@
         WindowStyle="SingleBorderWindow"
         WindowStartupLocation="CenterScreen"
         WindowState="Normal"
+        Loaded="WindowLoaded"
     >
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0"
@@ -146,7 +147,8 @@
                     </Button.Template>
                 </Button>
             </Grid>
-            <Frame Grid.Row="1" Name="SolitaireFrame" Source="Menu.xaml" NavigationUIVisibility="Hidden"/>
+            <Frame Grid.Row="1" Name="SolitaireFrame" NavigationUIVisibility="Hidden"
+                   Background="Green"/>
         </Grid>
     </Border>
 </Window>

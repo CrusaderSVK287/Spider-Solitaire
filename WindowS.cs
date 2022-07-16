@@ -20,12 +20,15 @@ namespace Spider_Solitaire
     /// </summary>
     public partial class WindowS : Window
     {
+        public string CurrentLanguage { get; }
         public WindowS()
         {
             InitializeComponent();
             _ = ChangeMinMaxButtonContent();
             Settings.WriteSettingsFile();
             Statistics.CreateFile();
+            Localisation.LocalisationIntegrityCheck();
+            CurrentLanguage = Localisation.GetCurrentLanguage();
         }
 
         private async Task ChangeMinMaxButtonContent()
@@ -33,6 +36,13 @@ namespace Spider_Solitaire
             MinMaxButton.Content = (WindowState == WindowState.Normal) ? "🗖" : "🗗";
             await Task.Delay(250);
             _ = ChangeMinMaxButtonContent();
+        }
+
+        private void WindowLoaded(object sender, RoutedEventArgs e)
+        {
+            SettingsButton.Content = Localisation.SetText(TextType.WindowSettingsButton, CurrentLanguage) + " ⚙";
+            Menu menu = new(CurrentLanguage);
+            SolitaireFrame.NavigationService.Navigate(menu);
         }
 
         private void DragWindow(object sender, MouseButtonEventArgs e)
@@ -43,7 +53,7 @@ namespace Spider_Solitaire
 
         private void ExitButtonClick(object sender, RoutedEventArgs e)
         {
-            Close();
+            Environment.Exit(0);
         }
 
         private void MinimizeButtonClick(object sender, RoutedEventArgs e)
@@ -66,7 +76,7 @@ namespace Spider_Solitaire
 
         private void SettingsClick(object sender, RoutedEventArgs e)
         {
-            Settings settings = new Settings(EnableSettingsButton);
+            Settings settings = new(EnableSettingsButton, CurrentLanguage);
             settings.Owner = this;
             settings.Show();
             SettingsButton.IsEnabled = false;
