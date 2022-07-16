@@ -55,7 +55,7 @@ namespace Spider_Solitaire
                             HintModeBox.SelectedIndex = Convert.ToInt32(data[1]);
                             break;
                         case 3:
-                            PlayAnimationsBox.IsChecked = (data[1] == "1")?true:false;
+                            PlayAnimationsBox.IsChecked = data[1] == "1";
                             break;
                         case 4:
                             LanguageBox.SelectedIndex = SetLanguageIndex(data[1]);
@@ -84,7 +84,7 @@ namespace Spider_Solitaire
                     "Card_spacing= 20",
                     "Hint_mode= 0",
                     "Play_animations= 1",
-                    "Language= english"
+                    "Language= English"
                 };
                 File.WriteAllLines(@"settings.txt", data);
             }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Windows;
 
 namespace Spider_Solitaire
 {
@@ -127,6 +128,17 @@ namespace Spider_Solitaire
             string[] data = language.Split(' ');
             if (data.Length != 2) throw new FileFormatException();
             return data[1];
+        }
+
+        //checks whether the localisation directory exists and contains at least one language
+        public static void LocalisationIntegrityCheck()
+        {
+            if (!Directory.Exists("@localisation")) Directory.CreateDirectory(@"localisation");
+            if(Directory.GetFiles(@"localisation").Length==0)
+            {
+                MessageBox.Show("No localisation file found, reinstall the game please", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
         }
     }
 }

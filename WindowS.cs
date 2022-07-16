@@ -27,6 +27,7 @@ namespace Spider_Solitaire
             _ = ChangeMinMaxButtonContent();
             Settings.WriteSettingsFile();
             Statistics.CreateFile();
+            Localisation.LocalisationIntegrityCheck();
             CurrentLanguage = Localisation.GetCurrentLanguage();
         }
 
@@ -39,7 +40,7 @@ namespace Spider_Solitaire
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
-            Menu menu = new Menu(CurrentLanguage);
+            Menu menu = new(CurrentLanguage);
             SolitaireFrame.NavigationService.Navigate(menu);
         }
 
@@ -51,7 +52,7 @@ namespace Spider_Solitaire
 
         private void ExitButtonClick(object sender, RoutedEventArgs e)
         {
-            Close();
+            Environment.Exit(0);
         }
 
         private void MinimizeButtonClick(object sender, RoutedEventArgs e)
@@ -74,7 +75,7 @@ namespace Spider_Solitaire
 
         private void SettingsClick(object sender, RoutedEventArgs e)
         {
-            Settings settings = new Settings(EnableSettingsButton);
+            Settings settings = new(EnableSettingsButton);
             settings.Owner = this;
             settings.Show();
             SettingsButton.IsEnabled = false;
