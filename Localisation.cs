@@ -122,7 +122,16 @@ namespace Spider_Solitaire
     {
         public static string? SetText(TextType type, string languageFileName)
         {
-            return File.ReadLines(@"localisation/" + languageFileName + ".txt").Skip((int)type).Take(1).First().Replace('→', '\n');
+            try
+            {
+                return File.ReadLines(@"localisation/" + languageFileName + ".txt").Skip((int)type).Take(1).First().Replace('→', '\n');
+            } 
+            catch (Exception ex)
+            {
+                MessageBox.Show("There has been an error when trying to access a file of the selected language\n\n" + ex.ToString(), "Localisation error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+            }
         }
 
         public static string GetCurrentLanguage()
