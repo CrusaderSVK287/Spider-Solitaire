@@ -92,6 +92,7 @@ namespace Spider_Solitaire
         GameHintTextBoxYouHave,
         GameHintTextBoxRemaining,
         GameVictoryText,
+        GameNoMoreMovesPossible,
 
         //Settings
         SettingsVisuals,

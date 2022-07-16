@@ -310,11 +310,10 @@ namespace Spider_Solitaire
         //Handles app update checking
         private void UpdateButtonClick(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show($"Would you like to download and install the version {LatestVersion} update automatically?\n" +
-                                                      "Press yes to install automatically\n" +
-                                                      "Press no to be redirected to the download page and download the update manually\n" +
-                                                      "Press cancel to cancel the update", "Auto Update", MessageBoxButton.YesNoCancel, MessageBoxImage.Question,
-                                                      MessageBoxResult.Yes);
+            MessageBoxResult result = MessageBox.Show($"{Localisation.SetText(TextType.UpdateBoxUpdateAutomaticallyQuestionPart1,CurrentLanguage)} {LatestVersion} " +
+                                                         Localisation.SetText(TextType.UpdateBoxUpdateAutomaticallyQuestionPart1, CurrentLanguage), 
+                                                         "Auto Update", MessageBoxButton.YesNoCancel, MessageBoxImage.Question,
+                                                         MessageBoxResult.Yes);
             if (result == MessageBoxResult.Cancel) return;
             if (result == MessageBoxResult.No)
             {
@@ -331,7 +330,7 @@ namespace Spider_Solitaire
             foreach (string file in files)
             {
                 if (File.Exists(@""+file)) continue;
-                result = MessageBox.Show("It seems you do not have the updater installed or it's damaged.\nWould you like to be redirected to it's repository in order to download it?", "Updater not installed",
+                result = MessageBox.Show(Localisation.SetText(TextType.UpdateBoxUpdateAutomaticallyUpdaterNotInstalled, CurrentLanguage), "Updater failed",
                     MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if(result == MessageBoxResult.Yes)
                 {

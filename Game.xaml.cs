@@ -225,7 +225,7 @@ namespace Spider_Solitaire
             for (int i = 0; i < 10; i++)
             {
                 if (deck.activeCards[i].Count > 0) continue;
-                InformationBox.Text = "You cannot deal a new row while any of the columns are empty";
+                InformationBox.Text = Localisation.SetText(TextType.GameInformationTextEmptyColumn, CurrentLanguage);
                 await Task.Delay(10000);
                 InformationBox.Text = " ";
                 return;
@@ -297,6 +297,7 @@ namespace Spider_Solitaire
             Restart.IsEnabled = false;
             Exit.IsEnabled = false;
             await Task.Delay(500);
+            VictoryText.Text = Localisation.SetText(TextType.GameVictoryText, CurrentLanguage) + "!";
             VictoryText.Visibility = Visibility.Visible;
             await Task.Delay(5000);
             NavigationService.Navigate(_menu);
@@ -454,7 +455,7 @@ namespace Spider_Solitaire
             }
 
             //no possible meaningfull move was found
-            MessageBoxResult result = MessageBox.Show("No more possible meaningfull moves found, consider taking a few steps back,\nrestarting the game or starting a new game.\n\nWould you like to restart the game with the same deck?"
+            MessageBoxResult result = MessageBox.Show(Localisation.SetText(TextType.GameNoMoreMovesPossible, CurrentLanguage)
                 , "No more moves",MessageBoxButton.YesNo,MessageBoxImage.Information);
             if(result == MessageBoxResult.Yes) RestartClick(new Image(), new RoutedEventArgs());
         }
@@ -464,14 +465,14 @@ namespace Spider_Solitaire
         {
             if (RemainingHints == 0)
             {
-                HintBox.Text = "No more hints available";
+                HintBox.Text = Localisation.SetText(TextType.GameHintTextBoxNoMoreHints, CurrentLanguage);
             }
             if (RemainingHints > 0)
             {
-                HintBox.Text = $"You have {RemainingHints-1} hints remaining";
+                HintBox.Text = $"{Localisation.SetText(TextType.GameHintTextBoxYouHave, CurrentLanguage)} {RemainingHints-1} {Localisation.SetText(TextType.GameHintTextBoxRemaining, CurrentLanguage)}";
             }
             await Task.Delay(5000);
-            HintBox.Text = "";
+            HintBox.Text = " ";
         }
 
         //determines whether the current card can be moved
@@ -579,10 +580,10 @@ namespace Spider_Solitaire
         {
             while(SPButtons.IsMouseOver == true)
             {
-                if (Exit.IsMouseOver == true) InformationBox.Text = "Exit";
-                else if (Restart.IsMouseOver == true) InformationBox.Text = "Restart";
-                else if (Back.IsMouseOver == true) InformationBox.Text = "Undo";
-                else if (Hint.IsMouseOver == true) InformationBox.Text = "Hint";
+                if (Exit.IsMouseOver == true) InformationBox.Text = Localisation.SetText(TextType.GameInformationTextButtonsHome,CurrentLanguage);
+                else if (Restart.IsMouseOver == true) InformationBox.Text = Localisation.SetText(TextType.GameInformationTextButtonsRestart, CurrentLanguage);
+                else if (Back.IsMouseOver == true) InformationBox.Text = Localisation.SetText(TextType.GameInformationTextButtonsUndo, CurrentLanguage);
+                else if (Hint.IsMouseOver == true) InformationBox.Text = Localisation.SetText(TextType.GameInformationTextButtonsHint, CurrentLanguage);
                 await Task.Delay(50);
             }
             InformationBox.Text = " ";
