@@ -1,0 +1,76 @@
+Welcome to spider solitaire!
+Play with 1 suit
+Play with 2 suits
+Play with 4 suits
+How to play
+Statistics
+Update
+How to play
+The goal of spider solitaire is, as with all solitaires, to clear the entire deck. This is done by assembling a full suit of cards. Each suite consists of 13 cards ranging from ace to king, having the same color. In order to assemble a suit, all 13 cards must be in order. Then the suit is removed from the deck, once all 8 suits are assembled, the game ends in victory. Below are all 4 kinds of suits →(from the left: clubs, diamonds, spades, hearts)
+When selecting the number of suits from the main menu, you are selecting how many suits (or colors) will be used in-game. This has no effect on the total number of cards. The number of total cards is always 104 (8 suits times 13 cards in one suit)→→To select a card or cards, click on the image of the card you want to select, and the animation will show you which card has been selected. You can then click on a column where you would like to place them. If you cannot place them in the selected column or you selected the very same column, the cards will return to their original place. In the game, you are allowed to move only cards that are facing upwards (you can see the suit and value), and you can move this pile only on a card that follows the ascension order (7 can only go on top of 8, 3 on top of 4, etc..). You can, however, place a card of a different suit on top of each other. For reference, here is an image of a full suit of spades.
+When you move cards away and an uncovered (blue) card becomes the top one, it reveals its suit and value. Once you clear out an entire column such as there are no cards remaining and you can see a green outline, that means you can place any card or sequence of cards in there, refer to the outline image below.
+Since the biggest card is a King, it means that Kings can only be moved into empty columns. On the other hand, since aces are the smallest card, no card can be placed on them. Once you run out of possible moves, you can deal with another row of 10 cards by clicking on the blue uncovered cards in the bottom right corner. This will add one card to each column. You cannot have an empty column when dealing new cards, however.→→This is basically it for basic game mechanics, scroll down for button explanation and advanced features. You can play a game with a very easy deck of cards by clicking on the text below →→
+Buttons
+In the game, there are 4 buttons, each with its own function.→
+This button returns you to the main menu, you can press load game if you wish to continue.
+This button restarts the game from the beginning with the same cards.
+This button undoes your last move.
+This button gives you a hint by highlighting a card or cards that can be picked up and a suggested place to put down.
+Advanced features and settings
+In settings, you can find some things that you can change. You can find the settings button in the top left corner with a ⚙ (gear) symbol on it→→ Card size determines the scale at which the cards will be rendered, ranging from 50% to 200%, 100% is the default. →Card spacing determines how far apart will cards be, the default is 20 however if you play with 4 suits it is a good idea to increase it to 25 or 30 in order to be able to recognize suits from each other. →Hint mode affects gameplay. There are 3 modes: →→-Enabled (default) - no restrictions →-Restricted - you have a limited number of hints. At the start of the game, you have 3 hints and you gain 1 for each assembled suit, together you can get 10 hints (you get 11th when you win) →-Disabled - You cannot use hints →→Additionally, there are two buttons, one resets all settings to default, and the other one erases all statistics You need to apply the settings when you change something, otherwise they will not be reflected.
+Error opening statistics file. →Delete the file and/or restart the application
+Statistics
+General
+Games started
+Games won
+Cards moved
+Suits assembled
+Suits of spades assembled 
+Suits of hearts assembled
+Suits of clubs assembled
+Suits of diamonds assembled
+Hints taken
+One suit games
+One suit games played
+One suit games won
+One suit games win percentage
+Two suit games
+Two suit games played
+Two suit games won
+Two suit games win percentage
+Four suit games
+Four suit games played
+Four suit games won
+Four suit games win percentage
+Would you like to download and install the version
+update automatically? →Press yes to install automatically →Press no to be redirected to the download page and download the update manually →Press cancel to cancel the update.
+It seems you do not have the updater installed or it's damaged.\nWould you like to be redirected to it's repository in order to download it?
+Exit
+Restart
+Undo
+Hint
+You cannot deal new row of cards while any of the columns are empty.
+No more hints remaining.
+You have
+hints remaining
+Victory
+No more possible meaningfull moves found, consider taking a few steps back,→restarting the game or starting a new game.→→Would you like to restart the game with the same deck?
+Visuals
+Card size:
+Card spacing:
+Play Animations
+Note: You can scroll with muse wheel to change values
+Gameplay
+Hint mode:
+Language:
+Miscellaneous
+Reset statistics
+Default settings
+Are you sure? This will reset all statistics to 0. →There is no going back.
+Settings have been applied. →You may now close the window. →If you are in game, please reload it in order →for changes to take effect
+Apply
+Cancel
+Enabled
+Restricted
+Disabled
+Settings
