@@ -26,6 +26,7 @@ namespace Spider_Solitaire
         private readonly Action _destroy; //used as a delegate from menu.cs, destroys all references to current game for garbage collector to free the memory
         private readonly int _numberOfColours;
         private readonly Settings settings;
+        public string CurrentLanguage { get; }
         private CommandType LastCommand { get; set; }
         private bool AnimationPlaying { get; set; } = false;   //used to track whether an animation is playing to avoid confusions
         private bool Loading { get; set; } = false;
@@ -36,7 +37,7 @@ namespace Spider_Solitaire
         private int RemainingHints { get; set; }    //number of remaining hints
 
         private Deck deck = new Deck();
-        public Game(int numberOfColours, bool isNewGame, Menu menu, Action Destroy)
+        public Game(int numberOfColours, bool isNewGame, Menu menu, Action Destroy, string language)
         {
             InitializeComponent();
             KeepAlive = false;
@@ -44,6 +45,7 @@ namespace Spider_Solitaire
             LastCommand = CommandType.select;
             settings = new();
             cardOffset = settings.CardSpacing;
+            CurrentLanguage = language;
             RemainingHints = GetHints();
             LayOutCardOutlines();
             if (isNewGame)
@@ -316,7 +318,7 @@ namespace Spider_Solitaire
                 File.WriteAllLines(@"autosave.soli", Lines.Take(Lines.Length - (int)LastCommand).ToArray());
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString(), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning); }
-            Game game = new Game(_numberOfColours, false, _menu, _destroy);
+            Game game = new Game(_numberOfColours, false, _menu, _destroy, CurrentLanguage);
             if (game != null) NavigationService.Navigate(game);
             _destroy();
         }
@@ -333,7 +335,7 @@ namespace Spider_Solitaire
                 File.WriteAllLines(@"autosave.soli", Lines.Take(105).ToArray());
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString(), "Restart", MessageBoxButton.OK, MessageBoxImage.Warning); }
-            Game game = new Game(_numberOfColours, false, _menu, _destroy);
+            Game game = new Game(_numberOfColours, false, _menu, _destroy, CurrentLanguage);
             if (game != null) NavigationService.Navigate(game);
             _destroy();
         }

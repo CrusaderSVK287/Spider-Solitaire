@@ -23,11 +23,12 @@ namespace Spider_Solitaire
     /// </summary>
     public partial class Menu : Page
     {
-
+        public string CurrentLanguage { get; }
         public Game? game;
-        public Menu()
+        public Menu(string language)
         {
             InitializeComponent();
+            CurrentLanguage = language;
             HowToPlayClick(new Button(),new RoutedEventArgs());
             _ = CheckForUpdate();
         }
@@ -67,7 +68,7 @@ namespace Spider_Solitaire
 
         private void StartGame(int numberOfSuits, bool isNewGame)
         {
-            game = new Game(numberOfSuits, isNewGame, this, DestroyGameReference);
+            game = new Game(numberOfSuits, isNewGame, this, DestroyGameReference, CurrentLanguage);
             NavigationService.Navigate(game);
         }
 

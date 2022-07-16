@@ -105,8 +105,13 @@ namespace Spider_Solitaire
         SettingsMiscellaneous,
         SettingsResetStats,
         SettingsDefaultSettings,
+        SettingsResetStatsQuestion,
+        SettingsApplyMessage,
         SettingsButtonApply,
         SettingsButtonCancel,
+        SettingsHintModeItemEnabled,
+        SettingsHintModeItemRestricted,
+        SettingsHintModeItemDisabled,
     }
 
     public abstract class Localisation
@@ -114,6 +119,14 @@ namespace Spider_Solitaire
         public static string? SetText(TextType type, string languageFileName)
         {
             return File.ReadLines(@"localisation/" + languageFileName).Skip((int)type).Take(1).First();
+        }
+
+        public static string GetCurrentLanguage()
+        {
+            string language = File.ReadLines(@"settings.txt").Skip(4).Take(1).First();
+            string[] data = language.Split(' ');
+            if (data.Length != 2) throw new FileFormatException();
+            return data[1];
         }
     }
 }

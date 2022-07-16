@@ -20,12 +20,14 @@ namespace Spider_Solitaire
     /// </summary>
     public partial class WindowS : Window
     {
+        public string CurrentLanguage { get; }
         public WindowS()
         {
             InitializeComponent();
             _ = ChangeMinMaxButtonContent();
             Settings.WriteSettingsFile();
             Statistics.CreateFile();
+            CurrentLanguage = Localisation.GetCurrentLanguage();
         }
 
         private async Task ChangeMinMaxButtonContent()
@@ -33,6 +35,12 @@ namespace Spider_Solitaire
             MinMaxButton.Content = (WindowState == WindowState.Normal) ? "🗖" : "🗗";
             await Task.Delay(250);
             _ = ChangeMinMaxButtonContent();
+        }
+
+        private void WindowLoaded(object sender, RoutedEventArgs e)
+        {
+            Menu menu = new Menu(CurrentLanguage);
+            SolitaireFrame.NavigationService.Navigate(menu);
         }
 
         private void DragWindow(object sender, MouseButtonEventArgs e)
