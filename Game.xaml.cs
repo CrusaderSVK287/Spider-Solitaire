@@ -346,7 +346,7 @@ namespace Spider_Solitaire
             HintBoxUpdate();
             if(RemainingHints == 0) return;
             if (!Loading) Statistics.IncreaseStat(StatisticType.HintsTaken);
-
+            RemainingHints--;
             //Parent = same color, value +1, Half-Parent = different color, value +1.
             //internal method, checks whether a card doesnt already lay on it's "parent" card (e.g. 7A is under 8A),
             //this is to prevent really unhelpfull hints
@@ -466,8 +466,7 @@ namespace Spider_Solitaire
             }
             if (RemainingHints > 0)
             {
-                RemainingHints--;
-                HintBox.Text = $"You have {RemainingHints} hint{(RemainingHints==1?"":"s")} remaining";
+                HintBox.Text = $"You have {RemainingHints-1} hints remaining";
             }
             await Task.Delay(5000);
             HintBox.Text = "";
