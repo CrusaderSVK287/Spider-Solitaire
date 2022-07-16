@@ -35,18 +35,17 @@ namespace Spider_Solitaire
         MenuHowToPlayButton,
         MenuStatisticsButton,
         MenuUpdateButton,
-        MenuSettingsButton,
 
         //How to play text
-        MenuSPInformationHowToPlayPart1,
-        MenuSPInformationHowToPlayPart2,
-        MenuSPInformationHowToPlayPart3,
-        MenuSPInformationHowToPlayPart4,
-        MenuSPInformationHowToPlayPart5,
-        MenuSPInformationHowToPlayPart6,
-        MenuSPInformationHowToPlayPart7,
-        MenuSPInformationHowToPlayPart8,
-        MenuSPInformationHowToPlayPart9,
+        MenuSPInformationHowToPlayPart01,
+        MenuSPInformationHowToPlayPart02,
+        MenuSPInformationHowToPlayPart03,
+        MenuSPInformationHowToPlayPart04,
+        MenuSPInformationHowToPlayPart05,
+        MenuSPInformationHowToPlayPart06,
+        MenuSPInformationHowToPlayPart07,
+        MenuSPInformationHowToPlayPart08,
+        MenuSPInformationHowToPlayPart09,
         MenuSPInformationHowToPlayPart10,
         MenuSPInformationHowToPlayPart11,
         MenuSPInformationHowToPlayPart12,
@@ -113,13 +112,14 @@ namespace Spider_Solitaire
         SettingsHintModeItemEnabled,
         SettingsHintModeItemRestricted,
         SettingsHintModeItemDisabled,
+        WindowSettingsButton,
     }
 
     public abstract class Localisation
     {
         public static string? SetText(TextType type, string languageFileName)
         {
-            return File.ReadLines(@"localisation/" + languageFileName).Skip((int)type).Take(1).First();
+            return File.ReadLines(@"localisation/" + languageFileName + ".txt").Skip((int)type).Take(1).First().Replace('→', '\n');
         }
 
         public static string GetCurrentLanguage()
