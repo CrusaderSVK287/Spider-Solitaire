@@ -5,21 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Spider_Solitaire"
         mc:Ignorable="d"
-        Title="Settings" Height="400" Width="250"
+        Title="Settings" Height="400" Width="350"
         ResizeMode="NoResize"
         Unloaded="Window_Unloaded"
         Background="White"
         WindowStartupLocation="CenterOwner">
     <Grid>
         <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left"
-                   Height="75" Width="240"
+                   Height="75" Width="340"
                    Margin="5,35,0,0" Background="WhiteSmoke"/>
         <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left"
-                   Height="70" Width="240"
+                   Height="70" Width="340"
                    Margin="5,155,0,0" Background="WhiteSmoke"/>
         <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left"
-                   Height="70" Width="240"
-                   Margin="5,265,0,0" Background="WhiteSmoke"/>
+                   Height="70" Width="340"
+                   Margin="5,255,0,0" Background="WhiteSmoke"/>
         <TextBlock Text="Note: You can scroll with mouse wheel to change values" 
                    FontSize="9" 
                    VerticalAlignment="Top" HorizontalAlignment="Left"
@@ -37,35 +37,35 @@
                    Margin="10,35,0,0"
                    Name="CardSizeDesc"/>
         <TextBlock Text="100" FontSize="15" Name="CardSizeText" 
-                   VerticalAlignment="Top" HorizontalAlignment="Left"
+                   VerticalAlignment="Top" HorizontalAlignment="Right"
                    MouseWheel="CardSizeTextMouseWheel" Height="25" Width="35" TextAlignment="Center"
-                   Margin="130,35,0,0"/>
+                   Margin="0,35,75,0"/>
         <TextBlock Text="Card spacing:" FontSize="15"
                    VerticalAlignment="Top" HorizontalAlignment="Left"
                    Margin="10,60,0,0"
                    Name="CardSpacingDesc"/>
         <TextBlock Text="20" FontSize="15" Name="CardSpacingText"
-                   VerticalAlignment="Top" HorizontalAlignment="Left"
+                   VerticalAlignment="Top" HorizontalAlignment="Right"
                    MouseWheel="CardSpacingTextMouseWheel" Width="30" Height="25" TextAlignment="Center"
-                   Margin="135,60,0,0"/>
+                   Margin="0,60,75,0"/>
         <TextBlock Text="Play animations:" FontSize="15"
                    VerticalAlignment="Top" HorizontalAlignment="Left"
                    Margin="10,85,0,0"
                    Name="PlayAnimDesc"/>
-        <CheckBox VerticalAlignment="Top" HorizontalAlignment="Left"
-                  Margin="195,90,0,0" Name="PlayAnimationsBox"
+        <CheckBox VerticalAlignment="Top" HorizontalAlignment="Right"
+                  Margin="0,90,30,0" Name="PlayAnimationsBox"
                   IsChecked="True"/>
-        <Button Width="30" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left"
-                Margin="170,35,0,0" Name="CardSizeUp" Click="CardSizeUpClick"
+        <Button Width="30" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right"
+                Margin="0,35,10,0" Name="CardSizeUp" Click="CardSizeUpClick"
                 Content="↑"/>
-        <Button Width="30" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left"
-                Margin="200,35,0,0" Name="CardSizeDown" Click="CardSizeDownClick"
+        <Button Width="30" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right"
+                Margin="0,35,40,0" Name="CardSizeDown" Click="CardSizeDownClick"
                 Content="↓"/>
-        <Button Width="30" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left"
-                Margin="170,60,0,0" Name="CardSpacingUp" Click="CardSpacingUpClick"
+        <Button Width="30" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right"
+                Margin="0,60,10,0" Name="CardSpacingUp" Click="CardSpacingUpClick"
                 Content="↑"/>
-        <Button Width="30" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left"
-                Margin="200,60,0,0" Name="CardSpacingDown" Click="CardSpacingDownClick"
+        <Button Width="30" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right"
+                Margin="0,60,40,0" Name="CardSpacingDown" Click="CardSpacingDownClick"
                 Content="↓"/>
 
         <TextBlock Text="Gameplay" FontSize="20" FontWeight="Medium"
@@ -81,39 +81,39 @@
                    Margin="10,188,0,0"
                    Name="LanguageDesc"/>
         <ComboBox Width="100" Height="22" Name="HintModeBox"
-                  HorizontalAlignment="Left" VerticalAlignment="Top"
-                  Margin="130,160,0,0" SelectedIndex="0">
+                  HorizontalAlignment="Right" VerticalAlignment="Top"
+                  Margin="0,160,10,0" SelectedIndex="0">
             <ComboBoxItem Content="Enabled" Name="HintEnabled"/>
             <ComboBoxItem Content="Restricted" Name="HintRestricted"/>
             <ComboBoxItem Content="Disabled" Name="HintDisabled"/>
         </ComboBox>
 
         <ComboBox Width="100" Height="22" Name="LanguageBox"
-                  HorizontalAlignment="Left" VerticalAlignment="Top"
-                  Margin="130,188,0,0" SelectedIndex="0"/>
+                  HorizontalAlignment="Right" VerticalAlignment="Top"
+                  Margin="0,188,10,0" SelectedIndex="0"/>
 
         <TextBlock Text="Miscellaneous" FontSize="20" FontWeight="Medium"
                    VerticalAlignment="Top" HorizontalAlignment="Left"
                    Margin="10,230,0,0"
                    Name="MiscellaneousText"/>
-        <Button Content="Reset statistics" Width="120" Height="25" FontSize="15"
+        <Button Content="Reset statistics" Width="315" Height="25" FontSize="15"
                 VerticalAlignment="Top" HorizontalAlignment="Left"
                 Margin="10,260,0,0" Name="ResetStatisticsButton" Click="ResetStatisticsButtonClick"/>
-        <Button Content="Default settings" Width="120" Height="25" FontSize="15"
+        <Button Content="Default settings" Width="315" Height="25" FontSize="15"
                 VerticalAlignment="Top" HorizontalAlignment="Left"
                 Margin="10,290,0,0" Name="DefaultSettButton" Click="DefaultSettButtonClick"/>
         
         <Border VerticalAlignment="Bottom" HorizontalAlignment="Center"
-                Width="240" Height="40"
+                Width="340" Height="40"
                 BorderBrush="Gray" BorderThickness="1"
-                Margin="0,0,0,5"/>
-        <Button Width="110" Height="30" Content="Apply" FontSize="15"
+                Margin="0,0,0,2"/>
+        <Button Width="165" Height="30" Content="Apply" FontSize="15"
                 VerticalAlignment="Bottom" HorizontalAlignment="Left"
-                Margin="6,0,0,10" Name="ApplyButton" IsDefault="True"
+                Margin="6,0,0,7" Name="ApplyButton" IsDefault="True"
                 Click="ApplyButtonClick"/>
-        <Button Width="110" Height="30" Content="Cancel" FontSize="15"
+        <Button Width="165" Height="30" Content="Cancel" FontSize="15"
                 VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                Margin="0,0,6,10" Name="CancelButton" IsCancel="True"
+                Margin="0,0,6,7" Name="CancelButton" IsCancel="True"
                 Click="CancelButtonClick"/>
     </Grid>
 </Window>
