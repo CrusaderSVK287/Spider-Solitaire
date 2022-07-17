@@ -184,7 +184,7 @@ namespace Spider_Solitaire
                 Source = new BitmapImage(new Uri(@"assets/home_icon_pressed.png", UriKind.Relative)),
             };
             buttonsOne.Children.Add(Bimg);
-            buttonsOne.Children.Add(new TextBlock() { Text = Localisation.SetText(TextType.MenuSPInformationHowToPlayPart08, CurrentLanguage), TextWrapping = TextWrapping.Wrap, Height = 80, Width = 275 });
+            buttonsOne.Children.Add(new TextBlock() { Text = Localisation.SetText(TextType.MenuSPInformationHowToPlayPart08, CurrentLanguage), TextWrapping = TextWrapping.Wrap, Width = 275 });
 
 
             StackPanel buttonsTwo = new()
@@ -202,7 +202,7 @@ namespace Spider_Solitaire
                 Source = new BitmapImage(new Uri(@"assets/restart_icon_pressed.png", UriKind.Relative)),
             };
             buttonsTwo.Children.Add(BTwoimg);
-            buttonsTwo.Children.Add(new TextBlock() { Text = Localisation.SetText(TextType.MenuSPInformationHowToPlayPart09, CurrentLanguage), TextWrapping = TextWrapping.Wrap, Height = 50, Width = 275 });
+            buttonsTwo.Children.Add(new TextBlock() { Text = Localisation.SetText(TextType.MenuSPInformationHowToPlayPart09, CurrentLanguage), TextWrapping = TextWrapping.Wrap, Width = 275 });
 
 
             StackPanel buttonsThree = new()
@@ -220,7 +220,7 @@ namespace Spider_Solitaire
                 Source = new BitmapImage(new Uri(@"assets/back_icon_pressed.png", UriKind.Relative)),
             };
             buttonsThree.Children.Add(BThreeimg);
-            buttonsThree.Children.Add(new TextBlock() { Text = Localisation.SetText(TextType.MenuSPInformationHowToPlayPart10, CurrentLanguage), TextWrapping = TextWrapping.Wrap, Height = 30, Width = 275 });
+            buttonsThree.Children.Add(new TextBlock() { Text = Localisation.SetText(TextType.MenuSPInformationHowToPlayPart10, CurrentLanguage), TextWrapping = TextWrapping.Wrap, Width = 275, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center });
 
 
             StackPanel buttonsFour = new()
@@ -238,7 +238,7 @@ namespace Spider_Solitaire
                 Source = new BitmapImage(new Uri(@"assets/hint_icon_pressed.png", UriKind.Relative)),
             };
             buttonsFour.Children.Add(BFourimg);
-            buttonsFour.Children.Add(new TextBlock() { Text = Localisation.SetText(TextType.MenuSPInformationHowToPlayPart11, CurrentLanguage), TextWrapping = TextWrapping.Wrap, Height = 100, Width = 275 });
+            buttonsFour.Children.Add(new TextBlock() { Text = Localisation.SetText(TextType.MenuSPInformationHowToPlayPart11, CurrentLanguage), TextWrapping = TextWrapping.Wrap, Width = 275 });
 
             SPInformation.Children.Add(new TextBlock() { Text = Localisation.SetText(TextType.MenuSPInformationHowToPlayPart12, CurrentLanguage), TextWrapping = TextWrapping.Wrap, FontSize = 40 });
             SPInformation.Children.Add(new TextBlock() { Text = Localisation.SetText(TextType.MenuSPInformationHowToPlayPart13, CurrentLanguage), TextWrapping = TextWrapping.Wrap });
@@ -271,7 +271,7 @@ namespace Spider_Solitaire
             TextBlock stats = new()
             {
                 Text = "\n---"+Localisation.SetText(TextType.MenuSPInformationStatisticsGeneral,CurrentLanguage)+"---\n" +
-                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsGeneral, CurrentLanguage)}: {data[(int)StatisticType.GamesStarted]}\n" +
+                $"{Localisation.SetText(TextType.MenuSPInformationStatisticsGamesStarted, CurrentLanguage)}: {data[(int)StatisticType.GamesStarted]}\n" +
                 $"{Localisation.SetText(TextType.MenuSPInformationStatisticsGamesWon, CurrentLanguage)}: {data[(int)StatisticType.GamesWon]}\n" +
                 $"{Localisation.SetText(TextType.MenuSPInformationStatisticsCardsMoved, CurrentLanguage)}: {data[(int)StatisticType.CardsMoved]}\n" +
                 $"{Localisation.SetText(TextType.MenuSPInformationStatisticsSuitsAssembled, CurrentLanguage)}: {data[(int)StatisticType.SuitsAssembled]}\n" +
