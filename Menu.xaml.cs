@@ -220,7 +220,7 @@ namespace Spider_Solitaire
                 Source = new BitmapImage(new Uri(@"assets/back_icon_pressed.png", UriKind.Relative)),
             };
             buttonsThree.Children.Add(BThreeimg);
-            buttonsThree.Children.Add(new TextBlock() { Text = Localisation.SetText(TextType.MenuSPInformationHowToPlayPart10, CurrentLanguage), TextWrapping = TextWrapping.Wrap, Width = 275 });
+            buttonsThree.Children.Add(new TextBlock() { Text = Localisation.SetText(TextType.MenuSPInformationHowToPlayPart10, CurrentLanguage), TextWrapping = TextWrapping.Wrap, Width = 275, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center });
 
 
             StackPanel buttonsFour = new()
