@@ -138,7 +138,8 @@
                     </Button.Style>
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border Width="100" Height="30"
+                            <Border Width="150" Height="30"
+                                    Name="SettingsButtonBorder"
                                 Background="{TemplateBinding Background}">
                                 <ContentPresenter VerticalAlignment="Center"
                                               HorizontalAlignment="Center"/>
