@@ -221,7 +221,7 @@ namespace Spider_Solitaire
         //Handles dealing of new row of cards
         public async void NewCardsClick(object sender, MouseButtonEventArgs e)
         {
-            if (NewCardNumber > 5 || AnimationPlaying) return;
+            if (NewCardNumber > 5 || AnimationPlaying || Selected.Count != 0) return;
             for (int i = 0; i < 10; i++)
             {
                 if (deck.activeCards[i].Count > 0) continue;
