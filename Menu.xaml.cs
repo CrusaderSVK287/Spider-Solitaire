@@ -33,12 +33,15 @@ namespace Spider_Solitaire
             _ = CheckForUpdate();
         }
 
-        private void DestroyGameReference()
+        private void DestroyGameReference(Game? newGame)
         {
             if (game == null) return;
             game.SolitaireGrid.Children.Clear();
             game.SolitaireGrid = null;
             game = null;
+            
+            if (newGame == null) return;
+            game = newGame;
         }
 
         private void OneSuiteNewGameClick(object sender, RoutedEventArgs e)

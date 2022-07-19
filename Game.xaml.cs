@@ -23,7 +23,7 @@ namespace Spider_Solitaire
     {
         private int cardOffset { get; set; }  //used to render the cards apart from each other
         private readonly Menu _menu;
-        private readonly Action _destroy; //used as a delegate from menu.cs, destroys all references to current game for garbage collector to free the memory
+        private readonly Action<Game> _destroy; //used as a delegate from menu.cs, destroys all references to current game for garbage collector to free the memory
         private readonly int _numberOfColours;
         private readonly Settings settings;
         public string CurrentLanguage { get; }
@@ -37,7 +37,7 @@ namespace Spider_Solitaire
         private int RemainingHints { get; set; }    //number of remaining hints
 
         private Deck deck = new Deck();
-        public Game(int numberOfColours, bool isNewGame, Menu menu, Action Destroy, string language)
+        public Game(int numberOfColours, bool isNewGame, Menu menu, Action<Game> Destroy, string language)
         {
             InitializeComponent();
             KeepAlive = false;
@@ -179,6 +179,7 @@ namespace Spider_Solitaire
                     for (int j = deck.activeCards[i].Count-1; j >= index; j--)
                     {
                         if(!Loading && settings.PlayAnimations) await Task.Delay(25);
+                        Card.RemoveEventHandlers(deck.activeCards[i][j], CardSelect);
                         SolitaireGrid.Children.Remove(deck.activeCards[i][j].Image);
                     }
 
@@ -300,14 +301,16 @@ namespace Spider_Solitaire
             VictoryText.Text = Localisation.SetText(TextType.GameVictoryText, CurrentLanguage) + "!";
             VictoryText.Visibility = Visibility.Visible;
             await Task.Delay(5000);
+            RemoveEventListenersFromCardImages();
             NavigationService.Navigate(_menu);
-            _destroy();
+            _destroy(null);
         }
 
         private void ExitClick(object sender, RoutedEventArgs e)
         {
+            RemoveEventListenersFromCardImages();
             NavigationService.Navigate(_menu);
-            _destroy();
+            _destroy(null);
         }
 
         private void BackClick(object sender, RoutedEventArgs e)
@@ -319,9 +322,11 @@ namespace Spider_Solitaire
                 File.WriteAllLines(@"autosave.soli", Lines.Take(Lines.Length - (int)LastCommand).ToArray());
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString(), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning); }
+            RemoveEventListenersFromCardImages();
             Game game = new(_numberOfColours, false, _menu, _destroy, CurrentLanguage);
-            if (game != null) NavigationService.Navigate(game);
-            _destroy();
+            if (game == null) return; 
+            NavigationService.Navigate(game);
+            _destroy(game);
         }
 
         private void RestartClick(object sender, RoutedEventArgs e)
@@ -336,9 +341,11 @@ namespace Spider_Solitaire
                 File.WriteAllLines(@"autosave.soli", Lines.Take(105).ToArray());
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString(), "Restart", MessageBoxButton.OK, MessageBoxImage.Warning); }
+            RemoveEventListenersFromCardImages();
             Game game = new Game(_numberOfColours, false, _menu, _destroy, CurrentLanguage);
-            if (game != null) NavigationService.Navigate(game);
-            _destroy();
+            if (game == null) return; 
+            NavigationService.Navigate(game);
+            _destroy(game);
         }
 
         private void HintClick(object sender, RoutedEventArgs e)
@@ -643,6 +650,19 @@ namespace Spider_Solitaire
         {
             if (settings.HintMode == 2) Hint.IsEnabled = false;
             return (settings.HintMode == 0) ? -1 : 3;
+        }
+
+        private void RemoveEventListenersFromCardImages()
+        {
+            if (deck == null) return;
+            for (int i = 0; i < 10; i++)
+            {
+                if (deck.activeCards[i].Count == 0) continue;
+                foreach (var card in deck.activeCards[i])
+                {
+                    Card.RemoveEventHandlers(card, CardSelect);
+                }
+            }
         }
     }
 }
