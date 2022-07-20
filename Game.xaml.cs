@@ -28,7 +28,7 @@ namespace Spider_Solitaire
         private readonly Settings settings;
         public string CurrentLanguage { get; }
         private CommandType LastCommand { get; set; }
-        private string? LastCommandArgs { get; set; }
+        private List<string> LastCommandArgs = new List<string>();
         private bool AnimationPlaying { get; set; } = false;   //used to track whether an animation is playing to avoid confusions
         private bool Loading { get; set; } = false;
         private List<Card> Selected { get; set; } = new(); //currenly selected card/s
@@ -36,6 +36,7 @@ namespace Spider_Solitaire
         private int NewCardNumber { get; set; } = 1;
         private int DecksSolved { get; set; } = 0;   //number of solved decks
         private int RemainingHints { get; set; }    //number of remaining hints
+        private bool ForceMove { get; set; }    //Used to force cards to move regardless of rules
 
         private Deck deck = new Deck();
         public Game(int numberOfColours, bool isNewGame, Menu menu, Action<Game> Destroy, string language)
@@ -45,7 +46,6 @@ namespace Spider_Solitaire
             _menu = menu;
             LastCommand = CommandType.select;
             settings = new();
-            LastCommandArgs = "";
             cardOffset = settings.CardSpacing;
             CurrentLanguage = language;
             RemainingHints = GetHints();
@@ -78,7 +78,6 @@ namespace Spider_Solitaire
             if (deck.activeCards == null || Selected.Count > 0) return;
             int x = ((Image)sender).Name[0] - 97;
             int y = ((Image)sender).Name[1] - 65;
-            MessageBox.Show(((Image)sender).Name);
             char n = ((Image)sender).Name[2];
             while (n > 'A')
             {
@@ -94,11 +93,11 @@ namespace Spider_Solitaire
             }
             if(valid)
             {
-                LastCommandArgs = ((Image)sender).Name;
+                //LastCommandArgs.Add(((Image)sender).Name);
                 SwichHitRegistration(false);
                 for (int i = y; i < deck.activeCards[x].Count; i++)
                 {
-                    if (!Loading) _ = deck.activeCards[x][i].SelectedMove(i + 1, cardOffset, settings.PlayAnimations); //+1 due to y being an indexer
+                    if (!Loading && !ForceMove) _ = deck.activeCards[x][i].SelectedMove(i + 1, cardOffset, settings.PlayAnimations); //+1 due to y being an indexer
                     Selected.Add(deck.activeCards[x][i]);
                 }
                 deck.activeCards[x].RemoveRange(y, deck.activeCards[x].Count-y);
@@ -106,7 +105,7 @@ namespace Spider_Solitaire
             }
             else
             {
-                if (!Loading && settings.PlayAnimations) _ = deck.activeCards[x][y].InvalidMove(y + 1, cardOffset);  //+1 due to y being an indexer
+                if (!Loading && !ForceMove && settings.PlayAnimations) _ = deck.activeCards[x][y].InvalidMove(y + 1, cardOffset);  //+1 due to y being an indexer
             }
         }
 
@@ -115,18 +114,17 @@ namespace Spider_Solitaire
         {
             if (Selected == null || Selected.Count == 0) return;
             int column_index = ((Grid)sender).Name[3] - '0';
-            if((deck.activeCards[column_index].Count == 0 || deck.activeCards[column_index].Last().Value-1 == Selected[0].Value) 
-                && column_index != Selected_x)
+            if(ForceMove || ((deck.activeCards[column_index].Count == 0 || deck.activeCards[column_index].Last().Value-1 == Selected[0].Value) 
+                && column_index != Selected_x))
             {
 
-                if (!Loading) Command.LogCommand(new Command(CommandType.select, new string[] { Selected[0].Image.Name }));
+                if (!Loading && !ForceMove) Command.LogCommand(new Command(CommandType.select, new string[] { Selected[0].Image.Name }));
 
-                LastCommandArgs = $"{Selected.First().Image.Name[0] - 'a'} ";
+                string LastCommandArgsEntry = $"{Selected.First().Image.Name[0] - 'a'} ";
                 deck.activeCards[column_index].AddRange(Selected);
-
-                bool flag = false; //used as tmp flag
-                foreach(var item in deck.activeCards[column_index])
+                foreach (var item in deck.activeCards[column_index])
                 {
+                    bool flag;
                     if (item.Image.Name == Selected[0].Image.Name) flag = true;
                     else flag = false;
                     string name = "";
@@ -143,18 +141,18 @@ namespace Spider_Solitaire
                     item.Image.Name = name;
 
                     if (!flag) continue;
-                    LastCommandArgs += name;
+                    LastCommandArgsEntry += name;
                 }
-                MessageBox.Show(LastCommandArgs);
-                foreach(var item in deck.activeCards[column_index])
+                foreach (var item in deck.activeCards[column_index])
                 {
                     Grid.SetColumn(item.Image, column_index + 1);
                     item.Image.Margin = new Thickness(0, (deck.activeCards[column_index].IndexOf(item)+1) * cardOffset + 5,0,0);
                 }
-                if (!Loading) Command.LogCommand(new Command(CommandType.move, new string[] { column_index.ToString() }));
+                if (!Loading && !ForceMove) Command.LogCommand(new Command(CommandType.move, new string[] { column_index.ToString() }));
                 LastCommand = CommandType.move;
-                if (!Loading) Statistics.IncreaseStat(StatisticType.CardsMoved, Selected.Count);
-                LastCommandArgs += " " + ((Grid)sender).Name[3];
+                if (!Loading && !ForceMove) Statistics.IncreaseStat(StatisticType.CardsMoved, Selected.Count);
+                LastCommandArgsEntry += " " + ((Grid)sender).Name[3];
+                LastCommandArgs.Add(LastCommandArgsEntry);
             }
             else
             {
@@ -224,7 +222,7 @@ namespace Spider_Solitaire
                         if (c == 'c') Statistics.IncreaseStat(StatisticType.SuitSpadesAssembled);
                         if (c == 'd') Statistics.IncreaseStat(StatisticType.SuitHeartsAssembled);
                     }
-                    LastCommandArgs = "assembled";
+                    LastCommandArgs.Add("assembled");
 
                     return;
                 }
@@ -262,7 +260,7 @@ namespace Spider_Solitaire
                 deck.activeCards[index].Add(card);
                 if (!Loading && settings.PlayAnimations) await Task.Delay(30);
             }
-            LastCommandArgs = "add";
+            LastCommandArgs.Add("add");
             Refresh();
             AnimationPlaying = false;
             LastCommand = CommandType.add;
@@ -281,6 +279,7 @@ namespace Spider_Solitaire
                 }
                 if (deck.activeCards[i].Count > 0 && deck.activeCards[i].Last().Visible == false)
                 {
+                    LastCommandArgs[^1] = LastCommandArgs.Last() + " revealed";
                     deck.activeCards[i].Last().Visible = true;
                     deck.activeCards[i].Last().GetColour();
                 }
@@ -330,29 +329,27 @@ namespace Spider_Solitaire
 
         private void BackClick(object sender, RoutedEventArgs e)
         {
-            if (LastCommand == CommandType.select || AnimationPlaying || Selected.Count > 0) return;
+            if (LastCommand == CommandType.select || AnimationPlaying || Selected.Count > 0 || LastCommandArgs == null || LastCommandArgs.Count == 0) return;
 
-            if (LastCommandArgs != null && !LastCommandArgs.Contains("assembled"))
+            if (!LastCommandArgs.Last().Contains("assembled"))
             {
-                if (LastCommand == CommandType.add) RevertAdd();
-                if (LastCommand == CommandType.move) RevertMove();
                 try
                 {
+                    if (LastCommand == CommandType.add) RevertAdd();
+                    if (LastCommand == CommandType.move) RevertMove();
                     var Lines = File.ReadAllLines(@"autosave.soli");
                     File.WriteAllLines(@"autosave.soli", Lines.Take(Lines.Length - (int)LastCommand).ToArray());
-                    MessageBox.Show(LastCommand.ToString());
                 }
-                catch (Exception ex) { MessageBox.Show(ex.ToString(), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning); }
+                catch (Exception ex) { MessageBox.Show(ex.ToString(), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning); ForceMove = false; }
                 return;
             }
-            MessageBox.Show("reverting move assemble");
 
             try
             {
                 var Lines = File.ReadAllLines(@"autosave.soli");
                 File.WriteAllLines(@"autosave.soli", Lines.Take(Lines.Length - (int)LastCommand).ToArray());
             }
-            catch (Exception ex) { MessageBox.Show(ex.ToString(), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning); }
+            catch (Exception ex) { MessageBox.Show(ex.ToString(), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning); ForceMove = false; }
             RemoveEventListenersFromCardImages();
             Game game = new(_numberOfColours, false, _menu, _destroy, CurrentLanguage);
             if (game == null) return; 
@@ -381,7 +378,6 @@ namespace Spider_Solitaire
 
         private void RevertAdd()
         {
-            MessageBox.Show("reverting add");
             for (int i = 0; i < 10; i++)
             {
                 if (deck.activeCards[i].Count == 0) continue;
@@ -391,12 +387,20 @@ namespace Spider_Solitaire
             deck.cardNum -= 10;
             Image[] newCardImages = { new1, new2, new3, new4, new5 };
             NewCardNumber--;
-            newCardImages[NewCardNumber - 1].Visibility = Visibility.Visible;
+            newCardImages[NewCardNumber - 1].Visibility = Visibility.Visible; 
+            LastCommandArgs.RemoveAt(LastCommandArgs.Count - 1);
         }
 
         private void RevertMove()
         {
-            MessageBox.Show("reverting move");
+            if (LastCommandArgs == null || !LastCommandArgs.Last().Contains(' ')) throw new ArgumentException();
+            ForceMove = true;
+            string[] data = LastCommandArgs.Last().Split(' ');
+            CardSelect(new Image { Name = data[1] }, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
+            ColumnClick(new Grid { Name = $"col{data[0]}" }, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
+            LastCommandArgs.RemoveAt(LastCommandArgs.Count - 1);
+            LastCommandArgs.RemoveAt(LastCommandArgs.Count - 1);
+            ForceMove = false;
         }
 
         private void HintClick(object sender, RoutedEventArgs e)
@@ -735,6 +739,18 @@ namespace Spider_Solitaire
             {
                 item.MouseLeftButtonUp -= NewCardsClick;
             }
+        }
+
+
+        //used for debug code sections, invoke by clicking the button in the middle of game
+        private void DEBUG_Click(object sender, RoutedEventArgs e)
+        {
+            string data = "";
+            foreach (var item in LastCommandArgs)
+            {
+                data +="--->" + item + "\n";
+            }
+            MessageBox.Show($"Number of elements: {LastCommandArgs.Count}"+"\n\n"+data);
         }
     }
 }
