@@ -389,6 +389,7 @@ namespace Spider_Solitaire
             NewCardNumber--;
             newCardImages[NewCardNumber - 1].Visibility = Visibility.Visible; 
             LastCommandArgs.RemoveAt(LastCommandArgs.Count - 1);
+            SetLastCommandBasedOnArgumnet(LastCommandArgs.Last());
         }
 
         private void RevertMove()
@@ -396,11 +397,23 @@ namespace Spider_Solitaire
             if (LastCommandArgs == null || !LastCommandArgs.Last().Contains(' ')) throw new ArgumentException();
             ForceMove = true;
             string[] data = LastCommandArgs.Last().Split(' ');
+            if( LastCommandArgs.Last().Contains("revealed") )
+            {
+                int index = Convert.ToInt32(data[0]);
+                deck.activeCards[index].Last().Visible = false;
+                deck.activeCards[index].Last().GetColour();
+            }
             CardSelect(new Image { Name = data[1] }, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
             ColumnClick(new Grid { Name = $"col{data[0]}" }, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
             LastCommandArgs.RemoveAt(LastCommandArgs.Count - 1);
-            LastCommandArgs.RemoveAt(LastCommandArgs.Count - 1);
+            if(LastCommandArgs.Count != 0) LastCommandArgs.RemoveAt(LastCommandArgs.Count - 1);
             ForceMove = false;
+            if (LastCommandArgs.Count != 0) SetLastCommandBasedOnArgumnet(LastCommandArgs.Last());
+        }
+
+        private void SetLastCommandBasedOnArgumnet(string arg)
+        {
+            LastCommand = arg.Contains("add") ? CommandType.add : CommandType.move;
         }
 
         private void HintClick(object sender, RoutedEventArgs e)

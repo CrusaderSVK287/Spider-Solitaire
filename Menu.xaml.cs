@@ -416,7 +416,9 @@ namespace Spider_Solitaire
             if (current[1] < latest[1]) return false;
 
             //bugfix
-            if (current[2] < latest[2]) return false;
+            if (current[2] < latest[2] &&
+                current[1] <= latest[1] &&
+                current[0] <= latest[0]) return false;
             
             return true;
         }
