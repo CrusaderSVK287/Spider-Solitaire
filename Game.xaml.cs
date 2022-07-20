@@ -179,7 +179,7 @@ namespace Spider_Solitaire
                     for (int j = deck.activeCards[i].Count-1; j >= index; j--)
                     {
                         if(!Loading && settings.PlayAnimations) await Task.Delay(25);
-                        Card.RemoveEventHandlers(deck.activeCards[i][j], CardSelect);
+                        deck.activeCards[i][j].Image.MouseLeftButtonUp -= CardSelect;
                         SolitaireGrid.Children.Remove(deck.activeCards[i][j].Image);
                     }
 
@@ -660,8 +660,29 @@ namespace Spider_Solitaire
                 if (deck.activeCards[i].Count == 0) continue;
                 foreach (var card in deck.activeCards[i])
                 {
-                    Card.RemoveEventHandlers(card, CardSelect);
+                    card.Image.MouseLeftButtonUp -= CardSelect;
                 }
+            }
+
+            IEnumerable<Button> query = SolitaireGrid.Children.OfType<Button>();
+            foreach (var item in query)
+            {
+                item.Click -= ExitClick;
+                item.Click -= RestartClick;
+                item.Click -= BackClick;
+                item.Click -= HintClick;
+            }
+
+            IEnumerable<ColumnDefinition> queryColumns = SolitaireGrid.Children.OfType<ColumnDefinition>();
+            foreach (var item in query)
+            {
+                item.MouseLeftButtonUp -= ColumnClick;
+            }
+
+            Image[] newCardImages = { new1, new2, new3, new4, new5 };
+            foreach (var item in newCardImages)
+            {
+                item.MouseLeftButtonUp -= NewCardsClick;
             }
         }
     }

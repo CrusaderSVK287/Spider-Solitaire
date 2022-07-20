@@ -41,7 +41,7 @@
         <Grid Grid.Column="8" Background="Transparent" MouseLeftButtonUp="ColumnClick" Name="col7"/>
         <Grid Grid.Column="9" Background="Transparent" MouseLeftButtonUp="ColumnClick" Name="col8"/>
         <Grid Grid.Column="10" Background="Transparent" MouseLeftButtonUp="ColumnClick" Name="col9"/>
-        <Grid Grid.Row="1" Grid.Column="10">
+        <Grid Grid.Row="1" Grid.Column="10" Name="NewCardsGrid">
             <Image Source="assets/uncovered.png" Height="120" Width="89" VerticalAlignment="Top" Name="new5" HorizontalAlignment="Left" Margin="0,0,0,0" MouseLeftButtonUp="NewCardsClick" Grid.ColumnSpan="2"/>
             <Image Source="assets/uncovered.png" Height="120" Width="89" VerticalAlignment="Top" Name="new4" HorizontalAlignment="Left" Margin="-5,0,0,0" MouseLeftButtonUp="NewCardsClick" Grid.ColumnSpan="2"/>
             <Image Source="assets/uncovered.png" Height="120" Width="89" VerticalAlignment="Top" Name="new3" HorizontalAlignment="Left" Margin="-10,0,0,0" MouseLeftButtonUp="NewCardsClick" Grid.ColumnSpan="2"/>
@@ -60,7 +60,7 @@
                    Visibility="Hidden"
                    TextAlignment="Center"
                    />
-        <Grid Grid.Row="1" Grid.ColumnSpan="12">
+        <Grid Grid.Row="1" Grid.ColumnSpan="12" Name="InformationGrid">
             <TextBlock Name="InformationBox"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Top"

@@ -102,9 +102,9 @@ namespace Spider_Solitaire
             Image.Source = new BitmapImage(new Uri(@"assets/" + (Visible ? $"{Value}{Colour}" : "uncovered") + ".png", UriKind.Relative));
         }
 
-        public static void RemoveEventHandlers(Card card, MouseButtonEventHandler handler)
+        public static void RemoveEventHandlers(Card card, Delegate handlerDel, RoutedEvent routed)
         {
-            card.Image.MouseLeftButtonUp -= handler;
+            card.Image.RemoveHandler(routed, handlerDel);
         }
     }
 }
