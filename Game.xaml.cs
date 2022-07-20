@@ -28,6 +28,7 @@ namespace Spider_Solitaire
         private readonly Settings settings;
         public string CurrentLanguage { get; }
         private CommandType LastCommand { get; set; }
+        private string? LastCommandArgs { get; set; }
         private bool AnimationPlaying { get; set; } = false;   //used to track whether an animation is playing to avoid confusions
         private bool Loading { get; set; } = false;
         private List<Card> Selected { get; set; } = new(); //currenly selected card/s
@@ -44,6 +45,7 @@ namespace Spider_Solitaire
             _menu = menu;
             LastCommand = CommandType.select;
             settings = new();
+            LastCommandArgs = "";
             cardOffset = settings.CardSpacing;
             CurrentLanguage = language;
             RemainingHints = GetHints();
@@ -76,7 +78,7 @@ namespace Spider_Solitaire
             if (deck.activeCards == null || Selected.Count > 0) return;
             int x = ((Image)sender).Name[0] - 97;
             int y = ((Image)sender).Name[1] - 65;
-
+            MessageBox.Show(((Image)sender).Name);
             char n = ((Image)sender).Name[2];
             while (n > 'A')
             {
@@ -92,6 +94,7 @@ namespace Spider_Solitaire
             }
             if(valid)
             {
+                LastCommandArgs = ((Image)sender).Name;
                 SwichHitRegistration(false);
                 for (int i = y; i < deck.activeCards[x].Count; i++)
                 {
@@ -118,9 +121,14 @@ namespace Spider_Solitaire
 
                 if (!Loading) Command.LogCommand(new Command(CommandType.select, new string[] { Selected[0].Image.Name }));
 
+                LastCommandArgs = $"{Selected.First().Image.Name[0] - 'a'} ";
                 deck.activeCards[column_index].AddRange(Selected);
+
+                bool flag = false; //used as tmp flag
                 foreach(var item in deck.activeCards[column_index])
                 {
+                    if (item.Image.Name == Selected[0].Image.Name) flag = true;
+                    else flag = false;
                     string name = "";
                     name += (char)(column_index + 97);
                     char a = (char)(deck.activeCards[column_index].IndexOf(item) + 65);
@@ -133,7 +141,11 @@ namespace Spider_Solitaire
                     name += $"{a}{b}";
 
                     item.Image.Name = name;
+
+                    if (!flag) continue;
+                    LastCommandArgs += name;
                 }
+                MessageBox.Show(LastCommandArgs);
                 foreach(var item in deck.activeCards[column_index])
                 {
                     Grid.SetColumn(item.Image, column_index + 1);
@@ -142,6 +154,7 @@ namespace Spider_Solitaire
                 if (!Loading) Command.LogCommand(new Command(CommandType.move, new string[] { column_index.ToString() }));
                 LastCommand = CommandType.move;
                 if (!Loading) Statistics.IncreaseStat(StatisticType.CardsMoved, Selected.Count);
+                LastCommandArgs += " " + ((Grid)sender).Name[3];
             }
             else
             {
@@ -211,6 +224,7 @@ namespace Spider_Solitaire
                         if (c == 'c') Statistics.IncreaseStat(StatisticType.SuitSpadesAssembled);
                         if (c == 'd') Statistics.IncreaseStat(StatisticType.SuitHeartsAssembled);
                     }
+                    LastCommandArgs = "assembled";
 
                     return;
                 }
@@ -248,6 +262,7 @@ namespace Spider_Solitaire
                 deck.activeCards[index].Add(card);
                 if (!Loading && settings.PlayAnimations) await Task.Delay(30);
             }
+            LastCommandArgs = "add";
             Refresh();
             AnimationPlaying = false;
             LastCommand = CommandType.add;
@@ -316,6 +331,22 @@ namespace Spider_Solitaire
         private void BackClick(object sender, RoutedEventArgs e)
         {
             if (LastCommand == CommandType.select || AnimationPlaying || Selected.Count > 0) return;
+
+            if (LastCommandArgs != null && !LastCommandArgs.Contains("assembled"))
+            {
+                if (LastCommand == CommandType.add) RevertAdd();
+                if (LastCommand == CommandType.move) RevertMove();
+                try
+                {
+                    var Lines = File.ReadAllLines(@"autosave.soli");
+                    File.WriteAllLines(@"autosave.soli", Lines.Take(Lines.Length - (int)LastCommand).ToArray());
+                    MessageBox.Show(LastCommand.ToString());
+                }
+                catch (Exception ex) { MessageBox.Show(ex.ToString(), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning); }
+                return;
+            }
+            MessageBox.Show("reverting move assemble");
+
             try
             {
                 var Lines = File.ReadAllLines(@"autosave.soli");
@@ -337,15 +368,35 @@ namespace Spider_Solitaire
             if (result == MessageBoxResult.No) return;
             try
             {
-                var Lines = File.ReadAllLines(@"autosave.soli");
-                File.WriteAllLines(@"autosave.soli", Lines.Take(105).ToArray());
+                File.WriteAllLines(@"autosave.soli", File.ReadAllLines(@"autosave.soli").Take(105).ToArray());
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString(), "Restart", MessageBoxButton.OK, MessageBoxImage.Warning); }
+
             RemoveEventListenersFromCardImages();
             Game game = new Game(_numberOfColours, false, _menu, _destroy, CurrentLanguage);
             if (game == null) return; 
             NavigationService.Navigate(game);
             _destroy(game);
+        }
+
+        private void RevertAdd()
+        {
+            MessageBox.Show("reverting add");
+            for (int i = 0; i < 10; i++)
+            {
+                if (deck.activeCards[i].Count == 0) continue;
+                SolitaireGrid.Children.Remove(deck.activeCards[i].Last().Image);
+                deck.activeCards[i].Remove(deck.activeCards[i].Last());
+            }
+            deck.cardNum -= 10;
+            Image[] newCardImages = { new1, new2, new3, new4, new5 };
+            NewCardNumber--;
+            newCardImages[NewCardNumber - 1].Visibility = Visibility.Visible;
+        }
+
+        private void RevertMove()
+        {
+            MessageBox.Show("reverting move");
         }
 
         private void HintClick(object sender, RoutedEventArgs e)
