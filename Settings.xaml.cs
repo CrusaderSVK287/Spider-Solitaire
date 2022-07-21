@@ -168,7 +168,7 @@ namespace Spider_Solitaire
             {
                 "English" => "English",
                 "Slovencina" => "Slovenčina",
-                "Ukrainsky" => "Український",
+                "Ukrainsky" => "Українська",
                 _ => "ERROR",
             };
         }
