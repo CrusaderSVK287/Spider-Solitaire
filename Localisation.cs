@@ -36,6 +36,7 @@ namespace Spider_Solitaire
         MenuHowToPlayButton,
         MenuStatisticsButton,
         MenuUpdateButton,
+        MenuLicenceButton,
 
         //How to play text
         MenuSPInformationHowToPlayPart01,

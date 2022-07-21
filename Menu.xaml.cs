@@ -96,6 +96,7 @@ namespace Spider_Solitaire
             HowToPlay.Content = Localisation.SetText(TextType.MenuHowToPlayButton, CurrentLanguage);
             Stats.Content = Localisation.SetText(TextType.MenuStatisticsButton, CurrentLanguage);
             UpdateButton.Content = Localisation.SetText(TextType.MenuUpdateButton, CurrentLanguage);
+            Licence.Content = Localisation.SetText(TextType.MenuLicenceButton, CurrentLanguage);
         }
 
         private void HowToPlayClick(object sender, RoutedEventArgs e)
@@ -255,6 +256,7 @@ namespace Spider_Solitaire
 
             SPInformation.Children.Add(new TextBlock() { Text = Localisation.SetText(TextType.MenuSPInformationHowToPlayPart12, CurrentLanguage), TextWrapping = TextWrapping.Wrap, FontSize = 40 });
             SPInformation.Children.Add(new TextBlock() { Text = Localisation.SetText(TextType.MenuSPInformationHowToPlayPart13, CurrentLanguage), TextWrapping = TextWrapping.Wrap });
+            InformationScrollViewer.ScrollToTop();
         }
 
         private void StatsClick(object sender, RoutedEventArgs e)
@@ -308,6 +310,43 @@ namespace Spider_Solitaire
                 TextWrapping = TextWrapping.Wrap,
             };
             SPInformation.Children.Add(stats);
+            InformationScrollViewer.ScrollToTop();
+        }
+
+        private void LicenceClick(object sender, RoutedEventArgs e)
+        {
+            SPInformation.Children.Clear();
+            TextBlock title = new()
+            {
+                Text = Localisation.SetText(TextType.MenuLicenceButton, CurrentLanguage),
+                FontSize = 40,
+            };
+
+            TextBlock licence = new()
+            {
+                Text = "\nMIT License\n\n" +
+                "Copyright (c) 2022 Lukáš Belán\n\n" +
+                "Permission is hereby granted, free of charge, to any person obtaining a copy " +
+                "of this software and associated documentation files (the \"Software\"), to deal " +
+                "in the Software without restriction, including without limitation the rights " +
+                "to use, copy, modify, merge, publish, distribute, sublicense, and/or sell " +
+                "copies of the Software, and to permit persons to whom the Software is " +
+                "furnished to do so, subject to the following conditions:\n\n" +
+                "The above copyright notice and this permission notice shall be included in all " +
+                "copies or substantial portions of the Software.\n\n" +
+                "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR " +
+                "IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, " +
+                "FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE " +
+                "AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER " +
+                "LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, " +
+                "OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE " +
+                "SOFTWARE.",
+                TextWrapping = TextWrapping.Wrap,
+            };
+
+            SPInformation.Children.Add(title);
+            SPInformation.Children.Add(licence);
+            InformationScrollViewer.ScrollToTop();
         }
 
         private void GitHubClick(object sender, RoutedEventArgs e)
