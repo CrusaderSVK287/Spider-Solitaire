@@ -21,13 +21,17 @@ namespace Spider_Solitaire
     /// </summary>
     public partial class Game : Page
     {
+        private readonly bool DEBUG_MODE = true;   //used to determine whether the debug button is visible
+
         private int cardOffset { get; set; }  //used to render the cards apart from each other
         private readonly Menu _menu;
-        private readonly Action _destroy; //used as a delegate from menu.cs, destroys all references to current game for garbage collector to free the memory
+        private readonly Action<Game> _destroy; //used as a delegate from menu.cs, destroys all references to current game for garbage collector to free the memory
         private readonly int _numberOfColours;
         private readonly Settings settings;
         public string CurrentLanguage { get; }
         private CommandType LastCommand { get; set; }
+        private List<string> LastCommandArgs = new List<string>();  //history of command arguments to make undo move possible
+        private List<Image> AssembledKingCards = new List<Image>(); //used to keep track of assembled king cards to remove when move undone
         private bool AnimationPlaying { get; set; } = false;   //used to track whether an animation is playing to avoid confusions
         private bool Loading { get; set; } = false;
         private List<Card> Selected { get; set; } = new(); //currenly selected card/s
@@ -35,11 +39,13 @@ namespace Spider_Solitaire
         private int NewCardNumber { get; set; } = 1;
         private int DecksSolved { get; set; } = 0;   //number of solved decks
         private int RemainingHints { get; set; }    //number of remaining hints
+        private bool ForceMove { get; set; }    //Used to force cards to move regardless of rules
 
         private Deck deck = new Deck();
-        public Game(int numberOfColours, bool isNewGame, Menu menu, Action Destroy, string language)
+        public Game(int numberOfColours, bool isNewGame, Menu menu, Action<Game> Destroy, string language)
         {
             InitializeComponent();
+            DEBUG.Visibility = DEBUG_MODE ? Visibility.Visible : Visibility.Hidden;
             KeepAlive = false;
             _menu = menu;
             LastCommand = CommandType.select;
@@ -76,7 +82,6 @@ namespace Spider_Solitaire
             if (deck.activeCards == null || Selected.Count > 0) return;
             int x = ((Image)sender).Name[0] - 97;
             int y = ((Image)sender).Name[1] - 65;
-
             char n = ((Image)sender).Name[2];
             while (n > 'A')
             {
@@ -92,10 +97,11 @@ namespace Spider_Solitaire
             }
             if(valid)
             {
+                //LastCommandArgs.Add(((Image)sender).Name);
                 SwichHitRegistration(false);
                 for (int i = y; i < deck.activeCards[x].Count; i++)
                 {
-                    if (!Loading) _ = deck.activeCards[x][i].SelectedMove(i + 1, cardOffset, settings.PlayAnimations); //+1 due to y being an indexer
+                    if (!Loading && !ForceMove) _ = deck.activeCards[x][i].SelectedMove(i + 1, cardOffset, settings.PlayAnimations); //+1 due to y being an indexer
                     Selected.Add(deck.activeCards[x][i]);
                 }
                 deck.activeCards[x].RemoveRange(y, deck.activeCards[x].Count-y);
@@ -103,7 +109,7 @@ namespace Spider_Solitaire
             }
             else
             {
-                if (!Loading && settings.PlayAnimations) _ = deck.activeCards[x][y].InvalidMove(y + 1, cardOffset);  //+1 due to y being an indexer
+                if (!Loading && !ForceMove && settings.PlayAnimations) _ = deck.activeCards[x][y].InvalidMove(y + 1, cardOffset);  //+1 due to y being an indexer
             }
         }
 
@@ -112,15 +118,19 @@ namespace Spider_Solitaire
         {
             if (Selected == null || Selected.Count == 0) return;
             int column_index = ((Grid)sender).Name[3] - '0';
-            if((deck.activeCards[column_index].Count == 0 || deck.activeCards[column_index].Last().Value-1 == Selected[0].Value) 
-                && column_index != Selected_x)
+            if(ForceMove || ((deck.activeCards[column_index].Count == 0 || deck.activeCards[column_index].Last().Value-1 == Selected[0].Value) 
+                && column_index != Selected_x))
             {
 
-                if (!Loading) Command.LogCommand(new Command(CommandType.select, new string[] { Selected[0].Image.Name }));
+                if (!Loading && !ForceMove) Command.LogCommand(new Command(CommandType.select, new string[] { Selected[0].Image.Name }));
 
+                string LastCommandArgsEntry = $"{Selected.First().Image.Name[0] - 'a'} ";
                 deck.activeCards[column_index].AddRange(Selected);
-                foreach(var item in deck.activeCards[column_index])
+                foreach (var item in deck.activeCards[column_index])
                 {
+                    bool flag;
+                    if (item.Image.Name == Selected[0].Image.Name) flag = true;
+                    else flag = false;
                     string name = "";
                     name += (char)(column_index + 97);
                     char a = (char)(deck.activeCards[column_index].IndexOf(item) + 65);
@@ -133,15 +143,20 @@ namespace Spider_Solitaire
                     name += $"{a}{b}";
 
                     item.Image.Name = name;
+
+                    if (!flag) continue;
+                    LastCommandArgsEntry += name;
                 }
-                foreach(var item in deck.activeCards[column_index])
+                foreach (var item in deck.activeCards[column_index])
                 {
                     Grid.SetColumn(item.Image, column_index + 1);
                     item.Image.Margin = new Thickness(0, (deck.activeCards[column_index].IndexOf(item)+1) * cardOffset + 5,0,0);
                 }
-                if (!Loading) Command.LogCommand(new Command(CommandType.move, new string[] { column_index.ToString() }));
+                if (!Loading && !ForceMove) Command.LogCommand(new Command(CommandType.move, new string[] { column_index.ToString() }));
                 LastCommand = CommandType.move;
-                if (!Loading) Statistics.IncreaseStat(StatisticType.CardsMoved, Selected.Count);
+                if (!Loading && !ForceMove) Statistics.IncreaseStat(StatisticType.CardsMoved, Selected.Count);
+                LastCommandArgsEntry += " " + ((Grid)sender).Name[3];
+                LastCommandArgs.Add(LastCommandArgsEntry);
             }
             else
             {
@@ -179,6 +194,7 @@ namespace Spider_Solitaire
                     for (int j = deck.activeCards[i].Count-1; j >= index; j--)
                     {
                         if(!Loading && settings.PlayAnimations) await Task.Delay(25);
+                        deck.activeCards[i][j].Image.MouseLeftButtonUp -= CardSelect;
                         SolitaireGrid.Children.Remove(deck.activeCards[i][j].Image);
                     }
 
@@ -210,6 +226,8 @@ namespace Spider_Solitaire
                         if (c == 'c') Statistics.IncreaseStat(StatisticType.SuitSpadesAssembled);
                         if (c == 'd') Statistics.IncreaseStat(StatisticType.SuitHeartsAssembled);
                     }
+                    LastCommandArgs[^1] = LastCommandArgs.Last() + $" assembled{c}";
+                    AssembledKingCards.Add(Image);
 
                     return;
                 }
@@ -247,6 +265,7 @@ namespace Spider_Solitaire
                 deck.activeCards[index].Add(card);
                 if (!Loading && settings.PlayAnimations) await Task.Delay(30);
             }
+            LastCommandArgs.Add("add");
             Refresh();
             AnimationPlaying = false;
             LastCommand = CommandType.add;
@@ -265,6 +284,7 @@ namespace Spider_Solitaire
                 }
                 if (deck.activeCards[i].Count > 0 && deck.activeCards[i].Last().Visible == false)
                 {
+                    LastCommandArgs[^1] = LastCommandArgs.Last() + " revealed" + i.ToString();
                     deck.activeCards[i].Last().Visible = true;
                     deck.activeCards[i].Last().GetColour();
                 }
@@ -300,28 +320,31 @@ namespace Spider_Solitaire
             VictoryText.Text = Localisation.SetText(TextType.GameVictoryText, CurrentLanguage) + "!";
             VictoryText.Visibility = Visibility.Visible;
             await Task.Delay(5000);
+            RemoveEventListenersFromCardImages();
             NavigationService.Navigate(_menu);
-            _destroy();
+            _destroy(null);
         }
 
         private void ExitClick(object sender, RoutedEventArgs e)
         {
+            RemoveEventListenersFromCardImages();
             NavigationService.Navigate(_menu);
-            _destroy();
+            _destroy(null);
         }
 
         private void BackClick(object sender, RoutedEventArgs e)
         {
-            if (LastCommand == CommandType.select || AnimationPlaying || Selected.Count > 0) return;
+            if (LastCommand == CommandType.select || AnimationPlaying || Selected.Count > 0 || LastCommandArgs == null || LastCommandArgs.Count == 0) return;
+
             try
             {
+                if (LastCommand == CommandType.add) RevertAdd();
+                else if (LastCommand == CommandType.move) RevertMove(LastCommandArgs.Last());
+                else throw new InvalidOperationException();
                 var Lines = File.ReadAllLines(@"autosave.soli");
                 File.WriteAllLines(@"autosave.soli", Lines.Take(Lines.Length - (int)LastCommand).ToArray());
             }
-            catch (Exception ex) { MessageBox.Show(ex.ToString(), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning); }
-            Game game = new(_numberOfColours, false, _menu, _destroy, CurrentLanguage);
-            if (game != null) NavigationService.Navigate(game);
-            _destroy();
+            catch (Exception ex) { MessageBox.Show(ex.ToString(), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning); ForceMove = false; }
         }
 
         private void RestartClick(object sender, RoutedEventArgs e)
@@ -332,13 +355,85 @@ namespace Spider_Solitaire
             if (result == MessageBoxResult.No) return;
             try
             {
-                var Lines = File.ReadAllLines(@"autosave.soli");
-                File.WriteAllLines(@"autosave.soli", Lines.Take(105).ToArray());
+                File.WriteAllLines(@"autosave.soli", File.ReadAllLines(@"autosave.soli").Take(105).ToArray());
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString(), "Restart", MessageBoxButton.OK, MessageBoxImage.Warning); }
+
+            RemoveEventListenersFromCardImages();
             Game game = new Game(_numberOfColours, false, _menu, _destroy, CurrentLanguage);
-            if (game != null) NavigationService.Navigate(game);
-            _destroy();
+            if (game == null) return; 
+            NavigationService.Navigate(game);
+            _destroy(game);
+        }
+
+        private void RevertAdd()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                if (deck.activeCards[i].Count == 0) continue;
+                SolitaireGrid.Children.Remove(deck.activeCards[i].Last().Image);
+                deck.activeCards[i].Remove(deck.activeCards[i].Last());
+            }
+            deck.cardNum -= 10;
+            Image[] newCardImages = { new1, new2, new3, new4, new5 };
+            NewCardNumber--;
+            newCardImages[NewCardNumber - 1].Visibility = Visibility.Visible; 
+            LastCommandArgs.RemoveAt(LastCommandArgs.Count - 1);
+            SetLastCommandBasedOnArgumnet(LastCommandArgs.Last());
+        }
+
+        private void RevertMove(string LastCommand)
+        {
+            if (LastCommandArgs == null || !LastCommand.Contains(' ')) throw new ArgumentException();
+            ForceMove = true;
+            string[] data = LastCommand.Split(' ');
+
+            if(LastCommand.Contains("revealed") )
+            {
+                foreach (string item in GetSubArgsFromArg(data, "revealed"))
+                {
+                    int index = Convert.ToInt32(item[^1].ToString());
+                    deck.activeCards[index].Last().Visible = false;
+                    deck.activeCards[index].Last().GetColour();
+                }
+            }
+
+            if(LastCommand.Contains("assembled"))
+            {
+                string subArg = LastCommand.Split(' ').ElementAt(3);
+                char colour = subArg[^1];
+                int index = Convert.ToInt32(data[2]);
+                for (int value = 13; value > 0; value--)
+                {
+                    Card card = new(value, colour, true, deck.activeCards[index].Count+1, index, cardOffset, CardSelect, settings.CardSizeFactor);
+                    SolitaireGrid.Children.Add(card.Image);
+                    Grid.SetColumn(card.Image, index + 1);
+                    deck.activeCards[index].Add(card);
+                }
+                SolitaireGrid.Children.Remove(AssembledKingCards.Last());
+                AssembledKingCards.Remove(AssembledKingCards.Last());
+                DecksSolved--;
+            }
+
+            CardSelect(new Image { Name = data[1] }, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
+            ColumnClick(new Grid { Name = $"col{data[0]}" }, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
+
+            LastCommandArgs.RemoveAt(LastCommandArgs.Count - 1);
+            if(LastCommandArgs.Count != 0) LastCommandArgs.RemoveAt(LastCommandArgs.Count - 1); //No damn idea why I had to add this line for it to work but hey it works so I won't touch it
+            ForceMove = false;
+            if (LastCommandArgs.Count != 0) SetLastCommandBasedOnArgumnet(LastCommandArgs.Last());
+        }
+
+        private static string[] GetSubArgsFromArg(in string[] data, in string arg)
+        {
+            List<string> subArgs = new List<string>();
+            foreach (var item in data) { if (item.Contains(arg)) subArgs.Add(item); }
+            return subArgs.ToArray();
+        }
+
+        private void SetLastCommandBasedOnArgumnet(string arg)
+        {
+            LastCommand = arg.Contains("add") ? CommandType.add : CommandType.move;
         }
 
         private void HintClick(object sender, RoutedEventArgs e)
@@ -643,6 +738,52 @@ namespace Spider_Solitaire
         {
             if (settings.HintMode == 2) Hint.IsEnabled = false;
             return (settings.HintMode == 0) ? -1 : 3;
+        }
+
+        private void RemoveEventListenersFromCardImages()
+        {
+            if (deck == null) return;
+            for (int i = 0; i < 10; i++)
+            {
+                if (deck.activeCards[i].Count == 0) continue;
+                foreach (var card in deck.activeCards[i])
+                {
+                    card.Image.MouseLeftButtonUp -= CardSelect;
+                }
+            }
+
+            IEnumerable<Button> query = SolitaireGrid.Children.OfType<Button>();
+            foreach (var item in query)
+            {
+                item.Click -= ExitClick;
+                item.Click -= RestartClick;
+                item.Click -= BackClick;
+                item.Click -= HintClick;
+            }
+
+            IEnumerable<ColumnDefinition> queryColumns = SolitaireGrid.Children.OfType<ColumnDefinition>();
+            foreach (var item in query)
+            {
+                item.MouseLeftButtonUp -= ColumnClick;
+            }
+
+            Image[] newCardImages = { new1, new2, new3, new4, new5 };
+            foreach (var item in newCardImages)
+            {
+                item.MouseLeftButtonUp -= NewCardsClick;
+            }
+        }
+
+
+        //used for debug code sections, invoke by clicking the button in the middle of game
+        private void DEBUG_Click(object sender, RoutedEventArgs e)
+        {
+            string data = "";
+            foreach (var item in LastCommandArgs)
+            {
+                data +="--->" + item + "\n";
+            }
+            MessageBox.Show($"Number of elements: {LastCommandArgs.Count}"+"\n\n"+data);
         }
     }
 }

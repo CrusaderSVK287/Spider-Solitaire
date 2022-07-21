@@ -33,12 +33,25 @@ namespace Spider_Solitaire
             _ = CheckForUpdate();
         }
 
-        private void DestroyGameReference()
+        private void DestroyGameReference(Game? newGame)
         {
             if (game == null) return;
+
+            Grid[] cols = { game.col0, game.col1, game.col2, game.col3, game.col4, game.col5, game.col6, game.col7, game.col8, game.col9,};
+            foreach (var item in cols)
+            {
+                item.Children.Clear();
+            }
+            game.InformationGrid.Children.Clear();
+            game.NewCardsGrid.Children.Clear();
             game.SolitaireGrid.Children.Clear();
             game.SolitaireGrid = null;
             game = null;
+            
+            GC.Collect();
+
+            if (newGame == null) return;
+            game = newGame;
         }
 
         private void OneSuiteNewGameClick(object sender, RoutedEventArgs e)
@@ -68,7 +81,7 @@ namespace Spider_Solitaire
 
         private void StartGame(int numberOfSuits, bool isNewGame)
         {
-            game = new Game(numberOfSuits, isNewGame, this, DestroyGameReference, CurrentLanguage);
+            if(game==null) game = new Game(numberOfSuits, isNewGame, this, DestroyGameReference, CurrentLanguage);
             NavigationService.Navigate(game);
         }
 
@@ -400,10 +413,13 @@ namespace Spider_Solitaire
             if (current[0] < latest[0]) return false;
 
             //minor
-            if (current[1] < latest[1]) return false;
+            if (current[1] < latest[1] &&
+                current[0] <= latest[0]) return false;
 
             //bugfix
-            if (current[2] < latest[2]) return false;
+            if (current[2] < latest[2] &&
+                current[1] <= latest[1] &&
+                current[0] <= latest[0]) return false;
             
             return true;
         }

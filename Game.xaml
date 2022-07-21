@@ -6,8 +6,9 @@
       xmlns:local="clr-namespace:Spider_Solitaire"
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="1150"
-      Title="Game" MinWidth="1000" MinHeight="650">
-
+      Title="Game" MinWidth="1000" MinHeight="650"
+      KeepAlive="False"
+      >
     <Grid Name="SolitaireGrid">
         <Grid.Background>
             <ImageBrush ImageSource="assets/greenbg.png"/>
@@ -40,7 +41,7 @@
         <Grid Grid.Column="8" Background="Transparent" MouseLeftButtonUp="ColumnClick" Name="col7"/>
         <Grid Grid.Column="9" Background="Transparent" MouseLeftButtonUp="ColumnClick" Name="col8"/>
         <Grid Grid.Column="10" Background="Transparent" MouseLeftButtonUp="ColumnClick" Name="col9"/>
-        <Grid Grid.Row="1" Grid.Column="10">
+        <Grid Grid.Row="1" Grid.Column="10" Name="NewCardsGrid">
             <Image Source="assets/uncovered.png" Height="120" Width="89" VerticalAlignment="Top" Name="new5" HorizontalAlignment="Left" Margin="0,0,0,0" MouseLeftButtonUp="NewCardsClick" Grid.ColumnSpan="2"/>
             <Image Source="assets/uncovered.png" Height="120" Width="89" VerticalAlignment="Top" Name="new4" HorizontalAlignment="Left" Margin="-5,0,0,0" MouseLeftButtonUp="NewCardsClick" Grid.ColumnSpan="2"/>
             <Image Source="assets/uncovered.png" Height="120" Width="89" VerticalAlignment="Top" Name="new3" HorizontalAlignment="Left" Margin="-10,0,0,0" MouseLeftButtonUp="NewCardsClick" Grid.ColumnSpan="2"/>
@@ -59,7 +60,9 @@
                    Visibility="Hidden"
                    TextAlignment="Center"
                    />
-        <Grid Grid.Row="1" Grid.ColumnSpan="12">
+        <Button Width="150" Height="50" Content="DEBUG" Name="DEBUG" Click="DEBUG_Click"
+                Grid.Column="6" Margin="-50,0,0,0"/>
+        <Grid Grid.Row="1" Grid.ColumnSpan="12" Name="InformationGrid">
             <TextBlock Name="InformationBox"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Top"
