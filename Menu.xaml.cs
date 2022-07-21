@@ -25,33 +25,24 @@ namespace Spider_Solitaire
     {
         public string CurrentLanguage { get; }
         public Game? game;
+        private bool Tutorial { get; set; }
         public Menu(string language)
         {
             InitializeComponent();
             CurrentLanguage = language;
+            Tutorial = false;
             HowToPlayClick(new Button(),new RoutedEventArgs());
             _ = CheckForUpdate();
         }
 
-        private void DestroyGameReference(Game? newGame)
+        private void DestroyGameReference()
         {
             if (game == null) return;
-
-            Grid[] cols = { game.col0, game.col1, game.col2, game.col3, game.col4, game.col5, game.col6, game.col7, game.col8, game.col9,};
-            foreach (var item in cols)
-            {
-                item.Children.Clear();
-            }
-            game.InformationGrid.Children.Clear();
-            game.NewCardsGrid.Children.Clear();
             game.SolitaireGrid.Children.Clear();
             game.SolitaireGrid = null;
             game = null;
             
             GC.Collect();
-
-            if (newGame == null) return;
-            game = newGame;
         }
 
         private void OneSuiteNewGameClick(object sender, RoutedEventArgs e)
@@ -71,6 +62,11 @@ namespace Spider_Solitaire
 
         private void LoadGameClick(object sender, RoutedEventArgs e)
         {
+            if(game != null && !Tutorial)
+            {
+                NavigationService.Navigate(game);
+                return;
+            }
             if (File.Exists(@"autosave.soli")) StartGame(-1, false);
             else
             {
@@ -81,7 +77,8 @@ namespace Spider_Solitaire
 
         private void StartGame(int numberOfSuits, bool isNewGame)
         {
-            if(game==null) game = new Game(numberOfSuits, isNewGame, this, DestroyGameReference, CurrentLanguage);
+            if (game != null) DestroyGameReference();
+            game = new Game(numberOfSuits, isNewGame, this, CurrentLanguage);
             NavigationService.Navigate(game);
         }
 
@@ -175,7 +172,9 @@ namespace Spider_Solitaire
                 try
                 {
                     File.WriteAllText(@"autosave.soli", "mc ac mc bc jc gc hc mc fc cc jc dc ic ec ic bc dc hc fc kc mc mc lc jc jc bc dc hc ic bc cc hc dc jc ic hc lc ec ac cc ec cc jc kc dc fc dc ec gc gc lc dc kc fc ac jc bc gc gc lc cc ac jc dc lc cc fc ec hc mc lc mc hc cc bc gc mc kc fc ac ec ic fc lc hc fc lc cc ac ic kc kc ec ic ac kc kc ac ic bc bc ec gc gc -null- ".Replace(' ', '\n'));
+                    Tutorial = true;
                     LoadGameClick(new Button(), new RoutedEventArgs());
+                    Tutorial = false;
                 }
                 catch (Exception ex) { MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error); return; }
             }

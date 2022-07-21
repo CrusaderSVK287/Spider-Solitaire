@@ -25,7 +25,6 @@ namespace Spider_Solitaire
 
         private int cardOffset { get; set; }  //used to render the cards apart from each other
         private readonly Menu _menu;
-        private readonly Action<Game> _destroy; //used as a delegate from menu.cs, destroys all references to current game for garbage collector to free the memory
         private readonly int _numberOfColours;
         private readonly Settings settings;
         public string CurrentLanguage { get; }
@@ -42,7 +41,7 @@ namespace Spider_Solitaire
         private bool ForceMove { get; set; }    //Used to force cards to move regardless of rules
 
         private Deck deck = new Deck();
-        public Game(int numberOfColours, bool isNewGame, Menu menu, Action<Game> Destroy, string language)
+        public Game(int numberOfColours, bool isNewGame, Menu menu, string language)
         {
             InitializeComponent();
             DEBUG.Visibility = DEBUG_MODE ? Visibility.Visible : Visibility.Hidden;
@@ -73,7 +72,6 @@ namespace Spider_Solitaire
                 Loading = false;
             }
             _numberOfColours = numberOfColours;
-            _destroy = Destroy;
         }
 
         //Loads all cards that are being selected into a tmp list "Selected"
@@ -320,16 +318,14 @@ namespace Spider_Solitaire
             VictoryText.Text = Localisation.SetText(TextType.GameVictoryText, CurrentLanguage) + "!";
             VictoryText.Visibility = Visibility.Visible;
             await Task.Delay(5000);
-            RemoveEventListenersFromCardImages();
             NavigationService.Navigate(_menu);
-            _destroy(null);
         }
 
         private void ExitClick(object sender, RoutedEventArgs e)
         {
-            RemoveEventListenersFromCardImages();
+            //RemoveEventListenersFromCardImages();
             NavigationService.Navigate(_menu);
-            _destroy(null);
+            //_destroy(null);
         }
 
         private void BackClick(object sender, RoutedEventArgs e)
@@ -353,17 +349,12 @@ namespace Spider_Solitaire
             MessageBoxResult result = MessageBox.Show(Localisation.SetText(TextType.GameRestartQuestion,CurrentLanguage),
                 "Note", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.No) return;
-            try
-            {
-                File.WriteAllLines(@"autosave.soli", File.ReadAllLines(@"autosave.soli").Take(105).ToArray());
-            }
-            catch (Exception ex) { MessageBox.Show(ex.ToString(), "Restart", MessageBoxButton.OK, MessageBoxImage.Warning); }
 
-            RemoveEventListenersFromCardImages();
-            Game game = new Game(_numberOfColours, false, _menu, _destroy, CurrentLanguage);
-            if (game == null) return; 
-            NavigationService.Navigate(game);
-            _destroy(game);
+            int count = LastCommandArgs.Count;
+            for (int i = 0; i < count; i++)
+            {
+                BackClick(new Button(), new RoutedEventArgs());
+            }
         }
 
         private void RevertAdd()
@@ -739,41 +730,6 @@ namespace Spider_Solitaire
             if (settings.HintMode == 2) Hint.IsEnabled = false;
             return (settings.HintMode == 0) ? -1 : 3;
         }
-
-        private void RemoveEventListenersFromCardImages()
-        {
-            if (deck == null) return;
-            for (int i = 0; i < 10; i++)
-            {
-                if (deck.activeCards[i].Count == 0) continue;
-                foreach (var card in deck.activeCards[i])
-                {
-                    card.Image.MouseLeftButtonUp -= CardSelect;
-                }
-            }
-
-            IEnumerable<Button> query = SolitaireGrid.Children.OfType<Button>();
-            foreach (var item in query)
-            {
-                item.Click -= ExitClick;
-                item.Click -= RestartClick;
-                item.Click -= BackClick;
-                item.Click -= HintClick;
-            }
-
-            IEnumerable<ColumnDefinition> queryColumns = SolitaireGrid.Children.OfType<ColumnDefinition>();
-            foreach (var item in query)
-            {
-                item.MouseLeftButtonUp -= ColumnClick;
-            }
-
-            Image[] newCardImages = { new1, new2, new3, new4, new5 };
-            foreach (var item in newCardImages)
-            {
-                item.MouseLeftButtonUp -= NewCardsClick;
-            }
-        }
-
 
         //used for debug code sections, invoke by clicking the button in the middle of game
         private void DEBUG_Click(object sender, RoutedEventArgs e)
