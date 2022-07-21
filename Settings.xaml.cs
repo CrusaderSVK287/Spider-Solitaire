@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
+using System.Diagnostics;
 
 namespace Spider_Solitaire
 {
@@ -22,12 +23,14 @@ namespace Spider_Solitaire
     {
         private readonly Action _ReenableSettingsButton;
         private string CurrentLanguage { get; }
+        private string SelectedLanguage { get; set; }
         private List<string> Languages { get; set; }
 
         public Settings(Action ReenableSettingsButton, string language)
         {
             InitializeComponent();
             CurrentLanguage = language;
+            SelectedLanguage = language;
             _ReenableSettingsButton = ReenableSettingsButton;
             Languages = new List<string>();
             LoadSettings();
@@ -134,6 +137,7 @@ namespace Spider_Solitaire
                     $"Language= {language}"
                 };
                 File.WriteAllLines(@"settings.txt", data);
+                SelectedLanguage = language;
             }
             catch (Exception e)
             {
@@ -151,6 +155,7 @@ namespace Spider_Solitaire
             string[] files = Directory.GetFiles(@"localisation");
             foreach (string file in files)
             {
+                if (file.Contains("DEBUG")) continue;
                 string[] tmp = file.Split(new char[] { '\\', '.' });
                 list.Add(tmp[1]);
             }
@@ -252,6 +257,11 @@ namespace Spider_Solitaire
                                  PlayAnimationsBox.IsChecked == true,
                                  Languages[LanguageBox.SelectedIndex])
                 == false) return;
+            if( SelectedLanguage != CurrentLanguage )
+            {
+                Process.Start(@"Spider Solitaire.exe");
+                Environment.Exit(0);
+            }
             MessageBox.Show(Localisation.SetText(TextType.SettingsApplyMessage, CurrentLanguage),"Applied",MessageBoxButton.OK,MessageBoxImage.Information);
         }
 

@@ -21,7 +21,7 @@ namespace Spider_Solitaire
     /// </summary>
     public partial class Game : Page
     {
-        private readonly bool DEBUG_MODE = true;   //used to determine whether the debug button is visible
+        private readonly bool DEBUG_MODE = false;   //used to determine whether the debug button and/or other DEBUG UI elementes are visible
 
         private int cardOffset { get; set; }  //used to render the cards apart from each other
         private readonly Menu _menu;
