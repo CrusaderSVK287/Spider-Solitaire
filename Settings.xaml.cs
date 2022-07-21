@@ -162,6 +162,17 @@ namespace Spider_Solitaire
             return list;
         }
 
+        private static string ParseLanguage(string langugae)
+        {
+            return langugae switch
+            {
+                "English" => "English",
+                "Slovencina" => "Slovenčina",
+                "Ukrainsky" => "Український",
+                _ => "ERROR",
+            };
+        }
+
         private void LoadLanguages()
         {
             if (Languages == null) return;
@@ -169,7 +180,7 @@ namespace Spider_Solitaire
             {
                 ComboBoxItem comboBoxItem = new()
                 {
-                    Content = item,
+                    Content = ParseLanguage(item),
                 };
                 LanguageBox.Items.Add(comboBoxItem);
             }
@@ -264,7 +275,5 @@ namespace Spider_Solitaire
             }
             MessageBox.Show(Localisation.SetText(TextType.SettingsApplyMessage, CurrentLanguage),"Applied",MessageBoxButton.OK,MessageBoxImage.Information);
         }
-
-        
     }
 }
