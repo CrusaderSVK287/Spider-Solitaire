@@ -31,7 +31,6 @@ namespace Spider_Solitaire
             InitializeComponent();
             CurrentLanguage = language;
             Tutorial = false;
-            HowToPlayClick(new Button(),new RoutedEventArgs());
             _ = CheckForUpdate();
         }
 
@@ -94,6 +93,8 @@ namespace Spider_Solitaire
             Stats.Content = Localisation.SetText(TextType.MenuStatisticsButton, CurrentLanguage);
             UpdateButton.Content = Localisation.SetText(TextType.MenuUpdateButton, CurrentLanguage);
             Licence.Content = Localisation.SetText(TextType.MenuLicenceButton, CurrentLanguage);
+            if (File.Exists(@"note.md")) ReadNote();
+            else HowToPlayClick(new Button(), new RoutedEventArgs());
         }
 
         private void HowToPlayClick(object sender, RoutedEventArgs e)
@@ -460,6 +461,44 @@ namespace Spider_Solitaire
                 current[0] <= latest[0]) return false;
             
             return true;
+        }
+
+        //Read an update note if there is any
+        private void ReadNote()
+        {
+            try
+            {
+                var data = File.ReadAllLines(@"note.md");
+                SPInformation.Children.Clear();
+                foreach (var item in data)
+                {
+                    int fontSize = 10;
+                    string text = "ERROR";
+                     if (item.StartsWith("# "))
+                    {
+                        fontSize = 40;
+                        text = item[2..];
+                    }
+                     else if (item.StartsWith("## "))
+                    {
+                        fontSize = 30;
+                        text = item[3..];
+                    }
+                     else if (item.StartsWith("* "))
+                    {
+                        fontSize = 20;
+                        text = "\t● " + item[2..];
+                    }
+                     else
+                    {
+                        text = item;
+                        fontSize = 20;
+                    }
+                    SPInformation.Children.Add(new TextBlock() { FontSize = fontSize, Text = text });
+                }
+                File.Delete(@"note.md");
+            }
+            catch (Exception ex) { MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error); return; }
         }
     }
 }
