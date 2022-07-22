@@ -487,7 +487,7 @@ namespace Spider_Solitaire
                      else if (item.StartsWith("* "))
                     {
                         fontSize = 20;
-                        text = "\t● " + item[2..];
+                        text = " ● " + item[2..];
                     }
                      else
                     {
