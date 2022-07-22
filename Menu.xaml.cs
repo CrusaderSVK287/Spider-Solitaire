@@ -494,7 +494,7 @@ namespace Spider_Solitaire
                         text = item;
                         fontSize = 20;
                     }
-                    SPInformation.Children.Add(new TextBlock() { FontSize = fontSize, Text = text });
+                    SPInformation.Children.Add(new TextBlock() { FontSize = fontSize, Text = text, TextWrapping = TextWrapping.Wrap });
                 }
                 File.Delete(@"note.md");
             }
