@@ -117,6 +117,7 @@ namespace Spider_Solitaire
         SettingsHintModeItemRestricted,
         SettingsHintModeItemDisabled,
         WindowSettingsButton,
+        SettingsRestartOnLangChange,
     }
 
     public abstract class Localisation

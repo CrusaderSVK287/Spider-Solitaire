@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Spider_Solitaire"
         mc:Ignorable="d"
-        Title="Settings" Height="400" Width="350"
+        Title="Settings" Height="430" Width="350"
         ResizeMode="NoResize"
         Unloaded="Window_Unloaded"
         Background="White"
@@ -15,11 +15,11 @@
                    Height="75" Width="340"
                    Margin="5,35,0,0" Background="WhiteSmoke"/>
         <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left"
-                   Height="70" Width="340"
+                   Height="90" Width="340"
                    Margin="5,155,0,0" Background="WhiteSmoke"/>
         <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left"
                    Height="70" Width="340"
-                   Margin="5,255,0,0" Background="WhiteSmoke"/>
+                   Margin="5,275,0,0" Background="WhiteSmoke"/>
         <TextBlock Text="Note: You can scroll with mouse wheel to change values" 
                    FontSize="9" 
                    VerticalAlignment="Top" HorizontalAlignment="Left"
@@ -90,18 +90,29 @@
 
         <ComboBox Width="100" Height="22" Name="LanguageBox"
                   HorizontalAlignment="Right" VerticalAlignment="Top"
-                  Margin="0,188,10,0" SelectedIndex="0"/>
+                  Margin="0,188,10,0" SelectedIndex="0"
+                  SelectionChanged="LanguageBoxSelected"/>
+
+        <TextBlock Text="Restart on language change" FontSize="15"
+                   VerticalAlignment="Top" HorizontalAlignment="Left"
+                   Margin="10,215,0,0"
+                   Name="RestartOnLanguageChangeDesc"
+                   Visibility="Hidden"/>
+        <CheckBox VerticalAlignment="Top" HorizontalAlignment="Right"
+                  Margin="0,220,30,0" Name="RestartOnLanguageChange"
+                  IsChecked="True"
+                  Visibility="Hidden"/>
 
         <TextBlock Text="Miscellaneous" FontSize="20" FontWeight="Medium"
                    VerticalAlignment="Top" HorizontalAlignment="Left"
-                   Margin="10,230,0,0"
+                   Margin="10,250,0,0"
                    Name="MiscellaneousText"/>
         <Button Content="Reset statistics" Width="315" Height="25" FontSize="15"
                 VerticalAlignment="Top" HorizontalAlignment="Left"
-                Margin="10,260,0,0" Name="ResetStatisticsButton" Click="ResetStatisticsButtonClick"/>
+                Margin="10,280,0,0" Name="ResetStatisticsButton" Click="ResetStatisticsButtonClick"/>
         <Button Content="Default settings" Width="315" Height="25" FontSize="15"
                 VerticalAlignment="Top" HorizontalAlignment="Left"
-                Margin="10,290,0,0" Name="DefaultSettButton" Click="DefaultSettButtonClick"/>
+                Margin="10,310,0,0" Name="DefaultSettButton" Click="DefaultSettButtonClick"/>
         
         <Border VerticalAlignment="Bottom" HorizontalAlignment="Center"
                 Width="340" Height="40"

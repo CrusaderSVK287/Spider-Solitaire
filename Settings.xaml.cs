@@ -98,6 +98,8 @@ namespace Spider_Solitaire
             HintRestricted.Content = Localisation.SetText(TextType.SettingsHintModeItemRestricted, CurrentLanguage);
             HintDisabled.Content = Localisation.SetText(TextType.SettingsHintModeItemDisabled, CurrentLanguage);
             Title = Localisation.SetText(TextType.WindowSettingsButton, CurrentLanguage);
+
+            RestartOnLanguageChangeDesc.Text = Localisation.SetText(TextType.SettingsRestartOnLangChange, CurrentLanguage);
         }
 
         public static bool WriteSettingsFile()
@@ -268,12 +270,26 @@ namespace Spider_Solitaire
                                  PlayAnimationsBox.IsChecked == true,
                                  Languages[LanguageBox.SelectedIndex])
                 == false) return;
-            if( SelectedLanguage != CurrentLanguage )
+            if( SelectedLanguage != CurrentLanguage && RestartOnLanguageChange.IsChecked == true)
             {
                 Process.Start(@"Spider Solitaire.exe");
                 Environment.Exit(0);
             }
             MessageBox.Show(Localisation.SetText(TextType.SettingsApplyMessage, CurrentLanguage),"Applied",MessageBoxButton.OK,MessageBoxImage.Information);
+        }
+
+        private void LanguageBoxSelected(object sender, RoutedEventArgs e)
+        {
+            if(LanguageBox.SelectedIndex != Languages.IndexOf(CurrentLanguage))
+            {
+                RestartOnLanguageChange.Visibility = Visibility.Visible;
+                RestartOnLanguageChangeDesc.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                RestartOnLanguageChange.Visibility = Visibility.Hidden;
+                RestartOnLanguageChangeDesc.Visibility = Visibility.Hidden;
+            }
         }
     }
 }
