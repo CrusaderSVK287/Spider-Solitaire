@@ -334,11 +334,12 @@ namespace Spider_Solitaire
 
             try
             {
-                if (LastCommand == CommandType.add) RevertAdd();
-                else if (LastCommand == CommandType.move) RevertMove(LastCommandArgs.Last());
+                CommandType type;
+                if (LastCommand == CommandType.add) type = RevertAdd();
+                else if (LastCommand == CommandType.move) type = RevertMove(LastCommandArgs.Last());
                 else throw new InvalidOperationException();
                 var Lines = File.ReadAllLines(@"autosave.soli");
-                File.WriteAllLines(@"autosave.soli", Lines.Take(Lines.Length - (int)LastCommand).ToArray());
+                File.WriteAllLines(@"autosave.soli", Lines.Take(Lines.Length - (int)type).ToArray());
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString(), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning); ForceMove = false; }
         }
@@ -357,7 +358,7 @@ namespace Spider_Solitaire
             }
         }
 
-        private void RevertAdd()
+        private CommandType RevertAdd()
         {
             for (int i = 0; i < 10; i++)
             {
@@ -371,9 +372,10 @@ namespace Spider_Solitaire
             newCardImages[NewCardNumber - 1].Visibility = Visibility.Visible; 
             LastCommandArgs.RemoveAt(LastCommandArgs.Count - 1);
             SetLastCommandBasedOnArgumnet(LastCommandArgs.Last());
+            return CommandType.add;
         }
 
-        private void RevertMove(string LastCommand)
+        private CommandType RevertMove(string LastCommand)
         {
             if (LastCommandArgs == null || !LastCommand.Contains(' ')) throw new ArgumentException();
             ForceMove = true;
@@ -413,6 +415,7 @@ namespace Spider_Solitaire
             if(LastCommandArgs.Count != 0) LastCommandArgs.RemoveAt(LastCommandArgs.Count - 1); //No damn idea why I had to add this line for it to work but hey it works so I won't touch it
             ForceMove = false;
             if (LastCommandArgs.Count != 0) SetLastCommandBasedOnArgumnet(LastCommandArgs.Last());
+            return CommandType.move;
         }
 
         private static string[] GetSubArgsFromArg(in string[] data, in string arg)
