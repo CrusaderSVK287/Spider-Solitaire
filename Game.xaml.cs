@@ -371,7 +371,8 @@ namespace Spider_Solitaire
             NewCardNumber--;
             newCardImages[NewCardNumber - 1].Visibility = Visibility.Visible; 
             LastCommandArgs.RemoveAt(LastCommandArgs.Count - 1);
-            SetLastCommandBasedOnArgumnet(LastCommandArgs.Last());
+            if (LastCommandArgs.Any()) SetLastCommandBasedOnArgumnet(LastCommandArgs.Last());
+            else LastCommand = CommandType.select;
             return CommandType.add;
         }
 
