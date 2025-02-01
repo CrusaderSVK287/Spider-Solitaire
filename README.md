@@ -15,6 +15,8 @@ See the Wiki portion here on github for extensive explanation.
 * Tweak some aspects of the game to your preferences
 * Semi-Automatic updates when new version drops
 
+![](assets/banner.jpg)
+
 # Requirements
 
 You will need a .Net desktop runtime, functioning CPU and about 200MB of RAM. Also like 10 MB of hard drive space.
@@ -29,3 +31,4 @@ Afterwards go onto releases https://github.com/CrusaderSVK287/Spider-Solitaire/r
 (Recommended is with the updater)
 zip file. After that extract it and your are done.
 To open the app, open the folder and then open the Spider Solitaire.exe
+
