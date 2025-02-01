@@ -96,6 +96,7 @@ namespace Spider_Solitaire
         GameVictoryText,
         GameNoMoreMovesPossible,
         GameRestartQuestion,
+        GameSolveButtonLabel,
 
         //Settings
         SettingsVisuals,
@@ -132,7 +133,8 @@ namespace Spider_Solitaire
             } 
             catch (Exception ex)
             {
-                MessageBox.Show("There has been an error when trying to access a file of the selected language\n" +
+                string path = @"localisation/" + languageFileName + ".txt";
+                MessageBox.Show("There has been an error when trying to access a file " + path + "\n" +
                     "DEBUG localisation file will be used instead\n\n" + ex.ToString(), "Localisation error",
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 return File.ReadLines(@"localisation/DEBUG.txt").Skip((int)type).Take(1).First().Replace('→', '\n'); ;

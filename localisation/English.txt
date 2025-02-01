@@ -6,6 +6,7 @@ Load Game
 How to play
 Statistics
 Update
+Licence
 How to play
 The goal of spider solitaire is, as with all solitaires, to clear the entire deck. This is done by assembling a full suit of cards. Each suite consists of 13 cards ranging from ace to king, having the same color. In order to assemble a suit, all 13 cards must be in order. Then the suit is removed from the deck, once all 8 suits are assembled, the game ends in victory. Below are all 4 kinds of suits →(from the left: clubs, diamonds, spades, hearts)
 When selecting the number of suits from the main menu, you are selecting how many suits (or colors) will be used in-game. This has no effect on the total number of cards. The number of total cards is always 104 (8 suits times 13 cards in one suit)→→To select a card or cards, click on the image of the card you want to select, and the animation will show you which card has been selected. You can then click on a column where you would like to place them. If you cannot place them in the selected column or you selected the very same column, the cards will return to their original place. In the game, you are allowed to move only cards that are facing upwards (you can see the suit and value), and you can move this pile only on a card that follows the ascension order (7 can only go on top of 8, 3 on top of 4, etc..). You can, however, place a card of a different suit on top of each other. For reference, here is an image of a full suit of spades.
@@ -57,6 +58,7 @@ hints remaining
 Victory
 No more possible meaningfull moves found, consider taking a few steps back,→restarting the game or starting a new game.→→Would you like to restart the game with the same deck?
 Are you sure? This action will reset the game to the starting point, →there is no going back
+Solve
 Visuals
 Card size:
 Card spacing:
@@ -76,3 +78,4 @@ Enabled
 Restricted
 Disabled
 Settings
+Restart on language change:

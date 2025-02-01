@@ -6,6 +6,7 @@ Načítať hru
 Ako hrať
 Štatistiky
 Aktualizovať
+Licencia
 Ako hrať
 Cieľom pavúčieho solitairu, ako pri všetkých solitairoch, je odstrániť všetky karty z hry. Toto sa docieli zostavením celej farebnej sady kariet. Každá sada sa skladá z 13 kariet rovnakej farby od esa po kráľa. Na zostavenie sady musí byť všetkých 13 kariet v rade za sebou. Následne sa sada odstráni z hry. Akonáhle je zostavených všetkých 8 sád, hráč vyhráva. Na obrázku nižšie sú všetky 4 farby →(z ľava: tref, káro, pika, srdce)
 Čísla na tlačítkach označujú koľko farieb bude figorovať v hre. Toto avšak nemá dopad na celkový počet kariet. Tých je stále 104 (8 sád po 13 kariet) →→Pre výber kariet na presun je potrebné kliknúť na obrázok karty. Animácia ukáže ktoré karty boli vybrané. Potom treba vybrať stĺpec kam vybrané karty položiť. Ak je vybraný nevhodný alebo ten istý stĺpec z kadiaľ boli karty vzaté, všetky sa vrátia na pôvodné miesto. Môžu sa brať iba karty ktoré sú odkryté, čiže je vydno ich farebnú sadu a hodnotu. Karta môže byť položená na kartu ktorá je za ňou v postupnosti (7 môže byť položená iba na 8, 3 na 4 atď...). Na farby sa toto pravidlo nevzťahuje a teda srdcová 9 môže ísť na pikovú 10. Na obrázku dole je zostavená celá sada pík zostupne.
@@ -57,6 +58,7 @@ nápoveda
 Výhra
 Žiadne ďalšie zmysluplné ťahy neboli nájdene, zvážte sa vrátiť niekoľko krokov, reštartovať hru alebo začať novú hru. →→Chceli by ste reštartovať hru s rovnakými kartami?
 Ste si istý? Táto akcia resetuje hru na začiatok, →nedá sa to vrátiť
+Vyriešiť
 Výzor
 Veľkosť kariet:
 Vzdialenosť kariet:
@@ -76,3 +78,4 @@ Povolená
 Obmbedzená
 Vypnutá
 Nastavenia
+Reštartovať pri zmene jazyka:

@@ -345,6 +345,9 @@ namespace Spider_Solitaire
                 else throw new InvalidOperationException();
                 var Lines = File.ReadAllLines(@"autosave.soli");
                 File.WriteAllLines(@"autosave.soli", Lines.Take(Lines.Length - (int)type).ToArray());
+
+                // This is to hide the solve button if needed
+                CheckToEnableSolveButton();
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString(), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning); ForceMove = false; }
         }
@@ -580,9 +583,20 @@ namespace Spider_Solitaire
             }
 
             //check whether the player can add new cards
-            if(NewCardNumber <= 5 && !Solving)
+            if(NewCardNumber <= 5)
             {
-                ShowHintFrames(NewCardNumber);
+                // This is just for the possibiliy to run the solving algorhitm even when there are cards to be dealt left
+                // The algorhitm doesnt know that in each column a card has to be present. Since this feature is not needed
+                // I wont be following on exapnding it. If someone want to do it here is what needs to be done:
+                // Implement a new method for example SolveDealNewCards that will
+                // 1. Check if there are any columns without a card
+                // 2. If there are, put any card into them
+                // 3. Press the NewCardsClick
+                // Dont forget to increase animation time somehow so it wont bug out
+                if (Solving)
+                    NewCardsClick(new Image(), new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
+                else
+                    ShowHintFrames(NewCardNumber);
                 return;
             }
 
@@ -622,7 +636,7 @@ namespace Spider_Solitaire
         private async void DoSolvingMove(int columnIndex, int startingCardIndex, int destinationColumnIndex)
         {
             CardSelect(deck.activeCards[columnIndex][startingCardIndex].Image, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
-
+            await Task.Delay(250);
             Grid grid = new Grid();
             grid.Name = $"col{destinationColumnIndex}";
             ColumnClick(grid, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
@@ -799,20 +813,21 @@ namespace Spider_Solitaire
         }
 
         private void CheckToEnableSolveButton()
-        {
-            // Allow to auto-solve only when 2 decks are remaining
-            if (DecksSolved < 6) return;
-
-            // All new card rows must be dealt
-            if (NewCardNumber < 6) return;
-                 
-            // All cards must be visible
+        {            
             bool hasInvisibleCard = deck.activeCards
                 .SelectMany(list => list)          // Flatten the List<Card>[] into a single sequence of Card objects
                 .Any(card => !card.Visible);
 
-            if (hasInvisibleCard) return;
+            // Allow to auto-solve only when 2 decks are remaining
+            // All new card rows must be dealt                 
+            // All cards must be visible
+            if (DecksSolved < 6 || NewCardNumber < 6 || hasInvisibleCard)
+            {
+                SolveButton.Visibility = Visibility.Hidden;
+                return;
+            }
 
+            SolveButton.Content = Localisation.SetText(TextType.GameSolveButtonLabel, CurrentLanguage);
             SolveButton.Visibility = Visibility.Visible;
         }
 
