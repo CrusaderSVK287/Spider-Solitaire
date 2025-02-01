@@ -168,10 +168,9 @@ namespace Spider_Solitaire
         {
             return langugae switch
             {
-                "English" => "English",
                 "Slovencina" => "Slovenčina",
                 "Ukrainsky" => "Українська",
-                _ => "ERROR",
+                _ => langugae,
             };
         }
 

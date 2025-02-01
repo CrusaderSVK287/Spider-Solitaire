@@ -10,11 +10,11 @@
     <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
     <StartupObject></StartupObject>
     <RepositoryUrl>https://github.com/CrusaderSVK287/Spider-Solitaire</RepositoryUrl>
-    <FileVersion>0.4.1.2</FileVersion>
-    <AssemblyVersion>0.4.1.2</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <PackageLicenseFile>C:\Users\lukas\Desktop\Kodiky\Spider Solitaire\LICENSE.txt</PackageLicenseFile>
     <Authors>Lukáš Belán</Authors>
-    <Version>0.4.1</Version>
+    <Version>1.0.0</Version>
     <Copyright>Copyright (C) 2022 Project - All Rights Reserve</Copyright>
   </PropertyGroup>
 

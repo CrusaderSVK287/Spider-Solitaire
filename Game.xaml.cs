@@ -224,7 +224,7 @@ namespace Spider_Solitaire
                         if (c == 'c') Statistics.IncreaseStat(StatisticType.SuitSpadesAssembled);
                         if (c == 'd') Statistics.IncreaseStat(StatisticType.SuitHeartsAssembled);
                     }
-                    LastCommandArgs[^1] = LastCommandArgs.Last() + $" assembled{c}";
+                    LastCommandArgs[^1] = LastCommandArgs.Last() + $" assembled{c}{i}";
                     AssembledKingCards.Add(Image);
 
                     return;
@@ -238,6 +238,7 @@ namespace Spider_Solitaire
         public async void NewCardsClick(object sender, MouseButtonEventArgs e)
         {
             if (NewCardNumber > 5 || AnimationPlaying || Selected.Count != 0) return;
+            // Check whether all columns have a card
             for (int i = 0; i < 10; i++)
             {
                 if (deck.activeCards[i].Count > 0) continue;
@@ -263,10 +264,13 @@ namespace Spider_Solitaire
                 deck.activeCards[index].Add(card);
                 if (!Loading && settings.PlayAnimations) await Task.Delay(30);
             }
+
             LastCommandArgs.Add("add");
             Refresh();
             AnimationPlaying = false;
             LastCommand = CommandType.add;
+            await IsSuitAssembled();
+            Refresh();
         }
 
         //makes sure that all cards are up and the correct ones are being shown
@@ -287,6 +291,7 @@ namespace Spider_Solitaire
                     deck.activeCards[i].Last().GetColour();
                 }
             }
+            CheckToEnableSolveButton();
         }
 
         //switches hittestvisible property of cards
@@ -335,11 +340,14 @@ namespace Spider_Solitaire
             try
             {
                 CommandType type;
-                if (LastCommand == CommandType.add) type = RevertAdd();
+                if (LastCommand == CommandType.add) type = RevertAdd(LastCommandArgs.Last());
                 else if (LastCommand == CommandType.move) type = RevertMove(LastCommandArgs.Last());
                 else throw new InvalidOperationException();
                 var Lines = File.ReadAllLines(@"autosave.soli");
                 File.WriteAllLines(@"autosave.soli", Lines.Take(Lines.Length - (int)type).ToArray());
+
+                // This is to hide the solve button if needed
+                CheckToEnableSolveButton();
             }
             catch (Exception ex) { MessageBox.Show(ex.ToString(), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning); ForceMove = false; }
         }
@@ -358,8 +366,25 @@ namespace Spider_Solitaire
             }
         }
 
-        private CommandType RevertAdd()
+        private CommandType RevertAdd(string sLastCommand)
         {
+            if (sLastCommand.Contains("assembled"))
+            {
+                string subArg = sLastCommand.Split(' ').ElementAt(1);
+                char colour = subArg[^2];
+                int index = sLastCommand[^1] - '0';
+                for (int value = 13; value > 0; value--)
+                {
+                    Card card = new(value, colour, true, deck.activeCards[index].Count + 1, index, cardOffset, CardSelect, settings.CardSizeFactor);
+                    SolitaireGrid.Children.Add(card.Image);
+                    Grid.SetColumn(card.Image, index + 1);
+                    deck.activeCards[index].Add(card);
+                }
+                SolitaireGrid.Children.Remove(AssembledKingCards.Last());
+                AssembledKingCards.Remove(AssembledKingCards.Last());
+                DecksSolved--;
+            }
+
             for (int i = 0; i < 10; i++)
             {
                 if (deck.activeCards[i].Count == 0) continue;
@@ -395,7 +420,7 @@ namespace Spider_Solitaire
             if(LastCommand.Contains("assembled"))
             {
                 string subArg = LastCommand.Split(' ').ElementAt(3);
-                char colour = subArg[^1];
+                char colour = subArg[^2];
                 int index = Convert.ToInt32(data[2]);
                 for (int value = 13; value > 0; value--)
                 {
@@ -433,13 +458,22 @@ namespace Spider_Solitaire
 
         private void HintClick(object sender, RoutedEventArgs e)
         {
-            if (Selected.Count > 0 || AnimationPlaying) return;
-
+            // hints disabled
             if (settings.HintMode == 2) return;
+
+            // if reamining hints are exactly 0 and hint mode is restricted. If hints are enabled they are at -1 and decrementing (doesnt matter)
             HintBoxUpdate();
-            if(RemainingHints == 0) return;
+            if (RemainingHints == 0) return;
+
             if (!Loading) Statistics.IncreaseStat(StatisticType.HintsTaken);
             RemainingHints--;
+            SolveOrShowHint(false);
+        }
+
+        private async void SolveOrShowHint(bool Solving)
+        {
+            if (Selected.Count > 0 || AnimationPlaying) return;
+
             //Parent = same color, value +1, Half-Parent = different color, value +1.
             //internal method, checks whether a card doesnt already lay on it's "parent" card (e.g. 7A is under 8A),
             //this is to prevent really unhelpfull hints
@@ -483,7 +517,11 @@ namespace Spider_Solitaire
                             deck.activeCards[j].Last().Colour == item.Colour)
                         {
                             if (LaysOnParentCard(deck.activeCards[i], item)) goto EndOfForeachLoopOne;
-                            ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
+
+                            // If we are solving the puzzle, solve, otherwise show hints
+                            if (Solving) DoSolvingMove(i, deck.activeCards[i].IndexOf(item), j);
+                            else ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
+
                             return;
                         }
                     }
@@ -508,7 +546,11 @@ namespace Spider_Solitaire
                             if (LaysOnParentCard(deck.activeCards[i], item) || 
                                 (LaysOnHalfParentCard(deck.activeCards[i],item) && IsHalfParent(item,deck.activeCards[j].Last()))
                                 ) goto EndOfForeachLoopTwo;
-                            ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
+
+                            // If we are solving the puzzle, solve, otherwise show hints
+                            if (Solving) DoSolvingMove(i, deck.activeCards[i].IndexOf(item), j);
+                            else ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
+
                             return;
                         }
                     }
@@ -530,7 +572,10 @@ namespace Spider_Solitaire
                     {
                         if (deck.activeCards[j].Count == 0 && j!=i)
                         {
-                            ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
+                            // If we are solving the puzzle, solve, otherwise show hints
+                            if (Solving) DoSolvingMove(i, deck.activeCards[i].IndexOf(item), j);
+                            else ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
+
                             return;
                         }
                     }
@@ -540,7 +585,18 @@ namespace Spider_Solitaire
             //check whether the player can add new cards
             if(NewCardNumber <= 5)
             {
-                ShowHintFrames(NewCardNumber);
+                // This is just for the possibiliy to run the solving algorhitm even when there are cards to be dealt left
+                // The algorhitm doesnt know that in each column a card has to be present. Since this feature is not needed
+                // I wont be following on exapnding it. If someone want to do it here is what needs to be done:
+                // Implement a new method for example SolveDealNewCards that will
+                // 1. Check if there are any columns without a card
+                // 2. If there are, put any card into them
+                // 3. Press the NewCardsClick
+                // Dont forget to increase animation time somehow so it wont bug out
+                if (Solving)
+                    NewCardsClick(new Image(), new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
+                else
+                    ShowHintFrames(NewCardNumber);
                 return;
             }
 
@@ -574,6 +630,16 @@ namespace Spider_Solitaire
                     pile[i].Value != pile[startingIndex].Value - sub) return false;
             }
             return true;
+        }
+
+        // While solving, move the cards
+        private async void DoSolvingMove(int columnIndex, int startingCardIndex, int destinationColumnIndex)
+        {
+            CardSelect(deck.activeCards[columnIndex][startingCardIndex].Image, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
+            await Task.Delay(250);
+            Grid grid = new Grid();
+            grid.Name = $"col{destinationColumnIndex}";
+            ColumnClick(grid, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
         }
 
         //Renders the gold hint frames based on column and starting index
@@ -744,6 +810,35 @@ namespace Spider_Solitaire
                 data +="--->" + item + "\n";
             }
             MessageBox.Show($"Number of elements: {LastCommandArgs.Count}"+"\n\n"+data);
+        }
+
+        private void CheckToEnableSolveButton()
+        {            
+            bool hasInvisibleCard = deck.activeCards
+                .SelectMany(list => list)          // Flatten the List<Card>[] into a single sequence of Card objects
+                .Any(card => !card.Visible);
+
+            // Allow to auto-solve only when 2 decks are remaining
+            // All new card rows must be dealt                 
+            // All cards must be visible
+            if (DecksSolved < 6 || NewCardNumber < 6 || hasInvisibleCard)
+            {
+                SolveButton.Visibility = Visibility.Hidden;
+                return;
+            }
+
+            SolveButton.Content = Localisation.SetText(TextType.GameSolveButtonLabel, CurrentLanguage);
+            SolveButton.Visibility = Visibility.Visible;
+        }
+
+        private async void SolveButtonClick(object sender, RoutedEventArgs e)
+        {
+            //settings.PlayAnimations = false;
+            while (DecksSolved < 8)
+            {
+                SolveOrShowHint(true);
+                await Task.Delay(500);
+            }
         }
     }
 }

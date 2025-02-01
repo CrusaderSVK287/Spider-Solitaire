@@ -215,8 +215,45 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
+
+
+
             </StackPanel>
-            
+
+            <Button Content="Solve" 
+                    FontSize="25"
+                    Name="SolveButton"
+                    Margin="880,35,0,-15"
+                    Click="SolveButtonClick"
+                    FontWeight="Light"
+                    Visibility="Hidden">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="Green"/>
+                        <Setter Property="FontWeight" Value="Medium"/>
+                        <Setter Property="Foreground" Value="DarkSlateGray"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="DarkGreen"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="210" Height="50"
+                                    CornerRadius="20"
+                                    BorderBrush="#f5d51f"
+                                    BorderThickness="3"
+                                    Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
         </Grid>
     </Grid>
 </Page>
