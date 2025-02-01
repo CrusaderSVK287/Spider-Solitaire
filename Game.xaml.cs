@@ -224,7 +224,7 @@ namespace Spider_Solitaire
                         if (c == 'c') Statistics.IncreaseStat(StatisticType.SuitSpadesAssembled);
                         if (c == 'd') Statistics.IncreaseStat(StatisticType.SuitHeartsAssembled);
                     }
-                    LastCommandArgs[^1] = LastCommandArgs.Last() + $" assembled{c}";
+                    LastCommandArgs[^1] = LastCommandArgs.Last() + $" assembled{c}{i}";
                     AssembledKingCards.Add(Image);
 
                     return;
@@ -238,6 +238,7 @@ namespace Spider_Solitaire
         public async void NewCardsClick(object sender, MouseButtonEventArgs e)
         {
             if (NewCardNumber > 5 || AnimationPlaying || Selected.Count != 0) return;
+            // Check whether all columns have a card
             for (int i = 0; i < 10; i++)
             {
                 if (deck.activeCards[i].Count > 0) continue;
@@ -263,10 +264,13 @@ namespace Spider_Solitaire
                 deck.activeCards[index].Add(card);
                 if (!Loading && settings.PlayAnimations) await Task.Delay(30);
             }
+
             LastCommandArgs.Add("add");
             Refresh();
             AnimationPlaying = false;
             LastCommand = CommandType.add;
+            await IsSuitAssembled();
+            Refresh();
         }
 
         //makes sure that all cards are up and the correct ones are being shown
@@ -335,7 +339,7 @@ namespace Spider_Solitaire
             try
             {
                 CommandType type;
-                if (LastCommand == CommandType.add) type = RevertAdd();
+                if (LastCommand == CommandType.add) type = RevertAdd(LastCommandArgs.Last());
                 else if (LastCommand == CommandType.move) type = RevertMove(LastCommandArgs.Last());
                 else throw new InvalidOperationException();
                 var Lines = File.ReadAllLines(@"autosave.soli");
@@ -358,8 +362,25 @@ namespace Spider_Solitaire
             }
         }
 
-        private CommandType RevertAdd()
+        private CommandType RevertAdd(string sLastCommand)
         {
+            if (sLastCommand.Contains("assembled"))
+            {
+                string subArg = sLastCommand.Split(' ').ElementAt(1);
+                char colour = subArg[^2];
+                int index = sLastCommand[^1] - '0';
+                for (int value = 13; value > 0; value--)
+                {
+                    Card card = new(value, colour, true, deck.activeCards[index].Count + 1, index, cardOffset, CardSelect, settings.CardSizeFactor);
+                    SolitaireGrid.Children.Add(card.Image);
+                    Grid.SetColumn(card.Image, index + 1);
+                    deck.activeCards[index].Add(card);
+                }
+                SolitaireGrid.Children.Remove(AssembledKingCards.Last());
+                AssembledKingCards.Remove(AssembledKingCards.Last());
+                DecksSolved--;
+            }
+
             for (int i = 0; i < 10; i++)
             {
                 if (deck.activeCards[i].Count == 0) continue;
@@ -395,7 +416,7 @@ namespace Spider_Solitaire
             if(LastCommand.Contains("assembled"))
             {
                 string subArg = LastCommand.Split(' ').ElementAt(3);
-                char colour = subArg[^1];
+                char colour = subArg[^2];
                 int index = Convert.ToInt32(data[2]);
                 for (int value = 13; value > 0; value--)
                 {
