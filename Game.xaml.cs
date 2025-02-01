@@ -21,7 +21,7 @@ namespace Spider_Solitaire
     /// </summary>
     public partial class Game : Page
     {
-        private readonly bool DEBUG_MODE = false;   //used to determine whether the debug button and/or other DEBUG UI elementes are visible
+        private readonly bool DEBUG_MODE = true;   //used to determine whether the debug button and/or other DEBUG UI elementes are visible
 
         private int cardOffset { get; set; }  //used to render the cards apart from each other
         private readonly Menu _menu;
@@ -291,6 +291,7 @@ namespace Spider_Solitaire
                     deck.activeCards[i].Last().GetColour();
                 }
             }
+            CheckToEnableSolveButton();
         }
 
         //switches hittestvisible property of cards
@@ -765,6 +766,28 @@ namespace Spider_Solitaire
                 data +="--->" + item + "\n";
             }
             MessageBox.Show($"Number of elements: {LastCommandArgs.Count}"+"\n\n"+data);
+        }
+
+        private void CheckToEnableSolveButton()
+        {
+            // Allow to auto-solve only when 2 decks are remaining
+            if (DecksSolved < 6) return;
+
+            if (NewCardNumber < 6) return;
+                 
+            // All cards must be visible
+            bool hasInvisibleCard = deck.activeCards
+                .SelectMany(list => list)          // Flatten the List<Card>[] into a single sequence of Card objects
+                .Any(card => !card.Visible);
+
+            if (hasInvisibleCard) return;
+
+            SolveButton.Visibility = Visibility.Visible;
+        }
+
+        private void SolveButtonClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("This button will solve the puzzle");
         }
     }
 }
