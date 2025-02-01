@@ -1,0 +1,5 @@
+Card_size= 100
+Card_spacing= 20
+Hint_mode= 0
+Play_animations= 1
+Language= English
