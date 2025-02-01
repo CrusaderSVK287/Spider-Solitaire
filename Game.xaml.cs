@@ -21,7 +21,7 @@ namespace Spider_Solitaire
     /// </summary>
     public partial class Game : Page
     {
-        private readonly bool DEBUG_MODE = true;   //used to determine whether the debug button and/or other DEBUG UI elementes are visible
+        private readonly bool DEBUG_MODE = false;   //used to determine whether the debug button and/or other DEBUG UI elementes are visible
 
         private int cardOffset { get; set; }  //used to render the cards apart from each other
         private readonly Menu _menu;
@@ -455,13 +455,22 @@ namespace Spider_Solitaire
 
         private void HintClick(object sender, RoutedEventArgs e)
         {
-            if (Selected.Count > 0 || AnimationPlaying) return;
-
+            // hints disabled
             if (settings.HintMode == 2) return;
+
+            // if reamining hints are exactly 0 and hint mode is restricted. If hints are enabled they are at -1 and decrementing (doesnt matter)
             HintBoxUpdate();
-            if(RemainingHints == 0) return;
+            if (RemainingHints == 0) return;
+
             if (!Loading) Statistics.IncreaseStat(StatisticType.HintsTaken);
             RemainingHints--;
+            SolveOrShowHint(false);
+        }
+
+        private async void SolveOrShowHint(bool Solving)
+        {
+            if (Selected.Count > 0 || AnimationPlaying) return;
+
             //Parent = same color, value +1, Half-Parent = different color, value +1.
             //internal method, checks whether a card doesnt already lay on it's "parent" card (e.g. 7A is under 8A),
             //this is to prevent really unhelpfull hints
@@ -505,7 +514,11 @@ namespace Spider_Solitaire
                             deck.activeCards[j].Last().Colour == item.Colour)
                         {
                             if (LaysOnParentCard(deck.activeCards[i], item)) goto EndOfForeachLoopOne;
-                            ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
+
+                            // If we are solving the puzzle, solve, otherwise show hints
+                            if (Solving) DoSolvingMove(i, deck.activeCards[i].IndexOf(item), j);
+                            else ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
+
                             return;
                         }
                     }
@@ -530,7 +543,11 @@ namespace Spider_Solitaire
                             if (LaysOnParentCard(deck.activeCards[i], item) || 
                                 (LaysOnHalfParentCard(deck.activeCards[i],item) && IsHalfParent(item,deck.activeCards[j].Last()))
                                 ) goto EndOfForeachLoopTwo;
-                            ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
+
+                            // If we are solving the puzzle, solve, otherwise show hints
+                            if (Solving) DoSolvingMove(i, deck.activeCards[i].IndexOf(item), j);
+                            else ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
+
                             return;
                         }
                     }
@@ -552,7 +569,10 @@ namespace Spider_Solitaire
                     {
                         if (deck.activeCards[j].Count == 0 && j!=i)
                         {
-                            ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
+                            // If we are solving the puzzle, solve, otherwise show hints
+                            if (Solving) DoSolvingMove(i, deck.activeCards[i].IndexOf(item), j);
+                            else ShowHintFrames(i, deck.activeCards[i].IndexOf(item), j);
+
                             return;
                         }
                     }
@@ -560,7 +580,7 @@ namespace Spider_Solitaire
             }
 
             //check whether the player can add new cards
-            if(NewCardNumber <= 5)
+            if(NewCardNumber <= 5 && !Solving)
             {
                 ShowHintFrames(NewCardNumber);
                 return;
@@ -596,6 +616,16 @@ namespace Spider_Solitaire
                     pile[i].Value != pile[startingIndex].Value - sub) return false;
             }
             return true;
+        }
+
+        // While solving, move the cards
+        private async void DoSolvingMove(int columnIndex, int startingCardIndex, int destinationColumnIndex)
+        {
+            CardSelect(deck.activeCards[columnIndex][startingCardIndex].Image, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
+
+            Grid grid = new Grid();
+            grid.Name = $"col{destinationColumnIndex}";
+            ColumnClick(grid, new MouseButtonEventArgs(InputManager.Current.PrimaryMouseDevice, 0, MouseButton.Left));
         }
 
         //Renders the gold hint frames based on column and starting index
@@ -773,6 +803,7 @@ namespace Spider_Solitaire
             // Allow to auto-solve only when 2 decks are remaining
             if (DecksSolved < 6) return;
 
+            // All new card rows must be dealt
             if (NewCardNumber < 6) return;
                  
             // All cards must be visible
@@ -785,9 +816,14 @@ namespace Spider_Solitaire
             SolveButton.Visibility = Visibility.Visible;
         }
 
-        private void SolveButtonClick(object sender, RoutedEventArgs e)
+        private async void SolveButtonClick(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("This button will solve the puzzle");
+            //settings.PlayAnimations = false;
+            while (DecksSolved < 8)
+            {
+                SolveOrShowHint(true);
+                await Task.Delay(500);
+            }
         }
     }
 }
